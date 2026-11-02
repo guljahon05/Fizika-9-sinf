@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ichki energiya</title>
+<style>
+:root{--bg:#f1f6ff;--c:#fff;--t:#14213d;--a:#2563eb;--b:#d3e0f5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f172a;--c:#1e293b;--t:#e8eefc;--b:#334155}}
+:root[data-theme=dark]{--bg:#0f172a;--c:#1e293b;--t:#e8eefc;--b:#334155}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.5 system-ui,sans-serif}
+header{padding:14px;text-align:center;background:linear-gradient(90deg,#2563eb,#e11d48);color:#fff}header h1{margin:0;font-size:1.3rem}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:2}
+nav button{flex:0 0 auto;border:2px solid var(--a);background:var(--c);color:var(--t);padding:6px 10px;border-radius:20px;font-size:.85rem}
+nav button.on{background:var(--a);color:#fff}
+main{max-width:760px;margin:auto;padding:8px}section{display:none;background:var(--c);border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:12px}section.on{display:block}
+h2{margin:.2em 0}h3{margin:1em 0 .3em;color:var(--a)}canvas{width:100%;height:auto;border-radius:10px;display:block}
+.box{background:var(--bg);border-left:4px solid #e11d48;padding:6px 10px;border-radius:6px;margin:6px 0}
+label{display:block;margin:6px 0;font-size:.9rem}input[type=range],select{width:100%}
+button.b{background:var(--a);color:#fff;border:0;border-radius:8px;padding:8px 14px;margin:4px 4px 0 0;font-size:.9rem}
+.cap{margin:6px 0;font-weight:600;color:#e11d48;min-height:3em}.out{font-size:.9rem;margin:4px 0}
+.bar{background:var(--b);border-radius:6px;height:14px;margin:2px 0 6px}.bar i{display:block;height:100%;border-radius:6px}
+details{background:var(--bg);border-radius:8px;padding:6px 10px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button.b{margin:0}
+.vbar button.alt{background:#64748b}
+.vbar input[type=range]{width:auto;flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;margin:0;font-weight:600}
+.vbar select{width:auto;font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--b);background:var(--c);color:var(--t)}
+.vnote{font-size:.85rem;opacity:.75;margin:6px 0 0}
+</style></head><body>
+<header><h1>🔥 9-sinf fizika · 15-mavzu: Ichki energiya</h1></header>
+<nav id="nav"></nav><main id="main"></main>
+<main id="vmain"><div class="vid" id="vid" style="background:var(--c);border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:12px"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="b" id="vpp">▶ Boshlash</button><button class="b b alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></main>
+<script>
+const $=(s)=>document.querySelector(s),W=400,H=240;
+const tri=(p,L)=>{p=((p%(2*L))+2*L)%(2*L);return p<L?p:2*L-p};
+const col=e=>`hsl(${240*(1-Math.min(1,Math.max(0,e)))},90%,55%)`;
+const mk=id=>{const c=$('#'+id);c.width=W;c.height=H;return c.getContext('2d')};
+const D=(x,px,py,r,c)=>{x.fillStyle=c;x.beginPath();x.arc(px,py,r,0,7);x.fill()};
+const BG=x=>{x.fillStyle='#0b1730';x.fillRect(0,0,W,H)};
+const TX=(x,s,px,py,c='#fff')=>{x.fillStyle=c;x.font='14px sans-serif';x.fillText(s,px,py)};
+const bar=(l,p,c)=>`${l}<div class=bar><i style="width:${Math.min(100,p)}%;background:${c}"></i></div>`;
+const R=(id,l,mn,mx,v,u,st=1)=>`<label>${l}: <b id=${id}v>${v}</b> ${u}<input type=range id=${id} min=${mn} max=${mx} step=${st} value=${v}></label>`;
+const V=id=>+$('#'+id).value;
+const S=[],A=[];let cur=0;
+
+/* Gaz modeli */
+function Gas(x,piston){const P=[],sp=1.6;let wx=W,tg=W,pv=0,N=40;
+ const r=()=>{P.length=0;for(let i=0;i<60;i++){const a=Math.random()*6.283;P.push({x:Math.random()*W*.9+5,y:Math.random()*(H-10)+5,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp})}};r();
+ const meas=n=>300*P.slice(0,n).reduce((s,p)=>s+p.vx*p.vx+p.vy*p.vy,0)/n/(sp*sp);
+ return{setN:n=>N=n,T:()=>meas(N),reset(){r();wx=tg=W},tgt:v=>tg=v,
+ setT(t){const m=meas(60);if(Math.abs(m-t)>.5){const f=Math.sqrt(t/m);P.forEach(p=>{p.vx*=f;p.vy*=f})}},
+ step(){pv=Math.abs(tg-wx)>.8?Math.sign(tg-wx)*.8:0;wx+=pv;
+  P.slice(0,N).forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<5){p.x=5;p.vx=Math.abs(p.vx)}
+   if(p.x>wx-5){p.x=wx-5;p.vx=-Math.abs(p.vx)+2*pv}if(p.y<5||p.y>H-5){p.vy*=-1;p.y=Math.min(H-5,Math.max(5,p.y))}});
+  BG(x);if(piston){x.fillStyle='#94a3b8';x.fillRect(wx,0,W-wx,H);TX(x,'PORSHEN',wx+8,120,'#0b1730')}
+  P.slice(0,N).forEach(p=>D(x,p.x,p.y,5,col((Math.hypot(p.vx,p.vy)/sp)**2/2)))}}}
+
+/* Animatsiya boshqaruvi */
+const M=Array.from({length:16},()=>({x:Math.random()*400,y:Math.random()*200,vx:(Math.random()+.4)*(Math.random()<.5?-1:1),vy:(Math.random()+.4)*(Math.random()<.5?-1:1)}));
+const mol=(x,tau,c,wd=W)=>M.forEach(p=>D(x,10+tri(p.x+p.vx*tau,wd-20),10+tri(p.y+p.vy*tau,H-20),5,c));
+const rod=(x,e,tau,y=120)=>{for(let i=0;i<10;i++){const k=e(i);D(x,60+i*30+Math.sin(tau*9+i)*(1+5*k),y+Math.cos(tau*11+i*2)*(1+5*k),11,col(k))}};
+const spring=(x,a,b,y)=>{x.strokeStyle='#fff';x.beginPath();x.moveTo(a,y);for(let i=1;i<12;i++)x.lineTo(a+(b-a)*i/12,y+(i%2?-10:10));x.lineTo(b,y);x.stroke()};
+const th=(x,t,a,b)=>{x.strokeStyle='#fff';x.strokeRect(350,30,20,170);x.fillStyle='#ef4444';x.fillRect(350,200-170*t,20,170*t);TX(x,Math.round(a+(b-a)*t)+'°C',340,222)};
+const ANI={
+1:{st:['Molekulalar tinimsiz va tartibsiz harakatlanadi.','Har bir molekula kinetik energiyaga ega.','Ularning barcha energiyalari yig\'indisi — ichki energiya.'],d:14,f:(x,t)=>{BG(x);x.strokeStyle='#fff';x.strokeRect(2,2,W-4,H-4);mol(x,t*500,col(.5));TX(x,'Ek = mv²/2',20,24)}},
+2:{st:['Molekulalar bir-biridan uzoqlashadi: Ep ortadi, Ek kamayadi.','Eng uzoq nuqta: Ep maksimal, Ek = 0.','Yaqinlashadi: Ep kamayadi, Ek ortadi.','Eng yaqin nuqta: Ek maksimal. Yig\'indi saqlanadi.'],d:16,f:(x,t)=>{BG(x);const ph=2*Math.PI*t,d=70+40*Math.sin(ph),y=100;spring(x,200-d,200+d,y);D(x,200-d,y,14,'#38bdf8');D(x,200+d,y,14,'#38bdf8');
+  const ek=Math.cos(ph)**2,ep=Math.sin(ph)**2;x.fillStyle='#22c55e';x.fillRect(120,200-ek*60,50,ek*60);x.fillStyle='#f59e0b';x.fillRect(230,200-ep*60,50,ep*60);TX(x,'Ek',135,218);TX(x,'Ep',245,218)}},
+3:{st:['Past temperatura: molekulalar sekin.','Isitilmoqda: tezlik ortadi.','Temperatura yuqori: molekulalar tez.','Ichki energiya ortdi.'],d:14,f:(x,t)=>{BG(x);mol(x,(.5*t+1.25*t*t)*600,col(.15+.85*t),W-60);th(x,t,20,100)}},
+4:{st:['Jism sirtda sirpanadi.','Ishqalanish: sirt molekulalari qattiq tebranadi.','Ish bajarildi — jism va sirt qizidi, ichki energiya ortdi.'],d:12,f:(x,t)=>{BG(x);const k=.15+.85*t,tau=t*40,bx=140+50*Math.sin(tau);
+  for(let i=0;i<14;i++)for(let j=0;j<3;j++)D(x,30+i*26+Math.sin(tau*5+i+j)*(1+7*k),160+j*22+Math.cos(tau*6+i)*(1+7*k),8,col(k));
+  for(let i=0;i<6;i++)for(let j=0;j<2;j++)D(x,bx+i*22+Math.sin(tau*5+i)*(1+5*k),100+j*22,8,col(k));TX(x,'← ishqalanish →',130,60);TX(x,'T: '+Math.round(20+60*t)+'°C',20,30)}},
+5:{st:['Issiqlik o\'tkazuvchanlik: tebranishlar sterjen bo\'ylab uzatiladi.','Konveksiya: issiq suyuqlik ko\'tarilib, sovug\'i cho\'kadi.','Nurlanish: energiya nur bilan, vakuumda ham uzatiladi.'],d:18,f:(x,t)=>{BG(x);const k=Math.min(2,Math.floor(t*3)),u=t*3-k;
+  if(k==0){rod(x,i=>Math.min(1,Math.max(.1,u*1.8-i*.13)),t*30);D(x,25,120,16,'#f59e0b');TX(x,'🔥',17,126)}
+  else if(k==1){x.strokeStyle='#64748b';x.lineWidth=6;x.strokeRect(100,40,200,160);x.lineWidth=1;for(let i=0;i<16;i++){const s=((i/16+u*.8)%1)*720,p=s<160?[100,200-s]:s<360?[100+s-160,40]:s<520?[300,40+s-360]:[300-(s-520),200];D(x,p[0],p[1],6,col(p[0]<200?.9:.15))}TX(x,'🔥',90,226)}
+  else{D(x,50,120,28,'#facc15');x.strokeStyle='#fde047';x.setLineDash([8,8]);x.lineDashOffset=-t*400;for(let i=0;i<5;i++){x.beginPath();x.moveTo(85,80+i*20);x.lineTo(300,80+i*20);x.stroke()}x.setLineDash([]);D(x,330,120,28,col(.1+.8*u));TX(x,'Quyosh',25,170)}}},
+6:{st:['Nasos porsheni havoni siqadi.','Siqish — ish bajarish: havo qiziydi.','Takroriy siqishlar havoni yana qizdiradi.','Nasos va shina qizidi: ichki energiya ortdi.'],d:16,f:(x,t)=>{BG(x);const py=50+60*(.5-.5*Math.cos(2*Math.PI*4*t));x.fillStyle='#94a3b8';x.fillRect(190,10,20,py-10);x.fillRect(150,py,100,8);x.strokeStyle='#fff';x.strokeRect(150,50,100,170);
+  M.slice(0,10).forEach(p=>D(x,160+tri(p.x+p.vx*t*300,80),py+16+tri(p.y+p.vy*t*300,Math.max(10,196-py)),5,col(.2+.7*t)));th(x,t,20,50)}}
+};
+function Anim(n,sec){const a=ANI[n],x=mk('a'+n);let t=0,pl=false;const cp=$('#c'+n);
+ const ob={sec,tick(dt){if(pl){t+=dt/a.d;if(t>=1){t=1;pl=false;$('#p'+n).textContent='▶ Boshlash'}}a.f(x,t);cp.textContent=a.st[Math.min(a.st.length-1,Math.floor(t*a.st.length))]}};
+ $('#p'+n).onclick=e=>{if(t>=1)t=0;pl=!pl;e.target.textContent=pl?'⏸ Pauza':'▶ Davom'};
+ $('#r'+n).onclick=()=>{t=0;pl=true;$('#p'+n).textContent='⏸ Pauza'};A.push(ob)}
+
+/* Bo'limlar */
+const SEC=[
+{t:'Ichki energiya nima',i:`Barcha jismlar <b>molekulalardan</b> iborat. Ular tinimsiz va tartibsiz harakatlanadi hamda bir-biri bilan ta'sirlashadi. Molekulalarning <b>kinetik energiyalari</b> va o'zaro ta'sir <b>potensial energiyalarining</b> yig'indisi jismning <div class=box><b>ichki energiyasi</b> (U) deyiladi. Birligi: joul (J).</div>Ichki energiya molekulalar soniga ham, ularning tezligiga ham bog'liq.`,
+ c:R('N1','Molekulalar soni',5,60,30,'ta')+R('T1','Temperatura',100,600,300,'K',10),
+ q:[['Ichki energiya nimalarning yig\'indisi?','Molekulalarning kinetik va potensial energiyalari yig\'indisi.'],['Molekulalar soni ikki marta ortsa (T o\'zgarmasa), ichki energiya qanday o\'zgaradi?','Taxminan ikki marta ortadi.']]},
+{t:'Kinetik va potensial energiya',i:`<b>Kinetik energiya</b> molekulalarning harakati bilan bog'liq: Ek = mv²/2. <b>Potensial energiya</b> molekulalar orasidagi masofa va o'zaro tortishish-itarishish kuchlariga bog'liq. Masofa o'zgarsa, Ep o'zgaradi; tezlik o'zgarsa, Ek o'zgaradi. Ichki energiya: <div class=box>U = ΣEk + ΣEp</div>`,
+ c:R('T2','Temperatura',50,600,300,'K',10)+R('d2','Molekulalar orasidagi masofa',20,40,28,'px'),
+ q:[['Molekulalar orasidagi masofa ortsa, qaysi energiya o\'zgaradi?','Potensial energiya (ortadi).'],['Tezroq harakatlanayotgan molekulaning qaysi energiyasi katta?','Kinetik energiyasi.']]},
+{t:'Temperaturaga bog\'liqligi',i:`<b>Temperatura</b> molekulalar o'rtacha kinetik energiyasining o'lchovidir. Jism qizisa, molekulalar tezroq harakatlanadi, Ek ortadi, demak <b>ichki energiya ortadi</b>. Sovisa, kamayadi. <div class=box>T ↑ ⇒ v ↑ ⇒ Ek ↑ ⇒ U ↑</div>`,
+ c:R('T3','Temperatura',100,600,300,'K',10),
+ q:[['Suv qizdirilganda uning ichki energiyasi nima uchun ortadi?','Molekulalar tezligi va kinetik energiyasi ortadi.'],['Bir xil massali 80°C va 20°C li suvdan qaysining ichki energiyasi katta?','80°C li suvniki.']]},
+{t:'Ish bajarish',i:`Ichki energiyani <b>ish bajarish</b> bilan o'zgartirish mumkin. Jismni <b>ishqalash</b>, <b>siqish</b>, <b>urish</b> uni qizdiradi: tashqi kuch ish bajaradi va ichki energiya ortadi. Jismning o'zi ish bajarsa (masalan, gaz kengaysa), uning ichki energiyasi kamayadi. <div class=box>Ish bajarilsa ⇒ ΔU = A</div>Simulyatsiyada porshenni suring: gaz siqilganda qiziydi.`,
+ c:R('P4','Porshenni surish (siqish)',0,100,0,'%')+`<button class=b id=rs4>Qayta boshlash</button>`,
+ q:[['Qo\'lni ishqalaganda nima uchun isiydi?','Ishqalanish kuchi ish bajaradi, ichki energiya ortadi.'],['Gaz siqilsa, temperaturasi qanday o\'zgaradi?','Ortadi: siqishda bajarilgan ish ichki energiyani oshiradi.']]},
+{t:'Issiqlik almashinuvi',i:`Ish bajarmasdan ham ichki energiyani o'zgartirish mumkin: <b>issiqlik almashinuvi</b>. Energiya issiq jismdan sovuq jismga o'tadi. Uch usuli bor: <b>issiqlik o'tkazuvchanlik</b> (molekulalar orqali, qattiq jismlarda), <b>konveksiya</b> (suyuqlik va gaz oqimlari bilan), <b>nurlanish</b> (nur bilan, vakuumda ham). <div class=box>Berilgan issiqlik miqdori: Q (J)</div>`,
+ c:R('H5','Issiq uchi temperaturasi',30,100,100,'°C')+R('C5','Sovuq uchi temperaturasi',0,30,0,'°C')+`<button class=b id=rs5>Boshlang'ich holat</button>`,
+ q:[['Quyoshdan Yerga energiya qaysi usulda keladi?','Nurlanish bilan.'],['Metall qoshiq issiq choyda nega qiziydi?','Issiqlik o\'tkazuvchanlik tufayli.']]},
+{t:'Misollar',i:`<b>Kundalik hayotda:</b> qo'llarni ishqalab isitish, nasos bilan shina shishirganda nasosning qizishi, gugurt chaqish, burg'ilashda burg'ining qizishi. <b>Texnikada:</b> ichki yonuv dvigatellari, isitish radiatorlari. Jismni qizdirish uchun kerak issiqlik: <div class=box>Q = c·m·Δt</div>c — solishtirma issiqlik sig'imi (J/kg·°C).`,
+ c:`<label>Modda: <select id=c6><option value=4200>Suv (4200)</option><option value=920>Alyuminiy (920)</option><option value=460>Temir (460)</option><option value=400>Mis (400)</option></select></label>`+R('m6','Massa',0.1,5,1,'kg',.1)+R('dT6','Temperatura o\'zgarishi Δt',1,100,50,'°C'),
+ q:[['Nasos bilan shina shishirganda nasos nega qiziydi?','Havo siqiladi va ishqalanish bor: ish bajariladi, ichki energiya ortadi.'],['1 kg suvni 10°C ga qizdirish uchun Q=? (c=4200)','Q = 4200·1·10 = 42000 J = 42 kJ.']]}
+];
+const nav=$('#nav'),main=$('#main');
+SEC.forEach((s,k)=>{const n=k+1;nav.insertAdjacentHTML('beforeend',`<button data-k=${k}>${n}. ${s.t.split(' ')[0]}</button>`);
+ main.insertAdjacentHTML('beforeend',`<section id=sec${k}><h2>${n}. ${s.t}</h2><h3>📘 Ma'lumot</h3><p>${s.i}</p><h3>🎛 Simulyatsiya</h3><canvas id=s${n}></canvas>${s.c}<div class=out id=o${n}></div>
+ <h3>🎬 Animatsiya</h3><canvas id=a${n}></canvas><button class=b id=p${n}>▶ Boshlash</button><button class=b id=r${n}>↺ Qayta boshlash</button><div class=cap id=c${n}></div>
+ <h3>❓ Nazorat savollari</h3>${s.q.map((q,j)=>`<details><summary>${j+1}. ${q[0]}</summary>Javob: ${q[1]}</details>`).join('')}</section>`)});
+const show=k=>{cur=k;document.querySelectorAll('section').forEach((e,i)=>e.classList.toggle('on',i==k));nav.querySelectorAll('button').forEach((e,i)=>e.classList.toggle('on',i==k))};
+nav.onclick=e=>{if(e.target.dataset.k)show(+e.target.dataset.k)};
+document.querySelectorAll('input[type=range]').forEach(i=>i.oninput=()=>$('#'+i.id+'v').textContent=i.value);
+for(let n=1;n<=6;n++)Anim(n,n-1);
+
+/* Simulyatsiyalar */
+const g1=Gas(mk('s1')),g3=Gas(mk('s3')),g4=Gas(mk('s4'),1),x2=mk('s2'),x5=mk('s5'),x6=mk('s6');
+S.push({sec:0,f(){g1.setN(V('N1'));g1.setT(V('T1'));g1.step();const u=V('N1')*V('T1')/100;$('#o1').innerHTML=`Ichki energiya U ∼ N·T = <b>${u.toFixed(0)}</b> shartli birlik`+bar('U',u/3.6,'#e11d48')}});
+S.push({sec:1,f(){const T=V('T2'),d=V('d2'),a=Math.sqrt(T/300)*3;BG(x2);for(let i=0;i<7;i++)for(let j=0;j<5;j++)D(x2,45+i*d+(Math.random()-.5)*2*a,40+j*d+(Math.random()-.5)*2*a,8,col(T/600));
+ $('#o2').innerHTML=bar('Kinetik energiya Ek (T ga bog\'liq)',T/6,'#22c55e')+bar('Potensial energiya Ep (masofaga bog\'liq)',(d-20)*5,'#f59e0b')+`Ichki energiya = Ek + Ep`}});
+S.push({sec:2,f(){g3.setT(V('T3'));g3.step();const T=V('T3');$('#o3').innerHTML=`T = ${T} K (${T-273}°C). O'rtacha tezlik ≈ <b>${Math.round(517*Math.sqrt(T/300))} m/s</b> (havo)`+bar('Ichki energiya U',T/6,'#e11d48')}});
+S.push({sec:3,f(){g4.tgt(W*(1-.6*V('P4')/100));g4.step();const T=g4.T();$('#o4').innerHTML=`Gaz temperaturasi: <b>${Math.round(T)} K</b> (${Math.round(T-273)}°C)`+bar('Ichki energiya',T/9,'#e11d48')}});
+$('#rs4').onclick=()=>{g4.reset();$('#P4').value=0;$('#P4v').textContent=0};
+const RD=Array(14).fill(20);
+S.push({sec:4,f(){RD[0]=V('H5');RD[13]=V('C5');for(let s=0;s<5;s++){const n=RD.slice();for(let i=1;i<13;i++)n[i]=RD[i]+.2*(RD[i-1]+RD[i+1]-2*RD[i]);n[0]=RD[0];n[13]=RD[13];n.forEach((v,i)=>RD[i]=v)}
+ BG(x5);const tm=performance.now()/100;RD.forEach((T,i)=>{const k=T/100;D(x5,28+i*26+Math.sin(tm*3+i)*(1+5*k),120+Math.cos(tm*4+i*2)*(1+5*k),10,col(k))});TX(x5,'Issiq →→→ Sovuq',130,40);
+ $('#o5').innerHTML=`Sterjen o'rtasi: <b>${RD[7].toFixed(0)}°C</b>. Energiya issiq uchdan sovuq uchga o'tadi.`}});
+$('#rs5').onclick=()=>RD.fill(20);
+S.push({sec:5,f(){const c=V('c6'),m=V('m6'),dT=V('dT6'),Q=c*m*dT;BG(x6);for(let i=0;i<20;i++)D(x6,20+tri(i*53+performance.now()*.05*(1+dT/50),W-40),30+i*9,5,col(dT/100));
+ x6.fillStyle='#f59e0b';x6.fillRect(20,200,Math.min(360,Q/2.1e6*360*4),20);TX(x6,'Q = '+(Q/1000).toFixed(1)+' kJ',20,195);
+ $('#o6').innerHTML=`Q = c·m·Δt = ${c}·${m}·${dT} = <b>${Q.toFixed(0)} J</b> (${(Q/1000).toFixed(1)} kJ)`}});
+let last=performance.now();
+(function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;S.forEach(s=>{if(s.sec==cur)s.f()});A.forEach(a=>{if(a.sec==cur)a.tick(dt)});requestAnimationFrame(loop)})(last);
+show(0);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+const FOOT="9-sinf Fizika • 15-mavzu: Ichki energiya",BEGIN="Ichki energiya • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: ichki energiya",t:"Salom, aziz oʻquvchilar! Bugun ichki energiya mavzusini oʻrganamiz va uni qanday oʻzgartirish mumkinligini koʻramiz."},
+{d:40,h:"1. Ichki energiya nima?",t:"Barcha jismlar molekulalardan iborat. Ular tinimsiz va tartibsiz harakatlanadi hamda bir-biri bilan taʼsirlashadi. Molekulalarning kinetik energiyalari va oʻzaro taʼsir potensial energiyalarining yigʻindisi jismning ichki energiyasi deyiladi. Uning belgisi U, birligi joul. Ekranda molekulalar soni ortgan sari ichki energiya ham ortayotganini koʻrasiz."},
+{d:45,h:"2. Kinetik va potensial energiya",t:"Kinetik energiya molekulalarning harakati bilan bogʻliq: E k teng m v kvadrat boʻlinsin ikki. Potensial energiya esa molekulalar orasidagi masofaga va tortishish-itarishish kuchlariga bogʻliq. Mana, ikki molekula tebranmoqda. Ular uzoqlashganda potensial energiya ortadi, kinetik energiya kamayadi; yaqinlashganda esa aksincha. Ichki energiya — barcha E k va E p ning yigʻindisi."},
+{d:40,h:"3. Temperaturaga bogʻliqligi",t:"Temperatura molekulalar oʻrtacha kinetik energiyasining oʻlchovidir. Jism qizisa, molekulalar tezroq harakatlanadi, kinetik energiya ortadi, demak ichki energiya ham ortadi. Sovisa, kamayadi. Zanjirni eslab qoling: T ortsa, v ortadi, E k ortadi, U ortadi."},
+{d:45,h:"4. Ish bajarish",t:"Ichki energiyani ish bajarish bilan oʻzgartirish mumkin. Jismni ishqalash, siqish, urish uni qizdiradi: tashqi kuch ish bajaradi va ichki energiya ortadi. Mana, porshen gazni siqmoqda, gaz qiziyapti. Jismning oʻzi ish bajarsa, masalan gaz kengaysa, uning ichki energiyasi kamayadi. Ish bajarilganda delta U teng A."},
+{d:55,h:"5. Issiqlik almashinuvi",t:"Ish bajarmasdan ham ichki energiyani oʻzgartirish mumkin — issiqlik almashinuvi bilan. Energiya issiq jismdan sovuq jismga oʻtadi. Uch usuli bor. Birinchisi — issiqlik oʻtkazuvchanlik: molekulalar orqali, asosan qattiq jismlarda. Ikkinchisi — konveksiya: suyuqlik va gaz oqimlari bilan, issiq qatlam koʻtariladi, sovugʻi choʻkadi. Uchinchisi — nurlanish: energiya nur bilan, vakuumda ham uzatiladi, masalan Quyoshdan Yerga."},
+{d:45,h:"6. Misollar",t:"Kundalik hayotdan misollar: qoʻllarni ishqalab isitish, nasos bilan shina shishirganda nasosning qizishi, gugurt chaqish, burgʻilashda burgʻining qizishi. Jismni qizdirish uchun kerak issiqlik: Q teng c m delta t, bunda c — solishtirma issiqlik sigʻimi. Masalan, 1 kilogramm suvni 10 darajaga qizdirish uchun Q teng 4200 karra 1 karra 10, ya’ni 42 000 joul, 42 kilojoul."},
+{d:15,h:"Xulosa",t:"Xulosa: ichki energiya — barcha molekulalar kinetik va potensial energiyalarining yigʻindisi. Uni ish yoki issiqlik almashinuvi bilan oʻzgartiramiz. Eʼtiboringiz uchun rahmat!"}
+];
+const R4=mkR([1,8,18,30],[["Ishqalash, siqish, urish → qiziydi",E],["Tashqi kuch ish bajaradi",E],["U ortadi:  ΔU = A",Y],["Gaz kengaysa: U kamayadi",G]]);
+const R6=mkR([1,5,9,17,25,33],[["Qoʻlni ishqalash → isiydi",E],["Nasos bilan shina shishirish",E],["Gugurt chaqish, burgʻilash",E],["Q = c·m·Δt",Y],["Q = 4200·1·10 = 42 000 J",Y],["Q = 42 kJ",OK]]);
+let P=[];const BX=[60,100,900,395],B1=[60,100,640,370],CB=[50,110,250,370];
+function g4(p){const t=cl((p-.1)/.5);return{vf:.85-.5*t,T:300+200*t}}
+function sceneEnter(i){P=[];if(i==0)P=rp(40,BX,1.2,3);if(i==1||i==3)P=rp(40,B1,1.6,1.6);if(i==4||i==6)P=rp(40,CB,1.4,1.4)}
+function sceneStep(i,p){if(i==0)gas(P,1,BX,5);else if(i==1)gas(P,1,B1,5);else if(i==3)gas(P,Math.sqrt((100+500*cl((p-.1)/.8))/300),B1,5);
+else if(i==4){const g=g4(p);gas(P,Math.sqrt(g.T/300),[CB[0],110+260*(1-g.vf),CB[2],CB[3]],4)}else if(i==6){const vf=.55+.3*Math.cos(6.283*p*S[6].d/3);gas(P,1.1,[CB[0],110+260*(1-vf),CB[2],CB[3]],4)}}
+function spring(x1,x2,y){c.strokeStyle="#e2e8f0";c.lineWidth=2;c.beginPath();c.moveTo(x1,y);for(let i=1;i<12;i++)c.lineTo(x1+(x2-x1)*i/12,y+(i%2?-10:10));c.lineTo(x2,y);c.stroke()}
+function sceneDraw(i,p,lt){
+if(i==0){frame(BX);P.forEach(o=>dot(o.x,o.y,5,col(o.sp)));if(p>.35){c.fillStyle="rgba(2,6,23,.8)";c.fillRect(250,150,460,66);rich("Ichki energiya  U",W/2,198,36,Y)}}
+else if(i==1){const n=Math.round(5+35*cl(p));frame(B1);P.slice(0,n).forEach(o=>dot(o.x,o.y,5,col(o.sp)));c.fillStyle="rgba(15,23,42,.85)";c.fillRect(665,100,270,270);rich("N = "+n+" ta",800,160,30,E);c.fillStyle=G;c.font="600 16px sans-serif";c.fillText("Ichki energiya U",800,215);c.fillStyle="#1e293b";c.fillRect(690,235,220,18);c.fillStyle="#e11d48";c.fillRect(690,235,220*n/40,18);rich("N ↑  ⇒  U ↑",800,300,26,Y)}
+else if(i==2){const ph=6.283*lt/8,d=70+40*Math.sin(ph),y=190,cx=280;spring(cx-d,cx+d,y);dot(cx-d,y,16,"#38bdf8");dot(cx+d,y,16,"#38bdf8");
+const ek=Math.cos(ph)**2,ep=Math.sin(ph)**2;c.fillStyle="#22c55e";c.fillRect(600,330-130*ek,60,130*ek);c.fillStyle="#f59e0b";c.fillRect(720,330-130*ep,60,130*ep);rich("E_{k}",630,356,22,E);rich("E_{p}",750,356,22,E);rich("E_{k} + E_{p} = U",690,120,24,Y);
+rich("E_{k} = m·v² / 2",cx,300,22,"#4ade80");if(lt>18)rich("masofa ↑ ⇒ E_{p} ↑,  E_{k} ↓",cx,345,20,"#fbbf24")}
+else if(i==3){const T=100+500*cl((p-.1)/.8);frame(B1);P.forEach(o=>dot(o.x,o.y,5,col(o.sp*Math.sqrt(T/300))));thermo(790,120,330,(T-100)/500,"T = "+Math.round(T)+" K");if(lt>16)rich("T ↑  ⇒  v ↑  ⇒  E_{k} ↑  ⇒  U ↑",W/2,402,22,Y)}
+else if(i==4){const g=g4(p);cylx(CB[0],110,200,260,g.vf,{});P.forEach(o=>dot(o.x,o.y,4,col(o.sp*Math.sqrt(g.T/300))));if(p>.05&&p<.65)arrow(150,70,150,100,"#fbbf24",6);rich("T = "+Math.round(g.T)+" K",410,200,30,"#fb923c");rich("siqish = ish",410,245,22,G);panel(R4,lt,18)}
+else if(i==5){const ph=lt<18?0:lt<36?1:2,u=ph==0?lt/18:ph==1?(lt-18)/18:(lt-36)/19;
+if(ph==0){for(let k=0;k<10;k++){const kk=cl(u*1.8-k*.13)*.9+.1;dot(80+k*45+Math.sin(lt*9+k)*(1+5*kk),230+Math.cos(lt*11+k*2)*(1+5*kk),14,mix(kk))}flame(40,275,lt,1)}
+else if(ph==1){c.strokeStyle="#64748b";c.lineWidth=6;c.strokeRect(160,140,280,170);for(let k=0;k<16;k++){const s=((k/16+(lt-18)*.05)%1)*900,pp=s<170?[160,310-s]:s<450?[160+s-170,140]:s<620?[440,140+s-450]:[440-(s-620),310];dot(pp[0],pp[1],6,mix(pp[0]<300?.9:.15))}flame(190,330,lt,.8)}
+else{dot(110,230,44,"#facc15");c.strokeStyle="#fde047";c.lineWidth=3;c.setLineDash([8,8]);c.lineDashOffset=-lt*30;for(let k=0;k<5;k++){c.beginPath();c.moveTo(165,190+k*20);c.lineTo(390,190+k*20);c.stroke()}c.setLineDash([]);dot(440,230,36,mix(.1+.7*cl(u)));rich("Quyosh",110,300,18,E);rich("Yer",440,290,18,E);rich("vakuumda ham",275,160,18,G)}
+[["Issiqlik oʻtkazuvchanlik","qattiq jismlarda"],["Konveksiya","suyuqlik va gaz oqimi"],["Nurlanish","nur bilan, vakuumda ham"]].forEach((m,k)=>{const on=k==ph;c.globalAlpha=on?1:.55;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(590,110+k*90,340,76);c.fillStyle=on?"#fbbf24":"#475569";c.fillRect(590,110+k*90,6,76);rich(m[0],610,146+k*90,21,on?Y:E,"l");rich(m[1],610,172+k*90,16,G,"l");c.globalAlpha=1})}
+else if(i==6){const vf=.55+.3*Math.cos(6.283*lt/3),tt=cl(lt/30);cylx(CB[0],110,200,260,vf,{});P.forEach(o=>dot(o.x,o.y,4,col(o.sp*(1+tt))));rich("Nasos qiziydi",150,398,18,"#fb923c");panel(R6,lt,19)}
+else if(i==7)bullets(["Ichki energiya U = ΣE_{k} + ΣE_{p}  (J)","T ↑  ⇒  v ↑  ⇒  E_{k} ↑  ⇒  U ↑","Oʻzgartirish: ish (ΔU = A) yoki issiqlik almashinuvi (Q)"],lt,3.5,170,22)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

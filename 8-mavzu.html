@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fizika 9-sinf — Masalalar yechish</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#f0f9ff;color:#0f172a}
+header{background:linear-gradient(90deg,#2563eb,#7c3aed);color:#fff;padding:14px;text-align:center}h1{margin:0;font-size:1.2rem}
+nav{display:flex;flex-wrap:wrap;gap:6px;padding:10px;justify-content:center}
+nav button{border:0;border-radius:20px;padding:8px 12px;background:#fff;font-weight:600;cursor:pointer;box-shadow:0 1px 3px #0003}
+nav button.on{background:#f59e0b;color:#fff}
+main{max-width:820px;margin:auto;padding:0 10px 30px}
+.card{background:#fff;border-radius:14px;padding:14px;margin:10px 0;box-shadow:0 2px 6px #0002}
+h2,h3{margin:.2em 0 .5em}table{border-collapse:collapse;width:100%}td,th{border:1px solid #cbd5e1;padding:6px;text-align:center}th{background:#dbeafe}
+canvas{width:100%;background:#fff;border-radius:10px;border:1px solid #cbd5e1;display:block}
+.sl{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:center;margin:6px 0;font-size:.9rem}.sl input{width:100%}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.btns button{flex:1;min-width:110px;border:0;border-radius:10px;padding:12px;font-weight:700;font-size:1rem;color:#fff;background:#16a34a}
+.btns button:nth-child(2){background:#f59e0b}.btns button:nth-child(3){background:#dc2626}
+.rd{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:6px;margin:8px 0}
+.rd div{background:#fef3c7;border-radius:8px;padding:6px;text-align:center;font-size:.85rem}
+.gr{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}.gr[hidden]{display:none}
+details{background:#ecfccb;border-radius:8px;padding:8px;margin-bottom:10px}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:10px;padding:12px 16px;font-weight:700;font-size:1rem;color:#fff;background:#16a34a;cursor:pointer}
+.vbar button.alt{background:#64748b}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem}
+.vbar select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid #cbd5e1}
+.vnote{font-size:.85rem;color:#475569;margin:6px 0 0}
+</style></head><body>
+<header><h1>Fizika · 9-sinf · 8-mavzu: Masalalar yechish</h1></header>
+<nav id="nav"></nav><main id="app"></main>
+<main id="vmain"><div class="card" id="vid"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></main>
+<script>
+const $=s=>document.querySelector(s);
+const fm=x=>typeof x=='string'?x:(x!==0&&Math.abs(x)<.01)?x.toExponential(2):(+x).toFixed(2);
+let cur=0,p={},t=0,run=false,last=0,K=1;
+
+function arr(c,x1,y1,x2,y2,col,l){
+ if(Math.hypot(x2-x1,y2-y1)<4)return;
+ c.strokeStyle=c.fillStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+ const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);
+ c.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));c.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));c.fill();
+ c.font='bold 14px sans-serif';c.fillText(l,(x1+x2)/2-6,(y1+y2)/2-8);}
+function ground(c){c.fillStyle='#86efac';c.fillRect(0,180,600,60);}
+
+/* Yo'lda harakat: 1, 2, 5, 7-masalalar */
+function line(c,p,t,S,q){
+ const E=q.S(p,q.T(p)),X=Math.max(E.x,1e-6),vm=Math.max(E.v,1e-6);ground(c);
+ const px=100+S.x/X*330;
+ c.fillStyle='#000';c.font='12px sans-serif';c.fillText('0 m',95,200);c.fillText(fm(E.x)+' m',420,200);
+ c.fillStyle='#3b82f6';c.fillRect(px,130,50,40);c.fillStyle='#111';
+ [px+10,px+40].forEach(w=>{c.beginPath();c.arc(w,172,8,0,7);c.fill()});
+ if(S.sp!==undefined){c.strokeStyle='#7c3aed';c.lineWidth=2;c.beginPath();const x0=px+50,L=20+S.sp*2;c.moveTo(x0,150);
+  for(let i=1;i<=8;i++)c.lineTo(x0+L*i/8,150+(i%2?-8:8));c.lineTo(x0+L,150);c.stroke();c.fillText('prujina',x0+2,135);}
+ arr(c,px+25,110,px+25+70*S.v/vm,110,'#16a34a','v');
+ (S.A||[]).forEach((a,i)=>arr(c,px+25,88-i*22,px+25+a[4]*(20+70*Math.min(1,a[0]/a[1])),88-i*22,a[2],a[3]));}
+
+function fall(c,p,t,S){
+ c.fillStyle='#86efac';c.fillRect(0,215,600,25);c.strokeStyle='#64748b';c.lineWidth=1;
+ c.beginPath();c.moveTo(150,20);c.lineTo(150,215);c.stroke();c.fillStyle='#000';c.font='13px sans-serif';
+ c.fillText('h = '+p.h+' m',60,120);
+ const y=20+S.x/p.h*180;c.fillStyle='#ef4444';c.beginPath();c.arc(300,y,12,0,7);c.fill();
+ const vm=10*Math.sqrt(2*p.h/10);
+ arr(c,300,y+14,300,y+14+Math.max(0,Math.min(60*S.v/vm,215-y-14)),'#16a34a','v');
+ arr(c,340,y,340,y+Math.max(0,Math.min(30,215-y)),'#dc2626','g');}
+
+function circ(c,p,t,S){
+ const cx=300,cy=120,R=25+p.R*16,a=S.ang,x=cx+R*Math.cos(a),y=cy-R*Math.sin(a);
+ c.strokeStyle='#94a3b8';c.lineWidth=2;c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();
+ c.fillStyle='#000';c.beginPath();c.arc(cx,cy,3,0,7);c.fill();
+ c.setLineDash([5,4]);c.beginPath();c.moveTo(cx,cy);c.lineTo(x,y);c.stroke();c.setLineDash([]);
+ c.font='13px sans-serif';c.fillText('R = '+p.R+' m',cx+4,cy+16);
+ c.fillStyle='#ef4444';c.beginPath();c.arc(x,y,10,0,7);c.fill();
+ arr(c,x,y,x-55*Math.sin(a),y-55*Math.cos(a),'#16a34a','v');
+ arr(c,x,y,x+45*(cx-x)/R,y+45*(cy-y)/R,'#dc2626','a');}
+
+function grav(c,p,t,S){
+ const r1=8+Math.cbrt(p.m1)*4,r2=8+Math.cbrt(p.m2)*4,d=40+p.r*80,w=Math.sin(t*4)*4,y=120;
+ const x1=300-d/2+w,x2=300+d/2-w,L=(Math.log10(S.F)+13)*10;
+ c.fillStyle='#3b82f6';c.beginPath();c.arc(x1,y,r1,0,7);c.fill();
+ c.fillStyle='#f59e0b';c.beginPath();c.arc(x2,y,r2,0,7);c.fill();
+ arr(c,x1+r1,y-4,x1+r1+L,y-4,'#dc2626','F');arr(c,x2-r2,y+4,x2-r2-L,y+4,'#dc2626','F');
+ c.strokeStyle='#000';c.lineWidth=1;c.beginPath();c.moveTo(x1,y+50);c.lineTo(x2,y+50);c.stroke();
+ c.fillStyle='#000';c.font='13px sans-serif';c.fillText('r = '+p.r+' m',290,y+68);
+ c.fillText('m₁ = '+p.m1+' kg',x1-25,y-r1-8);c.fillText('m₂ = '+p.m2+' kg',x2-25,y-r2-8);}
+
+function coll(c,p,t,S,q){
+ const E=q.S(p,q.T(p)),w1=30+p.m1*5,w2=30+p.m2*5,sc=(540-w1-w2)/Math.max(E.x,1);ground(c);
+ const a=30+S.x*sc,b=30+w1+4*sc+S.x2*sc;
+ c.fillStyle='#3b82f6';c.fillRect(a,140,w1,40);c.fillStyle='#f59e0b';c.fillRect(b,140,w2,40);
+ c.fillStyle='#fff';c.font='bold 13px sans-serif';c.fillText(p.m1+' kg',a+4,165);c.fillText(p.m2+' kg',b+4,165);
+ arr(c,a+w1/2,120,a+w1/2+70*S.v/p.v1,120,'#16a34a','v₁');
+ if(S.after)arr(c,b+w2/2,100,b+w2/2+70*S.v/p.v1,100,'#16a34a','v₂');}
+
+function gr(id,key,lab){
+ const cv=$(id),c=cv.getContext('2d'),q=P[cur],T=q.T(p),N=60,pts=[];let m=1e-9;
+ for(let i=0;i<=N;i++){const s=q.S(p,T*i/N)[key];pts.push(s);m=Math.max(m,s)}
+ c.clearRect(0,0,300,150);c.strokeStyle='#64748b';c.lineWidth=1;c.beginPath();c.moveTo(35,10);c.lineTo(35,125);c.lineTo(290,125);c.stroke();
+ c.strokeStyle='#2563eb';c.lineWidth=2;c.beginPath();
+ pts.forEach((s,i)=>{const x=35+i/N*255,y=125-s/m*110;i?c.lineTo(x,y):c.moveTo(x,y)});c.stroke();
+ const cs=q.S(p,t)[key];c.fillStyle='#ef4444';c.beginPath();c.arc(35+t/T*255,125-cs/m*110,5,0,7);c.fill();
+ c.fillStyle='#000';c.font='12px sans-serif';c.fillText(lab,45,14);c.fillText(fm(m),0,24);c.fillText('0',24,138);c.fillText(T.toFixed(1)+' s',250,142);}
+
+const P=[
+{n:'Tekis harakat',c:'Velosipedchi to‘g‘ri yo‘lda tekis harakatlanib, 5 m/s tezlik bilan 20 s yurdi. U qancha masofani bosib o‘tdi?',
+ g:'v = 5 m/s<br>t = 20 s',f:'s = ?',
+ s:['Tekis harakat formulasi: s = v · t','s = 5 m/s · 20 s','s = 100 m'],a:'s = 100 m. Birlik: (m/s)·s = m ✓',
+ sl:[['v','Tezlik v',1,20,5,1,'m/s'],['T','Vaqt t',1,30,20,1,'s']],T:p=>p.T,D:line,
+ S:(p,t)=>{const x=p.v*t;return{x,v:p.v,r:[['v',p.v,'m/s'],['a',0,'m/s²'],['s',x,'m']]}}},
+{n:'Tekis tezlanuvchan harakat',c:'Avtomobil 2 m/s tezlik bilan ketayotib, 1,5 m/s² tezlanish bilan 8 s davomida tezlashdi. Oxirgi tezligi va bosib o‘tgan yo‘lini toping.',
+ g:'v₀ = 2 m/s<br>a = 1,5 m/s²<br>t = 8 s',f:'v = ?<br>s = ?',
+ s:['v = v₀ + a·t = 2 + 1,5·8 = 14 m/s','s = v₀·t + a·t²/2 = 2·8 + 1,5·64/2','s = 16 + 48 = 64 m'],a:'v = 14 m/s, s = 64 m. Birlik: (m/s²)·s = m/s ✓',
+ sl:[['v0','Boshlang‘ich tezlik v₀',0,20,2,1,'m/s'],['a','Tezlanish a',.5,5,1.5,.5,'m/s²'],['T','Vaqt t',1,15,8,1,'s']],T:p=>p.T,D:line,
+ S:(p,t)=>{const v=p.v0+p.a*t,x=p.v0*t+p.a*t*t/2;return{x,v,r:[['v',v,'m/s'],['a',p.a,'m/s²'],['s',x,'m']]}}},
+{n:'Erkin tushish',c:'Tosh 45 m balandlikdan boshlang‘ich tezliksiz tashlandi. U necha sekundda yerga tushadi va tezligi qancha bo‘ladi? (g = 10 m/s², havo qarshiligi hisobga olinmasin)',
+ g:'h = 45 m<br>v₀ = 0<br>g = 10 m/s²',f:'t = ?<br>v = ?',
+ s:['h = g·t²/2 ⇒ t = √(2h/g)','t = √(2·45/10) = √9 = 3 s','v = g·t = 10·3 = 30 m/s'],a:'t = 3 s, v = 30 m/s. Birlik: √(m/(m/s²)) = s ✓',
+ sl:[['h','Balandlik h',5,80,45,5,'m']],T:p=>Math.sqrt(2*p.h/10),D:fall,
+ S:(p,t)=>{const u=Math.min(t,Math.sqrt(2*p.h/10)),x=5*u*u,v=10*u;return{x,v,r:[['v',v,'m/s'],['g',10,'m/s²'],['s',x,'m'],['h qoldi',p.h-x,'m']]}}},
+{n:'Aylana bo‘ylab tekis harakat',c:'Karusel radiusi 2 m. U bir marta to‘liq aylanishga 4 s sarflaydi. Karuselda o‘tirgan bolaning chiziqli tezligi va markazga intilma tezlanishini toping.',
+ g:'R = 2 m<br>T = 4 s',f:'v = ?<br>a = ?',
+ s:['v = 2πR/T = 2·3,14·2/4 ≈ 3,14 m/s','a = v²/R = 3,14²/2','a ≈ 4,93 m/s²'],a:'v ≈ 3,14 m/s, a ≈ 4,93 m/s² (markazga yo‘nalgan). Birlik: (m/s)²/m = m/s² ✓',
+ sl:[['R','Radius R',1,5,2,.5,'m'],['Tp','Davr T',1,10,4,.5,'s']],T:()=>10,D:circ,
+ S:(p,t)=>{const v=2*Math.PI*p.R/p.Tp,w=2*Math.PI/p.Tp;return{x:v*t,v,ang:w*t,r:[['v',v,'m/s'],['ω',w,'rad/s'],['a',v*v/p.R,'m/s²'],['s',v*t,'m']]}}},
+{n:'Nyuton qonunlari',c:'Muz ustidagi massasi 20 kg chana 60 N kuch bilan tortilmoqda (ishqalanish yo‘q). Chananing tezlanishi va 5 s dan keyingi tezligini toping.',
+ g:'m = 20 kg<br>F = 60 N<br>t = 5 s',f:'a = ?<br>v = ?',
+ s:['Nyutonning 2-qonuni: a = F/m = 60/20 = 3 m/s²','v = a·t = 3·5 = 15 m/s'],a:'a = 3 m/s², v = 15 m/s. Birlik: N/kg = m/s² ✓',
+ sl:[['m','Massa m',1,50,20,1,'kg'],['F','Kuch F',1,100,60,1,'N'],['T','Vaqt t',1,10,5,1,'s']],T:p=>p.T,D:line,
+ S:(p,t)=>{const a=p.F/p.m,x=a*t*t/2;return{x,v:a*t,A:[[p.F,100,'#f59e0b','F',1]],r:[['v',a*t,'m/s'],['a',a,'m/s²'],['F',p.F,'N'],['s',x,'m']]}}},
+{n:'Butun olam tortishish qonuni',c:'Ikki bola bir-biridan 1 m masofada turibdi: massalari 60 kg va 80 kg. Ular bir-birini qanday kuch bilan tortadi? (G = 6,67·10⁻¹¹ N·m²/kg²)',
+ g:'m₁ = 60 kg<br>m₂ = 80 kg<br>r = 1 m<br>G = 6,67·10⁻¹¹',f:'F = ?',
+ s:['F = G·m₁·m₂ / r²','F = 6,67·10⁻¹¹ · 60 · 80 / 1²','F = 6,67·10⁻¹¹ · 4800 ≈ 3,2·10⁻⁷ N'],a:'F ≈ 3,2·10⁻⁷ N — juda kichik, shuning uchun sezmaymiz. Masofa 2 marta oshsa, kuch 4 marta kamayadi ✓',
+ sl:[['m1','Massa m₁',1,100,60,1,'kg'],['m2','Massa m₂',1,100,80,1,'kg'],['r','Masofa r',.5,5,1,.5,'m']],T:()=>Infinity,D:grav,G:false,
+ S:(p,t)=>{const F=6.67e-11*p.m1*p.m2/p.r**2;return{F,r:[['F₁ = F₂',F.toExponential(2),'N'],['r',p.r,'m'],['m₁·m₂',p.m1*p.m2,'kg²']]}}},
+{n:'Ishqalanish va elastiklik kuchi',c:'Massasi 10 kg yashik polda turibdi. Uni prujinali dinamometr (bikrlik k = 200 N/m) bilan tortishmoqda, prujina 15 sm (0,15 m) cho‘zilgan. Ishqalanish koeffitsiyenti μ = 0,2. Yashikning tezlanishini toping. (g = 10 m/s²)',
+ g:'m = 10 kg<br>k = 200 N/m<br>x = 0,15 m<br>μ = 0,2',f:'a = ?',
+ s:['Guk qonuni: F = k·x = 200·0,15 = 30 N','Tayanch reaksiyasi: N = m·g = 10·10 = 100 N','Ishqalanish kuchi: Fish = μ·N = 0,2·100 = 20 N','a = (F − Fish)/m = (30 − 20)/10 = 1 m/s²'],a:'a = 1 m/s². Birlik: N/kg = m/s² ✓. Agar F ≤ Fish bo‘lsa, yashik qimirlamaydi.',
+ sl:[['m','Massa m',1,30,10,1,'kg'],['mu','Ishqalanish μ',0,.6,.2,.05,''],['x','Prujina cho‘zilishi x',0,30,15,1,'sm']],T:()=>6,D:line,
+ S:(p,t)=>{const F=2*p.x,Fs=p.mu*p.m*10,a=Math.max(0,(F-Fs)/p.m),x=a*t*t/2;
+  return{x,v:a*t,sp:p.x,A:[[F,100,'#f59e0b','F',1],[Fs,100,'#dc2626','Fish',-1]],r:[['v',a*t,'m/s'],['a',a,'m/s²'],['F',F,'N'],['Fish',Fs,'N'],['s',x,'m']]}}},
+{n:'Impulsning saqlanish qonuni',c:'Massasi 2 kg aravacha 3 m/s tezlik bilan harakatlanib, tinch turgan 1 kg massali aravachaga urildi va ular yopishib birga harakatlandi. Urilishdan keyingi tezlikni toping.',
+ g:'m₁ = 2 kg<br>v₁ = 3 m/s<br>m₂ = 1 kg<br>v₂ = 0',f:'v = ?',
+ s:['Urilishdan oldin: p = m₁v₁ + m₂v₂ = 2·3 + 0 = 6 kg·m/s','Saqlanish qonuni: m₁v₁ = (m₁ + m₂)·v','v = 6/(2+1) = 2 m/s'],a:'v = 2 m/s. Birlik: kg·(m/s)/kg = m/s ✓',
+ sl:[['m1','Massa m₁',1,10,2,1,'kg'],['v1','Tezlik v₁',1,10,3,1,'m/s'],['m2','Massa m₂',1,10,1,1,'kg']],T:p=>4/p.v1+3,D:coll,
+ S:(p,t)=>{const tc=4/p.v1,v=p.m1*p.v1/(p.m1+p.m2),af=t>=tc,x=af?4+v*(t-tc):p.v1*t,vv=af?v:p.v1;
+  return{x,v:vv,x2:af?x-4:0,after:af,r:[['v₁',vv,'m/s'],['v₂',af?v:0,'m/s'],['p',af?(p.m1+p.m2)*v:p.m1*p.v1,'kg·m/s']]}}}
+];
+
+const EX=`<div class=card><h2>Mustaqil ishlash uchun masalalar</h2>${[
+['Velosipedchi 10 m/s tezlik bilan ketayotib tormoz berdi va 5 s da to‘xtadi. Tezlanishi va tormozlanish yo‘lini toping.','a = (0 − 10)/5 = −2 m/s² (modul 2 m/s²); s = v₀·t/2 = 10·5/2 = 25 m'],
+['Tosh boshlang‘ich tezliksiz 4 s davomida tushdi (g = 10 m/s²). U qanday balandlikdan tushgan va yerga urilish tezligi qancha?','h = g·t²/2 = 10·16/2 = 80 m; v = g·t = 40 m/s'],
+['Massasi 60 kg bola 2 m/s tezlik bilan yugurib, tinch turgan 40 kg massali aravachaga sakrab chiqdi. Ikkalasining tezligi qancha?','m₁v₁ = (m₁+m₂)·v ⇒ v = 60·2/100 = 1,2 m/s']
+].map((x,i)=>`<p><b>${i+1}.</b> ${x[0]}</p><details><summary>Javob</summary>${x[1]}</details>`).join('')}</div>`;
+
+function draw(){
+ const q=P[cur],S=q.S(p,t),c=$('#cv').getContext('2d');
+ c.clearRect(0,0,600,240);c.fillStyle='#e0f2fe';c.fillRect(0,0,600,240);q.D(c,p,t,S,q);
+ $('#rd').innerHTML=(q.G===false?[]:[['t',t,'s']]).concat(S.r).map(r=>`<div><b>${r[0]}</b><br>${fm(r[1])} ${r[2]}</div>`).join('');
+ if(q.G!==false){gr('#g1','v','v–t grafik');gr('#g2','x','s–t grafik')}}
+function go(){if(t>=P[cur].T(p))t=0;run=true}
+function rs(){t=0;run=false;draw()}
+function show(i){
+ cur=i;run=false;t=0;
+ document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('on',j==i));
+ if(i==8){$('#app').innerHTML=EX;return}
+ const q=P[i];p={};q.sl.forEach(s=>p[s[0]]=s[4]);
+ $('#app').innerHTML=`<div class=card><h2>${i+1}-masala. ${q.n}</h2><p>${q.c}</p></div>
+<div class=card><table><tr><th>Berilgan</th><th>Topish kerak</th></tr><tr><td>${q.g}</td><td>${q.f}</td></tr></table></div>
+<div class=card><h3>Yechim</h3><ol>${q.s.map(x=>'<li>'+x+'</li>').join('')}</ol><p><b>Javob:</b> ${q.a}</p></div>
+<div class=card><h3>Simulyatsiya</h3><canvas id=cv width=600 height=240></canvas><div class=rd id=rd></div>
+<div class=gr ${q.G===false?'hidden':''}><canvas id=g1 width=300 height=150></canvas><canvas id=g2 width=300 height=150></canvas></div>
+${q.sl.map(s=>`<div class=sl><label>${s[1]}</label><input type=range id=s_${s[0]} min=${s[2]} max=${s[3]} step=${s[5]} value=${s[4]}><b id=o_${s[0]}>${s[4]} ${s[6]}</b></div>`).join('')}
+<div class=sl><label>Animatsiya tezligi</label><input type=range id=sK min=.5 max=3 step=.5 value=${K}><b>×</b></div>
+<div class=btns><button onclick="go()">▶ Boshlash</button><button onclick="run=false">⏸ To‘xtatish</button><button onclick="rs()">↺ Qayta boshlash</button></div></div>`;
+ q.sl.forEach(s=>$('#s_'+s[0]).oninput=e=>{p[s[0]]=+e.target.value;$('#o_'+s[0]).textContent=e.target.value+' '+s[6];t=0;run=false;draw()});
+ $('#sK').oninput=e=>K=+e.target.value;draw();}
+$('#nav').innerHTML=P.map((q,i)=>`<button onclick="show(${i})">${i+1}. ${q.n}</button>`).join('')+'<button onclick="show(8)">Mustaqil ish</button>';
+function loop(ts){const dt=Math.min((ts-last)/1000,.1)*K;last=ts;
+ if(run&&cur<8){t+=dt;const T=P[cur].T(p);if(t>=T){t=T;run=false}draw()}requestAnimationFrame(loop)}
+show(0);requestAnimationFrame(loop);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const FOOT="9-sinf Fizika • Masalalar yechish",BEGIN="Masalalar yechish • 5 daqiqa";
+const S=[
+{d:12,h:"Masalalar yechish: reja",t:"Salom, aziz oʻquvchilar! Bugun kinematika va dinamikadan sakkizta masalani birgalikda yechamiz."},
+{d:34,h:"1-masala. Tekis harakat",t:"Birinchi masala. Velosipedchi toʻgʻri yoʻlda tekis harakatlanib, 5 metr bir sekund tezlik bilan 20 sekund yurdi. U qancha masofa bosdi? Tekis harakat formulasi: s teng v karra t. Qiymatlarni qoʻyamiz: 5 karra 20 teng 100 metr. Birlik: metr bir sekund karra sekund — metr. Javob: 100 metr."},
+{d:34,h:"2-masala. Tekis tezlanuvchan harakat",t:"Ikkinchi masala. Avtomobil 2 metr bir sekund tezlik bilan ketayotib, 1,5 metr bir sekund kvadrat tezlanish bilan 8 sekund tezlashdi. Tezlik: 2 plyus 1,5 karra 8, 14 metr bir sekund. Yoʻl: 2 karra 8 plyus 1,5 karra 64 boʻlinsin 2, ya’ni 16 plyus 48, 64 metr."},
+{d:34,h:"3-masala. Erkin tushish",t:"Uchinchi masala: erkin tushish. Tosh 45 metr balandlikdan boshlangʻich tezliksiz tashlandi. Balandlik h teng g t kvadrat boʻlinsin ikki, bundan t teng ildiz ostida ikki h boʻlinsin g, ya’ni ildiz ostida 9, bu 3 sekund. Tezlik v teng g karra t, 10 karra 3, 30 metr bir sekund."},
+{d:34,h:"4-masala. Aylana boʻylab tekis harakat",t:"Toʻrtinchi masala: aylana boʻylab tekis harakat. Karusel radiusi 2 metr, bir aylanishga 4 sekund ketadi. Chiziqli tezlik: v teng ikki pi R boʻlinsin T, taxminan 3,14 metr bir sekund. Markazga intilma tezlanish: a teng v kvadrat boʻlinsin R, taxminan 4,93 metr bir sekund kvadrat, markazga yoʻnalgan."},
+{d:34,h:"5-masala. Nyuton qonunlari",t:"Beshinchi masala: Nyuton qonunlari. Muz ustidagi massasi 20 kilogramm chana 60 nyuton kuch bilan tortilmoqda, ishqalanish yoʻq. Nyutonning ikkinchi qonuniga koʻra, a teng F boʻlinsin m, 60 boʻlinsin 20, 3 metr bir sekund kvadrat. Besh sekunddan keyin tezlik 3 karra 5, 15 metr bir sekund."},
+{d:34,h:"6-masala. Butun olam tortishish qonuni",t:"Oltinchi masala: butun olam tortishish qonuni. Ikki bola bir-biridan 1 metr masofada turibdi, massalari 60 va 80 kilogramm. F teng G m bir m ikki boʻlinsin r kvadrat. Hisoblasak, taxminan 3,2 karra 10 ning minus 7-darajasi nyuton. Bu juda kichik, shuning uchun biz buni sezmaymiz. Masofa ikki marta oshsa, kuch toʻrt marta kamayadi."},
+{d:34,h:"7-masala. Ishqalanish va elastiklik kuchi",t:"Yettinchi masala: ishqalanish va elastiklik kuchi. Massasi 10 kilogramm yashik polda turibdi. Uni bikrligi 200 nyuton bir metr boʻlgan dinamometr bilan tortishmoqda, prujina 15 santimetr choʻzilgan. Guk qonuniga koʻra F teng k x, 30 nyuton. Tayanch reaksiyasi 100 nyuton, ishqalanish kuchi 20 nyuton. Tezlanish: 30 minus 20 boʻlinsin 10, 1 metr bir sekund kvadrat."},
+{d:34,h:"8-masala. Impulsning saqlanish qonuni",t:"Sakkizinchi masala: impulsning saqlanish qonuni. Massasi 2 kilogramm aravacha 3 metr bir sekund tezlik bilan harakatlanib, tinch turgan 1 kilogramm aravachaga urildi va ular yopishib ketdi. Dastlabki impuls 6 kilogramm metr bir sekund. Saqlanish qonuniga koʻra, 6 teng 3 karra v, bundan v teng 2 metr bir sekund."},
+{d:16,h:"Xulosa: asosiy formulalar",t:"Xulosa: har bir masalada berilganlarni yozing, formulani tanlang, hisoblang va birliklarni tekshiring. Eʼtiboringiz uchun rahmat!"}
+];
+const T0=[1,5,11,17,23,29],mkR=a=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+const R=[null,
+mkR([["v = 5 m/s,  t = 20 s",E],["s = v·t",Y],["s = 5·20 = 100 m",Y],["Birlik: (m/s)·s = m ✓",G],["Javob: s = 100 m",OK]]),
+mkR([["v_{0} = 2 m/s,  a = 1,5 m/s²",E],["t = 8 s",E],["v = v_{0} + a·t = 14 m/s",Y],["s = v_{0}·t + a·t²/2 = 64 m",Y],["Javob: v = 14 m/s, s = 64 m",OK]]),
+mkR([["h = 45 m,  v_{0} = 0,  g = 10 m/s²",E],["t = √(2h/g) = √9 = 3 s",Y],["v = g·t = 10·3 = 30 m/s",Y],["Javob: t = 3 s, v = 30 m/s",OK]]),
+mkR([["R = 2 m,  T = 4 s",E],["v = 2πR / T ≈ 3,14 m/s",Y],["a = v² / R ≈ 4,93 m/s²",Y],["Javob: v ≈ 3,14 m/s",OK],["a ≈ 4,93 m/s² (markazga)",OK]]),
+mkR([["m = 20 kg,  F = 60 N,  t = 5 s",E],["a = F / m = 60 / 20 = 3 m/s²",Y],["v = a·t = 3·5 = 15 m/s",Y],["Javob: a = 3 m/s², v = 15 m/s",OK]]),
+mkR([["m_{1} = 60 kg,  m_{2} = 80 kg",E],["r = 1 m,  G = 6,67·10⁻¹¹",E],["F = G·m_{1}·m_{2} / r²",Y],["F ≈ 3,2·10⁻⁷ N",OK],["r × 2  ⇒  F 4 marta kam",G]]),
+mkR([["m = 10 kg,  k = 200 N/m,  x = 0,15 m",E],["F = k·x = 200·0,15 = 30 N",Y],["N = m·g = 100 N",Y],["F_{ish} = μ·N = 0,2·100 = 20 N",Y],["a = (F − F_{ish}) / m = 1 m/s²",OK]]),
+mkR([["m_{1} = 2 kg,  v_{1} = 3 m/s",E],["m_{2} = 1 kg,  v_{2} = 0",E],["p = 2·3 + 0 = 6 kg·m/s",Y],["m_{1}v_{1} = (m_{1} + m_{2})·v",Y],["v = 6 / 3 = 2 m/s",OK]])];
+function sceneEnter(i){}
+function sceneStep(i,p){}
+function sceneDraw(i,p,lt){
+const tau=cl((p-.1)/.8);
+if(i==0){const N=["1. Tekis harakat","2. Tekis tezlanuvchan harakat","3. Erkin tushish","4. Aylana boʻylab harakat","5. Nyuton qonunlari","6. Butun olam tortishish","7. Ishqalanish va elastiklik","8. Impulsning saqlanishi"];
+N.forEach((s,k)=>{const al=cl(lt*1.3-k*.8);if(al<=0)return;c.globalAlpha=al;c.textAlign="left";c.fillStyle=E;c.font="600 23px sans-serif";c.fillText(s,k<4?70:500,150+(k%4)*58);c.globalAlpha=1});c.textAlign="center"}
+else if(i==1){ground(334);const x=60+360*tau;cart(x,334,70,"#4ade80","");arr(x+70,305,x+120,305,OK,"v = 5 m/s",x+40,278);rich("t = "+fx(20*tau)+" s      s = "+fx(100*tau)+" m",300,200,22,Y);panel(R[1],lt,19)}
+else if(i==2){ground(334);const t=8*tau,s=2*t+.75*t*t,v=2+1.5*t,x=60+370*s/64;cart(x,334,70,"#f59e0b","");arr(x+70,305,x+80+v*3,305,"#fbbf24","v",x+95,285);rich("t = "+fx(t)+" s      v = "+fx(v)+" m/s",300,175,22,Y);rich("s = "+fx(s)+" m",300,212,22,Y);panel(R[2],lt,19)}
+else if(i==3){const u=cl((p-.15)/.6),y=98+270*u*u;ground(380);c.fillStyle="#334155";c.fillRect(330,110,70,270);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(400,110);c.lineTo(440,110);c.stroke();
+arrow(470,110,470,380,"#94a3b8");arrow(470,380,470,110,"#94a3b8");c.fillStyle="#cbd5e1";c.font="700 16px sans-serif";c.fillText("h = 45 m",523,250);
+dot(420,y,12,"#fbbf24");rich("t = "+fx(3*u)+" s",50,160,22,Y,"l");rich("v = "+fx(30*u)+" m/s",50,198,22,Y,"l");rich("g = 10 m/s²",50,236,22,G,"l");panel(R[3],lt,19)}
+else if(i==4){const cx=300,cy=235,Rp=90,a=2*Math.PI*2*tau,bx=cx+Rp*Math.cos(a),by=cy-Rp*Math.sin(a);
+c.strokeStyle="#94a3b8";c.lineWidth=2;c.beginPath();c.arc(cx,cy,Rp,0,6.283);c.stroke();dot(cx,cy,4,E);c.setLineDash([5,4]);c.beginPath();c.moveTo(cx,cy);c.lineTo(bx,by);c.stroke();c.setLineDash([]);
+dot(bx,by,12,"#fbbf24");arr(bx,by,bx-55*Math.sin(a),by-55*Math.cos(a),OK,"v",bx-72*Math.sin(a),by-72*Math.cos(a));arr(bx,by,bx+45*(cx-bx)/Rp,by+45*(cy-by)/Rp,"#f87171","a",bx+60*(cx-bx)/Rp,by+60*(cy-by)/Rp);
+rich("R = 2 m",cx,cy+Rp+28,18,G);rich("v ≈ 3,14 m/s      a ≈ 4,93 m/s²",300,392,20,Y);panel(R[4],lt,19)}
+else if(i==5){ground(340);const x=110+290*tau*tau;cart(x,340,90,"#38bdf8","20 kg");arr(x+90,311,x+160,311,"#f87171","F = 60 N",x+125,288);
+rich("t = "+fx(5*tau)+" s    v = "+fx(15*tau)+" m/s    s = "+fx(37.5*tau*tau)+" m",300,165,20,Y);rich("a = 3 m/s²",300,200,22,OK);panel(R[5],lt,19)}
+else if(i==6){const r=1+cl((p-.45)/.35),d=150*r,x1=300-d/2,x2=300+d/2,y=215,L=40/(r*r);dot(x1,y,28,"#3b82f6");dot(x2,y,32,"#f59e0b");c.fillStyle="#fff";c.font="700 13px sans-serif";c.fillText("60 kg",x1,y+4);c.fillText("80 kg",x2,y+4);
+arr(x1+28,y-6,x1+28+L,y-6,"#f87171","F",x1+28+L/2,y-16);arr(x2-32,y+6,x2-32-L,y+6,"#f87171","F",x2-32-L/2,y+24);
+c.strokeStyle=G;c.lineWidth=1.5;c.beginPath();c.moveTo(x1,y+50);c.lineTo(x2,y+50);c.stroke();rich("r = "+fx(r)+" m",300,y+78,18,G);rich("F ≈ "+fx(3.2/(r*r))+"·10⁻⁷ N",300,345,24,Y);panel(R[6],lt,19)}
+else if(i==7){ground(340);const x=110+220*tau*tau,x0=x+90;cart(x,340,90,"#38bdf8","10 kg");c.strokeStyle="#a78bfa";c.lineWidth=3;c.beginPath();c.moveTo(x0,311);for(let k=1;k<=8;k++)c.lineTo(x0+70*k/8,311+(k%2?-9:9));c.lineTo(x0+70,311);c.stroke();
+arr(x0+70,311,x0+120,311,"#f87171","F = 30 N",x0+95,288);arr(x,311,x-34,311,"#fb923c","Fishq = 20 N",x-16,288);
+rich("prujina choʻzilgan: x = 15 cm",300,150,18,G);rich("a = 1 m/s²",300,200,24,OK);panel(R[7],lt,19)}
+else if(i==8){const pre=p<.4,x1=pre?60+140*(p/.4):200+233*(p-.4),x2=pre?290:290+233*(p-.4);cart(x1,340,90,"#38bdf8","2 kg");cart(x2,340,60,"#fb923c","1 kg");ground(340);
+if(pre)arr(x1+45,275,x1+105,275,OK,"v₁ = 3 m/s",x1+75,258);else arr(x1+75,275,x1+125,275,OK,"v = 2 m/s",x1+100,258);
+if(p>.4&&p<.55){c.fillStyle="#fbbf24";c.font="700 22px sans-serif";c.fillText("yopishdi!",x2,235)}
+rich(pre?"p = 2·3 + 0 = 6 kg·m/s":"p = (2 + 1)·2 = 6 kg·m/s",300,190,20,Y);panel(R[8],lt,19)}
+else if(i==9){const L=["s = v·t;   v = v_{0} + a·t,   s = v_{0}·t + a·t²/2","t = √(2h/g),   v = g·t;   a = v² / R","a = F / m;   F = G·m_{1}m_{2} / r²","F = k·x,   F_{ish} = μ·N;   m_{1}v_{1} = (m_{1}+m_{2})·v"];
+L.forEach((s,k)=>{if(lt>k*2.5){c.globalAlpha=Math.min(1,(lt-k*2.5)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",50,160+k*62);rich(s,95,160+k*62,22,E,"l");c.globalAlpha=1}})}}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

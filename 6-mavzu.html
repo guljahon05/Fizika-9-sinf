@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Temperatura — 9-sinf fizika</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef2f7;--card:#fff;--ink:#12233a;--mut:#4d5f78;--line:#cfd8e4;--hot:#d93a1f;--cold:#1f6fe0;--acc:#0a8f7a;--sim:#0e1a2e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--card:#16223a;--ink:#e8eef8;--mut:#a9b8cf;--line:#2c3b58;--hot:#ff6a4d;--cold:#5aa2ff;--acc:#35d0b5}}
+:root[data-theme="dark"]{--bg:#0b1220;--card:#16223a;--ink:#e8eef8;--mut:#a9b8cf;--line:#2c3b58;--hot:#ff6a4d;--cold:#5aa2ff;--acc:#35d0b5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,sans-serif}
+header{padding:18px 16px 6px;max-width:980px;margin:auto}
+h1{margin:0;font-size:1.5rem}header p{margin:2px 0 0;color:var(--mut)}
+nav{display:flex;gap:8px;max-width:980px;margin:12px auto;padding:0 16px;flex-wrap:wrap}
+nav button{flex:1 1 200px;padding:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font:600 .95rem inherit;font-family:inherit;cursor:pointer}
+nav button.on{border-color:var(--cold);background:var(--cold);color:#fff}
+main{max-width:980px;margin:auto;padding:0 16px 40px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{margin:0 0 8px;font-size:1.2rem}
+.theory p{margin:6px 0;max-width:75ch}
+.formula{display:inline-block;background:var(--bg);border-left:4px solid var(--acc);padding:6px 12px;font-weight:700;margin:4px 0}
+canvas{width:100%;height:auto;display:block;background:var(--sim);border-radius:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+@media(max-width:720px){.row{grid-template-columns:1fr}}
+.ctl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:12px}
+.ctl label{display:flex;flex-direction:column;gap:2px;font-weight:600;flex:1 1 220px}
+input[type=range]{width:100%;accent-color:var(--cold);height:28px}
+.btn{padding:10px 16px;border:0;border-radius:10px;background:var(--acc);color:#fff;font:600 1rem inherit;font-family:inherit;cursor:pointer}
+.btn.alt{background:var(--mut)}
+.btn:focus-visible,nav button:focus-visible,.q button:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.read{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.read div{flex:1 1 140px;padding:8px 12px;border-radius:10px;background:var(--bg);font-weight:700}
+.hot{color:var(--hot)}.cold{color:var(--cold)}
+.eq{display:none;margin-top:10px;padding:10px 14px;background:var(--acc);color:#fff;border-radius:10px;font-weight:700}
+.st{font-size:1.15rem;font-weight:700;margin-top:8px}
+.calc{font-size:1.1rem;font-weight:700;padding:8px 12px;background:var(--bg);border-radius:10px;margin-top:10px}
+.q{margin:10px 0}.q p{margin:0 0 6px;font-weight:600}
+.q button{display:block;width:100%;text-align:left;margin:4px 0;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.q button.ok{border-color:var(--acc);background:var(--acc);color:#fff}
+.q button.no{border-color:var(--hot);background:var(--hot);color:#fff}
+.fb{min-height:1.4em;font-weight:600;color:var(--mut)}
+.marks{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#vcv{height:auto;aspect-ratio:16/9}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar input[type=range]{width:auto;flex:1;min-width:140px}
+.vbar label{display:flex;flex-direction:row;align-items:center;gap:8px;font-weight:600;font-size:.9rem;flex:0 0 auto}
+.vbar select{font:inherit;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.vnote{font-size:.85rem;color:var(--mut);margin:6px 0 0}
+</style></head><body>
+<header><h1>Temperatura</h1><p>9-sinf fizika · 6-mavzu · interaktiv simulyatsiya</p></header>
+<nav id="tabs"><button class="on" data-t="1">1. Issiqlik muvozanati</button><button data-t="2">2. Selsiy shkalasi</button><button data-t="3">3. Absolyut temperatura</button></nav>
+<main>
+<section id="s1" class="on">
+<div class="card theory"><h2>Issiqlik muvozanati</h2>
+<p>Temperaturalari har xil ikki jism tegib turganda, issiq jismdan sovuq jismga energiya (issiqlik) o'tadi. Shu vaqtda issiq jism soviydi, sovuq jism isiydi.</p>
+<p>Ma'lum vaqtdan keyin ikkala jismning temperaturasi tenglashadi va o'zgarmay qoladi. Bu holat <b>issiqlik muvozanati</b> deyiladi.</p>
+<p><b>Temperatura</b> — jism qanchalik qizigani (isiganlik darajasi)ni bildiruvchi kattalik.</p></div>
+<div class="card"><canvas id="c1" width="700" height="300"></canvas>
+<div class="read"><div class="hot">Issiq jism: <span id="r1a"></span></div><div class="cold">Sovuq jism: <span id="r1b"></span></div><div>Vaqt: <span id="r1t">0.0</span> s</div></div>
+<div class="ctl"><label>Issiq jism boshlang'ich temperaturasi: <span id="v1a">80 °C</span><input id="s1a" type="range" min="50" max="100" value="80"></label>
+<label>Sovuq jism boshlang'ich temperaturasi: <span id="v1b">20 °C</span><input id="s1b" type="range" min="0" max="40" value="20"></label>
+<button class="btn" id="touch">Tegizish</button><button class="btn alt" id="rst1">Qayta boshlash</button></div>
+<div class="eq" id="eq1">Issiqlik muvozanati o'rnatildi!</div>
+<canvas id="g1" width="700" height="220" style="margin-top:12px"></canvas></div>
+<div class="card"><h2>Nazorat savollari</h2><div id="q1"></div></div>
+</section>
+
+<section id="s2">
+<div class="card theory"><h2>Temperaturaning Selsiy shkalasi</h2>
+<p>Temperaturani termometr bilan o'lchaymiz. Selsiy shkalasini shved olimi Anders Selsiy taklif qilgan (1742-yil).</p>
+<p>Normal atmosfera bosimida muzning erish temperaturasi <b>0 °C</b>, suvning qaynash temperaturasi <b>100 °C</b> deb olingan. Oradagi masofa 100 teng qismga bo'lingan, har bir qismi 1 gradus Selsiy (1 °C) deyiladi.</p></div>
+<div class="card"><canvas id="c2" width="420" height="360"></canvas>
+<div class="st" id="st2"></div>
+<div class="ctl"><label>Temperatura: <span id="v2"></span><input id="s2" type="range" min="-20" max="120" value="25"></label></div></div>
+<div class="card"><h2>Nazorat savollari</h2><div id="q2"></div></div>
+</section>
+
+<section id="s3">
+<div class="card theory"><h2>Absolyut temperatura</h2>
+<p>Ingliz olimi Lord Kelvin absolyut temperatura shkalasini kiritgan. Temperaturaning eng quyi chegarasi bor — <b>absolyut nol</b>: 0 K = −273 °C (aniqroq −273,15 °C). Bundan past temperatura bo'lmaydi.</p>
+<p>Birligi — kelvin (K). 1 K = 1 °C, ya'ni shkalalarda bir daraja teng. O'tish formulasi: <span class="formula">T = t + 273</span> (T — kelvinda, t — °C da).</p>
+<p>Temperatura pasaygan sari molekulalar sekinlashadi; absolyut nolda issiqlik harakati eng kam bo'ladi. Kelvin shkalasida manfiy temperatura bo'lmaydi.</p></div>
+<div class="card"><div class="row"><canvas id="c3a" width="420" height="370"></canvas><canvas id="c3b" width="360" height="300"></canvas></div>
+<div class="calc" id="calc3"></div><div class="st" id="st3"></div>
+<div class="ctl"><label>Temperatura: <span id="v3"></span><input id="s3" type="range" min="-273" max="200" value="20"></label></div>
+<div class="marks"><button class="btn alt" data-v="-273">0 K · absolyut nol</button><button class="btn alt" data-v="0">273 K · muz eriydi</button><button class="btn alt" data-v="100">373 K · suv qaynaydi</button></div></div>
+<div class="card"><h2>Nazorat savollari</h2><div id="q3"></div></div>
+</section>
+<div class="card" id="vid"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="btn" id="vpp">▶ Boshlash</button><button class="btn alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const Q={1:[["Issiq va sovuq jism tegib turganda energiya qaysi tomonga o'tadi?",["Sovuq jismdan issiq jismga","Issiq jismdan sovuq jismga","Energiya o'tmaydi"],1],["Issiqlik muvozanati o'rnatilganda jismlarning temperaturasi qanday bo'ladi?",["Tenglashadi va o'zgarmay qoladi","Issiq jismniki baribir yuqori qoladi","Doim o'zgarib turadi"],0]],
+2:[["Normal atmosfera bosimida suv necha °C da qaynaydi?",["0 °C","50 °C","100 °C"],2],["0 °C bilan 100 °C orasi Selsiy shkalasida nechta teng qismga bo'lingan?",["10 ta","100 ta","273 ta"],1]],
+3:[["25 °C necha kelvinga teng?",["248 K","298 K","−248 K"],1],["Absolyut nol nimaga teng?",["0 K = −273 °C","0 K = 0 °C","0 K = 273 °C"],0]]};
+for(const id in Q){const el=$('#q'+id);Q[id].forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML='<p>'+(i+1)+'. '+q[0]+'</p>';const fb=document.createElement('div');fb.className='fb';q[1].forEach((o,j)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{d.querySelectorAll('button').forEach(x=>x.classList.remove('ok','no'));b.classList.add(j==q[2]?'ok':'no');fb.textContent=j==q[2]?"To'g'ri! ✓":"Noto'g'ri, yana urinib ko'ring."};d.append(b)});d.append(fb);el.append(d)})}
+let cur=1;
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{cur=+b.dataset.t;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id=='s'+cur))});
+const mix=k=>{k=Math.max(0,Math.min(1,k));return`rgb(${31+201*k|0},${111-42*k|0},${224-180*k|0})`};
+const mkP=(n,x0,y0,x1,y1)=>Array.from({length:n},()=>{const a=Math.random()*6.283;return{x:x0+Math.random()*(x1-x0),y:y0+Math.random()*(y1-y0),c:Math.cos(a),s:Math.sin(a)}});
+const stepP=(p,v,dt,b)=>{p.x+=p.c*v*dt;p.y+=p.s*v*dt;if(p.x<b[0]){p.x=b[0];p.c=Math.abs(p.c)}if(p.x>b[2]){p.x=b[2];p.c=-Math.abs(p.c)}if(p.y<b[1]){p.y=b[1];p.s=Math.abs(p.s)}if(p.y>b[3]){p.y=b[3];p.s=-Math.abs(p.s)}};
+const dot=(x,p,c,r)=>{x.fillStyle=c;x.beginPath();x.arc(p.x,p.y,r,0,7);x.fill()};
+const txt=(x,s,px,py,c,f,al)=>{x.fillStyle=c;x.font=f||'13px sans-serif';x.textAlign=al||'left';x.fillText(s,px,py)};
+
+/* 1-bo'lim */
+const x1=$('#c1').getContext('2d'),y1=$('#g1').getContext('2d');
+const bA=[26,26,334,274],bB=[366,26,674,274];
+let T1,T2,touch,tm,hist,acc,eq,pA,pB;
+function reset1(){T1=+$('#s1a').value;T2=+$('#s1b').value;touch=false;tm=0;hist=[];acc=0;eq=false;pA=mkP(28,...bA);pB=mkP(28,...bB);$('#eq1').style.display='none';$('#touch').disabled=false}
+$('#s1a').oninput=e=>{$('#v1a').textContent=e.target.value+' °C';reset1()};
+$('#s1b').oninput=e=>{$('#v1b').textContent=e.target.value+' °C';reset1()};
+$('#touch').onclick=()=>{touch=true;$('#touch').disabled=true};
+$('#rst1').onclick=reset1;
+function sim1(dt){
+ if(touch&&!eq){const d=T1-T2;T1-=.25*d*dt;T2+=.25*d*dt;tm+=dt;acc+=dt;
+  if(acc>=.1){acc=0;hist.push([T1,T2])}
+  if(T1-T2<.3){T1=T2=(T1+T2)/2;eq=true;hist.push([T1,T2]);$('#eq1').style.display='block'}}
+ pA.forEach(p=>stepP(p,30+3.4*T1,dt,bA));pB.forEach(p=>stepP(p,30+3.4*T2,dt,bB));
+ const x=x1;x.clearRect(0,0,700,300);
+ x.lineWidth=3;x.strokeStyle=mix(T1/100);x.strokeRect(20,20,320,260);x.strokeStyle=mix(T2/100);x.strokeRect(360,20,320,260);
+ pA.forEach(p=>dot(x,p,mix(T1/100),5));pB.forEach(p=>dot(x,p,mix(T2/100),5));
+ if(touch){x.fillStyle='#ffd166';x.fillRect(340,20,20,260);txt(x,'→',350,155,'#0e1a2e','bold 22px sans-serif','center')}
+ txt(x,T1.toFixed(1)+' °C',180,16,'#fff','bold 14px sans-serif','center');txt(x,T2.toFixed(1)+' °C',520,16,'#fff','bold 14px sans-serif','center');
+ $('#r1a').textContent=T1.toFixed(1)+' °C';$('#r1b').textContent=T2.toFixed(1)+' °C';$('#r1t').textContent=tm.toFixed(1);
+ const g=y1;g.clearRect(0,0,700,220);g.strokeStyle='#4a5b78';g.lineWidth=1;g.beginPath();g.moveTo(40,10);g.lineTo(40,190);g.lineTo(690,190);g.stroke();
+ for(let v=0;v<=100;v+=25){const y=190-v*1.7;txt(g,v,34,y+4,'#9fb0cc','11px sans-serif','right');g.strokeStyle='#22314d';g.beginPath();g.moveTo(40,y);g.lineTo(690,y);g.stroke()}
+ txt(g,'t, s (20 s gacha)',690,212,'#9fb0cc','11px sans-serif','right');txt(g,'°C',8,14,'#9fb0cc','11px sans-serif');
+ [[0,'#ff6a4d'],[1,'#5aa2ff']].forEach(([k,c])=>{g.strokeStyle=c;g.lineWidth=3;g.beginPath();hist.forEach((h,i)=>{const X=40+i*.1/20*650,Y=190-h[k]*1.7;i?g.lineTo(X,Y):g.moveTo(X,Y)});g.stroke()})}
+reset1();
+
+/* 2-bo'lim */
+const x2=$('#c2').getContext('2d');
+const Y2=t=>300-(t+20)*270/140;
+function sim2(now){
+ const t=+$('#s2').value,x=x2;x.clearRect(0,0,420,360);
+ for(let v=-20;v<=120;v+=20){const y=Y2(v),sp=v==0||v==100;
+  x.strokeStyle=sp?'#ffd166':'#4a5b78';x.lineWidth=sp?3:1;x.setLineDash(sp?[6,4]:[]);x.beginPath();x.moveTo(sp?30:52,y);x.lineTo(sp?190:60,y);x.stroke();x.setLineDash([]);
+  txt(x,v+' °C',sp?8:48,y+(sp?-5:4),sp?'#ffd166':'#9fb0cc',sp?'bold 13px sans-serif':'11px sans-serif',sp?'left':'right')}
+ x.fillStyle='#e8eef8';x.beginPath();x.roundRect(62,24,16,280,8);x.fill();x.beginPath();x.arc(70,318,20,0,7);x.fill();
+ x.fillStyle='#d93a1f';x.beginPath();x.arc(70,318,15,0,7);x.fill();x.fillRect(66,Y2(t),8,318-Y2(t));
+ txt(x,t+' °C',70,354,'#fff','bold 15px sans-serif','center');
+ const L=200,R=390,B=335,top=130,wl=t>100?250:200;
+ if(t>=0){x.fillStyle='rgba(60,150,230,.55)';x.fillRect(L+2,wl,R-L-4,B-wl-2)}
+ if(t<0)for(const[a,b]of[[212,285],[268,285],[324,285],[240,232],[296,232]])ice(x,a,b,50);
+ else if(t==0){for(const a of[225,285,335])ice(x,a,wl-18,36);for(let i=0;i<3;i++){const p=(now*.7+i/3)%1;x.fillStyle='rgba(120,190,255,.9)';x.beginPath();x.arc(235+i*50,wl+2+p*40,3,0,7);x.fill()}}
+ if(t>=100){for(let i=0;i<(t>100?18:10);i++){const p=(now*.6+i*.137)%1,bx=L+14+(i*53%160),by=B-10-p*(B-wl-10);x.strokeStyle='rgba(255,255,255,.8)';x.lineWidth=1.5;x.beginPath();x.arc(bx,by,3+p*4,0,7);x.stroke()}
+  for(let i=0;i<(t>100?16:9);i++){const p=(now*.35+i*.11)%1;x.fillStyle=`rgba(230,240,255,${.5*(1-p)})`;x.beginPath();x.arc(L+20+(i*41%150)+Math.sin(now+i)*8,top-p*90,8+p*14,0,7);x.fill()}}
+ x.strokeStyle='#e8eef8';x.lineWidth=4;x.beginPath();x.moveTo(L,top);x.lineTo(L,B);x.lineTo(R,B);x.lineTo(R,top);x.stroke();
+ const s=t<0?['Muz (qattiq holat)','#8fd3ff']:t==0?['Muz erimoqda (0 °C)','#8fd3ff']:t<100?['Suyuq suv','#5aa2ff']:t==100?['Qaynayapti (100 °C)','#ff6a4d']:["Bug' (gaz holat)",'#ff6a4d'];
+ $('#st2').textContent='Holat: '+s[0];$('#v2').textContent=t+' °C'}
+function ice(x,a,b,s){x.fillStyle='rgba(200,236,255,.92)';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.roundRect(a,b,s,s,6);x.fill();x.stroke()}
+
+/* 3-bo'lim */
+const xa=$('#c3a').getContext('2d'),xb=$('#c3b').getContext('2d');
+const Y3=t=>320-(t+273)*280/473;let pC=mkP(40,10,10,350,290);
+function sim3(dt){
+ const t=+$('#s3').value,T=t+273,x=xa;x.clearRect(0,0,420,370);
+ [[-273,'0 K','absolyut nol'],[-200],[-100],[0,'273 K','muz eriydi'],[100,'373 K','suv qaynaydi'],[200]].forEach(([v,k,n])=>{const y=Y3(v),sp=!!n;
+  x.strokeStyle=sp?'#ffd166':'#4a5b78';x.lineWidth=sp?2.5:1;x.setLineDash(sp?[5,4]:[]);x.beginPath();x.moveTo(sp?40:88,y);x.lineTo(sp?230:112,y);x.stroke();x.setLineDash([]);
+  txt(x,v+' °C',84,y+4,sp?'#ffd166':'#9fb0cc',sp?'bold 12px sans-serif':'11px sans-serif','right');
+  txt(x,(v+273)+' K'+(n?' · '+n:''),238,y+4,sp?'#ffd166':'#9fb0cc',sp?'bold 12px sans-serif':'11px sans-serif')});
+ [[100,'°C','#ff6a4d'],[210,'K','#35d0b5']].forEach(([cx,u,c])=>{x.fillStyle='#e8eef8';x.beginPath();x.roundRect(cx-8,36,16,290,8);x.fill();x.beginPath();x.arc(cx,340,20,0,7);x.fill();x.fillStyle=c;x.beginPath();x.arc(cx,340,15,0,7);x.fill();x.fillRect(cx-4,Y3(t),8,340-Y3(t));txt(x,u,cx,26,'#fff','bold 14px sans-serif','center')});
+ const b=xb;b.clearRect(0,0,360,300);b.strokeStyle=mix(T/473);b.lineWidth=3;b.strokeRect(4,4,352,292);
+ const v=T<=0?1.5:14*Math.sqrt(T);pC.forEach(p=>{stepP(p,v,dt,[10,10,350,290]);dot(b,p,mix(T/473),6)});
+ $('#calc3').textContent=`T = t + 273 = ${t<0?'('+t+')':t} + 273 = ${T} K`;$('#v3').textContent=t+' °C = '+T+' K';
+ $('#st3').textContent=T<=0?'Absolyut nol: issiqlik harakati eng kam.':T<273?'Molekulalar sekin harakatlanadi.':T<373?'Molekulalar o\'rtacha tezlikda harakatlanadi.':'Molekulalar juda tez harakatlanadi.'}
+document.querySelectorAll('.marks button').forEach(b=>b.onclick=()=>{$('#s3').value=b.dataset.v});
+
+let last=performance.now();
+(function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(cur==1)sim1(dt);else if(cur==2)sim2(n/1000);else sim3(dt);requestAnimationFrame(loop)})(last);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const FOOT="9-sinf Fizika • Temperatura",BEGIN="Temperatura • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: issiq va sovuq",t:"Salom, aziz oʻquvchilar! Bugun temperatura mavzusini oʻrganamiz: issiqlik muvozanati, Selsiy shkalasi va absolyut temperatura."},
+{d:50,h:"1. Issiqlik muvozanati",t:"Temperaturalari har xil ikki jism tegib turganda, issiq jismdan sovuq jismga energiya, ya’ni issiqlik oʻtadi. Mana, chapda issiq jism, 80 daraja, oʻngda sovuq jism, 20 daraja. Ularni tegizamiz. Issiq jism soviyapti, sovuq jism isiyapti. Ma’lum vaqtdan keyin ikkala jismning temperaturasi tenglashadi va oʻzgarmay qoladi. Bu holat issiqlik muvozanati deyiladi."},
+{d:35,h:"Temperatura va termometr",t:"Temperatura — jism qanchalik qizigani, ya’ni isiganlik darajasini bildiruvchi kattalik. Uni termometr bilan oʻlchaymiz. Jism isisa, termometrdagi suyuqlik koʻtariladi, sovisa, pasayadi. Termometr shkalasi esa temperaturani sonlar bilan ifodalash imkonini beradi."},
+{d:55,h:"2. Selsiy shkalasi",t:"Selsiy shkalasini shved olimi Anders Selsiy 1742-yilda taklif qilgan. Normal atmosfera bosimida muzning erish temperaturasi nol daraja deb olingan. Suvning qaynash temperaturasi esa yuz daraja. Oradagi masofa yuz teng qismga boʻlingan va har bir qismi bir gradus Selsiy deyiladi. Termometrdagi suyuqlik koʻtarilib borayotganini koʻring: u nol darajadan yuz darajagacha oʻtmoqda."},
+{d:45,h:"3. Absolyut temperatura",t:"Temperaturaning eng quyi chegarasi bor. Uni ingliz olimi Lord Kelvin kiritgan absolyut temperatura shkalasida koʻrish qulay. Eng quyi chegara — absolyut nol, nol kelvin, ya’ni minus 273 daraja Selsiy. Temperatura pasaygan sari molekulalar sekinlashadi. Absolyut nolda issiqlik harakati eng kam boʻladi, bundan past temperatura boʻlmaydi."},
+{d:45,h:"Selsiy va Kelvin orasidagi bogʻlanish",t:"Temperaturaning birligi — kelvin. Bir kelvin bir gradus Selsiyga teng, ya’ni shkalalarda bir daraja bir xil. Kelvindagi temperatura T teng Selsiydagi temperatura t plyus 273. Masalan, muz erishida 273 kelvin, suv qaynashida 373 kelvin. Kelvin shkalasida manfiy temperatura boʻlmaydi."},
+{d:35,h:"Misollar",t:"Misol: 25 daraja Selsiy necha kelvin? T teng 25 plyus 273, bu 298 kelvin. Teskarisi: 300 kelvin necha daraja? t teng 300 minus 273, bu 27 daraja Selsiy."},
+{d:20,h:"Xulosa",t:"Xulosa: issiq jismdan sovuq jismga issiqlik oʻtadi va muvozanat oʻrnatiladi. Selsiy shkalasida nol va yuz daraja tayanch nuqtalar, kelvinda esa T teng t plyus 273. Eʼtiboringiz uchun rahmat!"}
+];
+let P=[],Pb=[];
+const LB=[60,100,450,350],RB=[510,100,900,350],KB=[60,100,640,370];
+function temps(i,lt){if(i==0)return[80,20,0];const tau=Math.max(0,lt-10),d=60*Math.exp(-.22*tau);return d<.6?[50,50,1]:[50+d/2,50-d/2,0]}
+function sceneEnter(i){P=[];Pb=[];if(i<=1){P=rp(25,LB,1,1);Pb=rp(25,RB,1,1)}if(i==4)P=rp(45,KB,1,1)}
+function sceneStep(i,p){if(i<=1){const tt=temps(i,p*S[i].d);gas(P,(30+3.4*tt[0])/90,LB,4);gas(Pb,(30+3.4*tt[1])/90,RB,4)}
+else if(i==4){const t=100-373*cl((p-.1)/.7);gas(P,.05+1.75*(t+273)/373,KB,4)}}
+function thermo(x,y0,y1,t,a,b){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-(t-a)/(b-a)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,Math.min(y1,ly),12,y1-Math.min(y1,ly)+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16)}
+function sceneDraw(i,p,lt){
+if(i<=1){const tt=temps(i,lt);c.lineWidth=3;c.strokeStyle=mix(tt[0]/100);c.strokeRect(LB[0],LB[1],LB[2]-LB[0],LB[3]-LB[1]);c.strokeStyle=mix(tt[1]/100);c.strokeRect(RB[0],RB[1],RB[2]-RB[0],RB[3]-RB[1]);
+P.forEach(o=>dot(o.x,o.y,5,mix(tt[0]/100)));Pb.forEach(o=>dot(o.x,o.y,5,mix(tt[1]/100)));
+c.font="700 18px sans-serif";c.fillStyle="#ff6a4d";c.fillText("Issiq jism",255,90);c.fillStyle="#5aa2ff";c.fillText("Sovuq jism",705,90);
+rich(fx(tt[0])+" °C",255,382,26,"#ff8a70");rich(fx(tt[1])+" °C",705,382,26,"#7ab8ff");
+if(i==1&&lt>10){c.fillStyle="#ffd166";c.fillRect(450,100,60,250);rich("→",480,236,30,"#0e1a2e")}
+if(tt[2]){rich("Issiqlik muvozanati oʻrnatildi!",W/2,410,22,OK)}}
+else if(i==2){const t=50+40*Math.sin(lt*.35);thermo(480,110,340,t,0,100);c.font="14px sans-serif";c.fillStyle=G;c.textAlign="left";for(let k=0;k<=100;k+=20)c.fillText(k+" °C",505,340-k*2.3+5);c.textAlign="center";
+rich("t = "+fx(t)+" °C",250,230,34,Y);if(lt>8)rich("Isisa — suyuqlik koʻtariladi",730,200,22,"#ff8a70");if(lt>14)rich("Sovisa — suyuqlik pasayadi",730,260,22,"#7ab8ff")}
+else if(i==3){const yO=t=>345-(t+20)*1.75,t=lt<26?20:lt<30?20-20*cl((lt-26)/4):100*cl((lt-30)/20);thermo(330,100,345,t,-20,120);
+c.strokeStyle="#cbd5e1";c.lineWidth=1.5;c.font="13px sans-serif";c.fillStyle=G;c.textAlign="left";for(let k=-20;k<=120;k+=10){const y=yO(k),L=(k==0||k==100)?16:8;c.beginPath();c.moveTo(342,y);c.lineTo(342+L,y);c.stroke();if(k%20==0)c.fillText(k,364,y+4)}c.textAlign="center";
+if(lt>3)rich("Anders Selsiy (1742)",720,95,22,Y);
+if(lt>8){c.setLineDash([5,4]);c.strokeStyle="#67e8f9";c.beginPath();c.moveTo(342,yO(0));c.lineTo(430,yO(0));c.stroke();c.setLineDash([]);rich("0 °C — muz eriydi",440,yO(0)+5,20,"#67e8f9","l")}
+if(lt>16){c.setLineDash([5,4]);c.strokeStyle="#fca5a5";c.beginPath();c.moveTo(342,yO(100));c.lineTo(430,yO(100));c.stroke();c.setLineDash([]);rich("100 °C — suv qaynaydi",440,yO(100)+5,20,"#fca5a5","l")}
+if(lt>26){c.strokeStyle=Y;c.lineWidth=2;c.beginPath();c.moveTo(300,yO(0));c.lineTo(290,yO(0));c.lineTo(290,yO(100));c.lineTo(300,yO(100));c.stroke();c.fillStyle=Y;c.font="600 19px sans-serif";c.fillText("100 teng qism,",170,215);c.fillText("har biri 1 °C",170,243)}
+rich("t = "+fx(t)+" °C",720,260,34,Y)}
+else if(i==4){const t=100-373*cl((p-.1)/.7),Tk=t+273;frame(KB);P.forEach(o=>dot(o.x,o.y,5,mix(Tk/373)));
+c.fillStyle="rgba(15,23,42,.85)";c.fillRect(665,100,270,270);rich("t = "+Math.round(t)+" °C",800,160,28,E);rich("T = "+Math.round(Tk)+" K",800,220,34,Y);if(p>.5)rich("T = t + 273",800,285,24,G);
+if(p>.8){c.fillStyle="rgba(2,6,23,.85)";c.fillRect(100,115,500,52);rich("Absolyut nol: 0 K = −273 °C",350,152,28,Y)}}
+else if(i==5){rich("T = t + 273",W/2,135,54,Y);if(lt>6)rich("1 K = 1 °C  (shkalalarda bir daraja teng)",W/2,190,24,OK);
+const R=[["0 K  =  −273 °C","absolyut nol",14],["273 K  =  0 °C","muz eriydi",22],["373 K  =  100 °C","suv qaynaydi",30]];
+R.forEach((r,k)=>{const al=cl((lt-r[2])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.9)";c.fillRect(120,240+k*48,720,40);rich(r[0],150,270+k*48,26,E,"l");rich(r[1],520,270+k*48,24,"#67e8f9","l");c.globalAlpha=1});
+if(lt>38)rich("Kelvin shkalasida manfiy temperatura boʻlmaydi",W/2,398,20,Y)}
+else if(i==6){const D=[[50,"Selsiy → Kelvin",["t = 25 °C","T = t + 273 = 25 + 273","T = 298 K"],[2,9,15]],[490,"Kelvin → Selsiy",["T = 300 K","t = T − 273 = 300 − 273","t = 27 °C"],[20,27,33]]];
+D.forEach(d=>{c.fillStyle="rgba(30,41,59,.92)";c.fillRect(d[0],105,420,235);c.fillStyle="#fbbf24";c.fillRect(d[0],105,420,5);rich(d[1],d[0]+210,142,20,G);d[2].forEach((s,k)=>{const al=cl((lt-d[3][k])*2);if(al<=0)return;c.globalAlpha=al;rich(s,d[0]+210,200+k*55,k==2?38:26,k==2?Y:E);c.globalAlpha=1})})}
+else if(i==7){const L=["Issiq jismdan sovuq jismga issiqlik oʻtadi: issiqlik muvozanati","Selsiy: 0 °C — muz erishi, 100 °C — suv qaynashi","Kelvin: T = t + 273,   0 K = −273 °C"];
+L.forEach((s,k)=>{if(lt>k*3){c.globalAlpha=Math.min(1,(lt-k*3)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 30px sans-serif";c.fillText((k+1)+".",60,190+k*70);rich(s,110,190+k*70,23,E,"l");c.globalAlpha=1}})}}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

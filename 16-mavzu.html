@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Termodinamik ish — 9-sinf fizika</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f3f7fc;--cd:#fff;--tx:#1d2733;--mu:#5b6b7c;--pr:#2f6fed;--ln:#d9e2ee;--ok:#2e9e5b;--or:#e8832a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161d;--cd:#19222c;--tx:#e6edf5;--mu:#98a8ba;--ln:#2b3745}}
+:root[data-theme="dark"]{--bg:#10161d;--cd:#19222c;--tx:#e6edf5;--mu:#98a8ba;--ln:#2b3745}
+html,body{height:auto}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:12px}
+h1{font-size:1.4rem;margin:8px 0}h2{font-size:1.15rem;margin:0 0 8px}
+.card{background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:14px;margin:12px 0}
+#tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+#tabs button{flex:0 0 auto;border:1px solid var(--ln);background:var(--cd);color:var(--tx);border-radius:20px;padding:6px 12px;font-size:.85rem;cursor:pointer}
+#tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.f{background:rgba(47,111,237,.12);border-left:4px solid var(--pr);padding:8px 10px;border-radius:6px}
+.try{color:var(--mu);font-size:.92rem}
+summary{cursor:pointer;color:var(--pr)}
+.sim{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+canvas{max-width:100%;height:auto;border:1px solid var(--ln);border-radius:10px}
+.ctl label{display:block;margin:8px 0}.ctl input{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.btns button{flex:1;border:0;border-radius:10px;padding:10px;color:#fff;font-size:1rem;cursor:pointer}
+#b1{background:var(--ok)}#b2{background:var(--or)}#b3{background:#7a8797}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.res div{background:rgba(47,111,237,.08);border-radius:10px;padding:8px;font-size:.9rem}
+.res b{display:block;font-size:1.05rem}
+#msg{margin-top:8px;font-weight:600}
+ol li{margin:8px 0}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:10px;padding:10px 16px;background:var(--pr);color:#fff;font-weight:700;cursor:pointer;font:inherit}
+.vbar button.alt{background:var(--mu)}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem}
+.vbar select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--ln);background:var(--cd);color:var(--tx)}
+.vnote{font-size:.85rem;color:var(--mu);margin:6px 0 0}
+</style></head><body><main>
+<h1>🔥 Termodinamik ish <small style="font-weight:400;color:var(--mu)">· 9-sinf, 16-mavzu</small></h1>
+<div id="tabs"></div>
+<section class="card"><h2 id="rt"></h2><div id="info"></div></section>
+<section class="card"><h2>🧪 Simulyatsiya</h2>
+<div class="sim"><canvas id="cc" width="300" height="300"></canvas><canvas id="gc" width="340" height="300"></canvas></div>
+<div class="ctl">
+<label>Bosim p (kPa): <b id="lp"></b><input type="range" id="sp" min="50" max="300" step="5"></label>
+<label>Hajm V (litr): <b id="lv"></b><input type="range" id="sv" min="0.5" max="5" step="0.1"></label>
+<label>Temperatura T (K): <b id="lt"></b><input type="range" id="stt"></label></div>
+<div class="btns"><button id="b1">▶ Boshlash</button><button id="b2">⏸ To'xtatish</button><button id="b3">↺ Qayta o'rnatish</button></div>
+<div class="res">
+<div>Hozirgi p<b id="rp"></b></div><div>Hozirgi V<b id="rv"></b></div><div>Hozirgi T<b id="rT"></b></div>
+<div>ΔV<b id="rdv"></b></div><div>Gaz bajargan ish A′<b id="rap"></b></div><div>Gaz ustida bajarilgan ish A<b id="ra"></b></div>
+<div>ΔU<b id="rdu"></b></div><div>Q<b id="rq"></b></div></div>
+<div id="msg"></div>
+<p class="try">p–V grafikda bo'yalgan yuza = gaz bajargan ish (yashil: kengayish, to'q sariq: siqilish). Hisoblar: ν·R = 1 J/K (ν ≈ 0,12 mol, bir atomli ideal gaz).</p>
+</section>
+<section class="card"><h2>✅ Mustahkamlash: 5 ta test</h2><ol>
+<li>Gaz p = 2·10⁵ Pa bosimda 0,5·10⁻³ m³ ga kengaydi. Gaz bajargan ish qancha?<details><summary>Javob</summary>A′ = p·ΔV = 2·10⁵ · 0,5·10⁻³ = 100 J.</details></li>
+<li>Gaz siqilganda (ΔV &lt; 0) uning bajargan ishi qanday ishorali?<details><summary>Javob</summary>Manfiy (A′ &lt; 0). Gaz ustida bajarilgan ish esa musbat (A = −A′ &gt; 0).</details></li>
+<li>Gazga 300 J issiqlik berildi va gaz 100 J ish bajardi. Ichki energiya qanchaga o'zgardi?<details><summary>Javob</summary>ΔU = Q + A = 300 + (−100) = 200 J (ortdi).</details></li>
+<li>p–V grafikda termodinamik ish nimaga teng?<details><summary>Javob</summary>Grafik chizig'i ostidagi yuzaga teng.</details></li>
+<li>Hajm o'zgarmasa (V = const) gaz qancha ish bajaradi va berilgan issiqlik nimaga sarflanadi?<details><summary>Javob</summary>Ish nolga teng (ΔV = 0). Q butunlay ichki energiyani oshirishga ketadi: Q = ΔU.</details></li>
+</ol></section>
+<div class="vid" id="vid" style="background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:12px;margin:12px 0"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div>
+</main>
+<script>
+const modes=[
+{t:"heat",n:"Ichki energiya",title:"Reja 1. Ichki energiya va uni o'zgartirish usullari",d:{T2:450},h:`
+<p>Jismdagi barcha molekulalarning kinetik va o'zaro ta'sir potensial energiyalari yig'indisi <b>ichki energiya</b> (U) deyiladi. Ideal gazda molekulalar bir-biri bilan ta'sirlashmaydi, shuning uchun U faqat temperaturaga bog'liq. Temperatura ortsa, molekulalar tezroq harakatlanadi va U ortadi. Ichki energiyani ikki usulda o'zgartirish mumkin: <b>issiqlik uzatish</b> (Q) va <b>ish bajarish</b> (A).</p>
+<p class="f">ΔU = (3/2)·ν·R·ΔT<br>ΔU — ichki energiya o'zgarishi (J); ν — modda miqdori (mol); R = 8,31 J/(mol·K); ΔT — temperatura o'zgarishi (K).</p>
+<p><b>Misol:</b> choynakdagi suv olovda qiziydi (issiqlik uzatish); qo'llarni bir-biriga ishqalasak ham isiydi (ish bajarish).</p>
+<p><b>Masala:</b> ν = 0,12 mol bir atomli gaz 300 K dan 400 K gacha qizdirildi. ΔU = ?<details><summary>Yechimi</summary>ΔU = 1,5 · 0,12 · 8,31 · 100 ≈ 150 J.</details></p>
+<p class="try">🔎 Temperatura slayderini siljitib "Boshlash"ni bosing: hajm o'zgarmaydi, molekulalar tezlashadi, A = 0, Q = ΔU.</p>`},
+{t:"isobar",n:"Termodinamik ish",title:"Reja 2. Termodinamik ish tushunchasi",d:{P:150,V2:3.5},h:`
+<p>Gaz kengayganda porshenni suradi va <b>ish bajaradi</b>. Porshen gazni siqsa, <b>gaz ustida ish bajariladi</b>. Gaz hajmi o'zgarganda bajariladigan ish <b>termodinamik ish</b> deyiladi. Hajm o'zgarmasa (ΔV = 0), ish ham nolga teng. Mexanikadagi A = F·s dan foydalanamiz: gaz porshenga F = p·S kuch bilan ta'sir qiladi, porshen h masofaga siljiydi, S·h = ΔV.</p>
+<p class="f">A′ = F·h = p·S·h = p·ΔV<br>A′ — gaz bajargan ish (J); p — bosim (Pa); ΔV — hajm o'zgarishi (m³).</p>
+<p><b>Misol:</b> velosiped shinasini to'ldirayotganda nasos porsheni havoni siqadi; bug' qozonida bug' porshenni itaradi.</p>
+<p><b>Masala:</b> Gaz porshenni F = 200 N kuch bilan 0,1 m ga siljitdi. Ish qancha?<details><summary>Yechimi</summary>A′ = F·s = 200 · 0,1 = 20 J.</details></p>
+<p class="try">🔎 Hajm slayderini kattaroq qiling: gaz kengayadi va ish bajaradi.</p>`},
+{t:"isobar",n:"A = p·ΔV",title:"Reja 3. Gazning kengayishi va siqilishida bajarilgan ish (A = p·ΔV)",d:{P:150,V2:4},h:`
+<p>Bosim o'zgarmaydigan jarayon <b>izobarik</b> jarayon deyiladi. Unda ish A′ = p·(V₂ − V₁) formula bilan topiladi. p–V grafikda izobara gorizontal chiziq bo'ladi. Ish shu chiziq ostidagi <b>to'g'ri to'rtburchak yuzasiga</b> teng: balandligi p, kengligi ΔV. Bosim qanchalik katta va hajm o'zgarishi qanchalik ko'p bo'lsa, ish shunchalik katta.</p>
+<p class="f">A′ = p·(V₂ − V₁)<br>p — Pa; V — m³ (1 litr = 10⁻³ m³); A′ — J. Simulyatsiyada kPa·L = J.</p>
+<p><b>Misol:</b> gaz bilan to'ldirilgan shar isitilganda kengayib atmosferani itaradi.</p>
+<p><b>Masala:</b> p = 2·10⁵ Pa da gaz hajmi 2 L dan 5 L ga ortdi. A′ = ?<details><summary>Yechimi</summary>ΔV = 3·10⁻³ m³; A′ = 2·10⁵ · 3·10⁻³ = 600 J.</details></p>
+<p class="try">🔎 p ni oshiring: grafikdagi to'rtburchak balandlashadi, ish ortadi.</p>`},
+{t:"isobar",n:"Ish ishorasi",title:"Reja 4. Ishning ishorasi: gaz ish bajaradi / gaz ustida ish bajariladi",d:{P:150,V2:0.8},h:`
+<p>Gaz <b>kengayganda</b> ΔV &gt; 0 va gaz ish bajaradi: A′ &gt; 0. Gaz <b>siqilganda</b> ΔV &lt; 0, gaz ishi manfiy: A′ &lt; 0. Bu holda tashqi kuchlar gaz ustida ish bajaradi. Gaz ustida bajarilgan ish gaz ishiga son jihatdan teng, ishorasi qarama-qarshi.</p>
+<p class="f">A = −A′ = −p·ΔV<br>A — gaz ustida bajarilgan ish (J). Kengayishda A &lt; 0, siqilishda A &gt; 0.</p>
+<p><b>Misol:</b> velosiped nasosining dastasini bossak, havo siqiladi — havo ustida ish bajariladi, nasos isiydi.</p>
+<p><b>Masala:</b> p = 10⁵ Pa da gaz 4 L dan 1 L gacha siqildi. A va A′ ni toping.<details><summary>Yechimi</summary>ΔV = −3·10⁻³ m³. A = −pΔV = +300 J (gaz ustida); A′ = −300 J.</details></p>
+<p class="try">🔎 Hajm slayderini boshlang'ich 2 L dan kichik qiling — yashil o'rniga to'q sariq yuza chiqadi (siqilish).</p>`},
+{t:"isobar",n:"1-qonun",title:"Reja 5. Termodinamikaning birinchi qonuni (ΔU = Q + A)",d:{P:150,V2:4},h:`
+<p>Energiya yo'qolmaydi, faqat bir turdan boshqasiga o'tadi. Gaz olgan issiqlik miqdori Q ichki energiyani oshirishga va gaz ish bajarishiga ketadi. Qonun: gaz ichki energiyasining o'zgarishi unga berilgan issiqlik va gaz ustida bajarilgan ish yig'indisiga teng. Q &gt; 0 — gaz issiqlik oldi, Q &lt; 0 — issiqlik berdi.</p>
+<p class="f">ΔU = Q + A  yoki  Q = ΔU + A′<br>Q — issiqlik miqdori (J); A — gaz ustida bajarilgan ish (J); ΔU — ichki energiya o'zgarishi (J).</p>
+<p><b>Misol:</b> gaz porshen ostida qizdirilsa, olgan issiqlikning bir qismi gazni qizdiradi, qolgani porshenni ko'taradi.</p>
+<p><b>Masala:</b> Gazga Q = 500 J issiqlik berildi, gaz A′ = 200 J ish bajardi. ΔU = ?<details><summary>Yechimi</summary>ΔU = Q − A′ = 500 − 200 = 300 J.</details></p>
+<p class="try">🔎 Natijalardagi Q ni kuzating: Q = ΔU + A′. Temperatura slayderi bilan ham hajmni boshqarish mumkin.</p>`},
+{t:"isoT",n:"Amaliy qo'llanish",title:"Reja 6. Amaliy qo'llanilishi (dvigatel, nasos, velosiped nasosi)",d:{Tc:300,V2:0.6},h:`
+<p><b>Dvigatelda</b> yonilg'i yonganda gaz qiziydi, kengayadi va porshenni suradi: ichki energiya mexanik ishga aylanadi. <b>Velosiped nasosida</b> havo siqiladi: unga ish bajariladi va havo isiydi. Sekin siqilganda temperatura o'zgarmaydi (izotermik jarayon), shuning uchun ΔU = 0 va Q = A′. Bunda siqilayotgan gaz atrofga issiqlik beradi (Q &lt; 0). Hajm kamayganda bosim ortadi: p·V = const.</p>
+<p class="f">Izotermik jarayonda: ΔU = 0, Q = A′ = −A<br>Ish p–V grafikdagi egri chiziq ostidagi yuza bilan topiladi.</p>
+<p><b>Misol:</b> nasosni ishlatsangiz, uning ostki qismi qiziydi; sovitgichda gaz siqilib, so'ng kengayib sovuqlik hosil qiladi.</p>
+<p><b>Masala:</b> Nasosda gaz ustida 120 J ish bajarildi, gaz atrofga 20 J issiqlik berdi (Q = −20 J). ΔU = ?<details><summary>Yechimi</summary>ΔU = Q + A = −20 + 120 = +100 J (gaz isidi).</details></p>
+<p class="try">🔎 Hajmni kamaytiring: bosim ortadi, Q manfiy chiqadi. Bosim bu rejimda avtomatik hisoblanadi.</p>`}
+];
+const $=i=>document.getElementById(i),cl=(x,a,b)=>Math.max(a,Math.min(b,x)),V1=2,N=36;
+let M=0,P=150,V2=4,T2=450,Tc=300,s=0,run=false,last=0;
+const mol=[...Array(N)].map(()=>{const a=Math.random()*6.283;return{x:Math.random()*160,y:Math.random()*20,ux:Math.cos(a),uy:Math.sin(a)}});
+const sp=$("sp"),sv=$("sv"),stt=$("stt");
+function st(t){const ty=modes[M].t;
+ if(ty=="heat"){const T=300+(T2-300)*t;return{V:2,T,p:T/2}}
+ const V=V1+(V2-V1)*t;
+ return ty=="isobar"?{V,p:P,T:P*V}:{V,p:Tc/V,T:Tc}}
+function calc(t){const r=st(t),i=st(0),ty=modes[M].t,dV=r.V-i.V;
+ const Ap=ty=="heat"?0:ty=="isobar"?P*dV:Tc*Math.log(r.V/i.V),dU=1.5*(r.T-i.T);
+ return{r,dV,Ap,A:-Ap,dU,Q:dU+Ap}}
+function setMode(i){M=i;const d=modes[i].d,ty=modes[i].t;
+ P=d.P||150;V2=d.V2||2;T2=d.T2||450;Tc=d.Tc||300;s=0;run=false;
+ $("rt").textContent=modes[i].title;$("info").innerHTML=modes[i].h;
+ [...$("tabs").children].forEach((b,k)=>b.className=k==i?"on":"");
+ sp.max=ty=="isobar"?300:1500;sp.disabled=ty!="isobar";sv.disabled=ty=="heat";
+ if(ty=="heat"){stt.min=150;stt.max=800;stt.step=10;stt.value=T2}
+ else if(ty=="isobar"){stt.min=25;stt.max=1500;stt.step=5;stt.value=P*V2}
+ else{stt.min=150;stt.max=600;stt.step=10;stt.value=Tc}
+ sp.value=P;sv.value=V2}
+function reset(){s=0;run=false}
+sp.oninput=()=>{P=+sp.value;stt.value=P*V2;reset()};
+sv.oninput=()=>{V2=+sv.value;if(modes[M].t=="isobar")stt.value=P*V2;reset()};
+stt.oninput=()=>{const v=+stt.value,ty=modes[M].t;
+ if(ty=="heat")T2=v;else if(ty=="isoT")Tc=v;else{V2=cl(v/P,.5,5);sv.value=V2;stt.value=P*V2}reset()};
+$("b1").onclick=()=>{if(s>=1)s=0;run=true};$("b2").onclick=()=>run=false;$("b3").onclick=reset;
+modes.forEach((m,i)=>{const b=document.createElement("button");b.textContent=(i+1)+". "+m.n;b.onclick=()=>setMode(i);$("tabs").appendChild(b)});
+const cc=$("cc").getContext("2d"),gc=$("gc").getContext("2d");
+function drawC(col,r,c){const x0=70,w=160,yb=280,h=r.V/6*250;
+ cc.clearRect(0,0,300,300);
+ const hue=cl(240-(r.T-100)/700*240,0,240);
+ cc.fillStyle=`hsla(${hue},80%,55%,.13)`;cc.fillRect(x0,yb-h,w,h);
+ cc.strokeStyle=col;cc.lineWidth=3;cc.beginPath();cc.moveTo(x0,20);cc.lineTo(x0,yb);cc.lineTo(x0+w,yb);cc.lineTo(x0+w,20);cc.stroke();
+ cc.fillStyle="#8a97a6";cc.fillRect(x0+w/2-3,6,6,yb-h-16);cc.fillRect(x0,yb-h-12,w,12);
+ const step=2.4*Math.sqrt(r.T/300);
+ mol.forEach(m=>{m.x+=m.ux*step;m.y+=m.uy*step;
+  if(m.x<4){m.x=4;m.ux=Math.abs(m.ux)}if(m.x>w-4){m.x=w-4;m.ux=-Math.abs(m.ux)}
+  if(m.y<4){m.y=4;m.uy=Math.abs(m.uy)}if(m.y>h-4){m.y=Math.max(4,h-4);m.uy=-Math.abs(m.uy)}
+  cc.fillStyle=`hsl(${hue},85%,50%)`;cc.beginPath();cc.arc(x0+m.x,yb-m.y,4,0,6.283);cc.fill()});
+ cc.fillStyle=col;cc.font="14px system-ui";cc.textAlign="center";
+ if(s>0&&Math.abs(c.dV)>.005)cc.fillText(c.dV>0?"⬆ Gaz ish bajaradi":"⬇ Gaz ustida ish bajariladi",150,h>200?20:yb-h-30);
+ cc.font="20px system-ui";
+ if(s>0&&c.Q>.5)cc.fillText("🔥 Q > 0",150,298);else if(s>0&&c.Q<-.5)cc.fillText("❄ Q < 0",150,298)}
+function drawG(col,c){const W=340,H=300,L=46,B=36,R=12,T=14,pts=[];
+ for(let k=0;k<=50;k++)pts.push(st(k/50));
+ const ym=Math.max(300,Math.ceil(Math.max(...pts.map(q=>q.p))*1.1/100)*100);
+ const X=v=>L+v/6*(W-L-R),Y=p=>H-B-p/ym*(H-B-T);
+ gc.clearRect(0,0,W,H);gc.font="11px system-ui";gc.fillStyle=col;gc.strokeStyle=col;gc.lineWidth=1;gc.textAlign="center";
+ const n=Math.round(s*50),cur=pts.slice(0,n);cur.push(st(s));
+ if(modes[M].t!="heat"){gc.fillStyle=cur[cur.length-1].V>=V1?"rgba(46,158,91,.4)":"rgba(232,131,42,.4)";
+  gc.beginPath();gc.moveTo(X(cur[0].V),Y(0));cur.forEach(q=>gc.lineTo(X(q.V),Y(q.p)));gc.lineTo(X(cur[cur.length-1].V),Y(0));gc.closePath();gc.fill()}
+ gc.fillStyle=col;gc.beginPath();gc.moveTo(L,T);gc.lineTo(L,H-B);gc.lineTo(W-R,H-B);gc.stroke();
+ for(let v=0;v<=6;v++)gc.fillText(v,X(v),H-B+13);
+ gc.textAlign="right";for(let k=0;k<=4;k++)gc.fillText(Math.round(ym*k/4),L-4,Y(ym*k/4)+4);
+ gc.textAlign="center";gc.fillText("V (L)",(L+W)/2,H-6);gc.fillText("p (kPa)",L+8,T-3);
+ gc.setLineDash([4,4]);gc.beginPath();pts.forEach((q,k)=>k?gc.lineTo(X(q.V),Y(q.p)):gc.moveTo(X(q.V),Y(q.p)));gc.stroke();gc.setLineDash([]);
+ gc.strokeStyle="#2f6fed";gc.lineWidth=3;gc.beginPath();cur.forEach((q,k)=>k?gc.lineTo(X(q.V),Y(q.p)):gc.moveTo(X(q.V),Y(q.p)));gc.stroke();
+ const e=cur[cur.length-1];gc.fillStyle="#2f6fed";gc.beginPath();gc.arc(X(e.V),Y(e.p),5,0,6.283);gc.fill()}
+const f=(x,u,d=1)=>x.toFixed(d).replace(".",",")+" "+u;
+function show(c){const r=c.r,ty=modes[M].t;
+ if(sp.disabled)sp.value=r.p;if(sv.disabled)sv.value=r.V;
+ $("lp").textContent=ty=="isobar"?P:Math.round(r.p);
+ $("lv").textContent=(ty=="heat"?r.V:V2).toFixed(1).replace(".",",");
+ $("lt").textContent=ty=="heat"?T2:ty=="isoT"?Tc:Math.round(P*V2);
+ $("rp").textContent=f(r.p,"kPa",0);$("rv").textContent=f(r.V,"L",2);$("rT").textContent=f(r.T,"K",0);
+ $("rdv").textContent=f(c.dV,"L",2)+" ("+c.dV.toFixed(2).replace(".",",")+"·10⁻³ m³)";
+ $("rap").textContent=f(c.Ap,"J");$("ra").textContent=f(c.A,"J");$("rdu").textContent=f(c.dU,"J");$("rq").textContent=f(c.Q,"J");
+ let m=c.dV>.005?"Gaz kengaydi → gaz ish bajardi (A′ > 0). ":c.dV<-.005?"Gaz siqildi → gaz ustida ish bajarildi (A > 0). ":"Hajm o'zgarmadi → ish 0. ";
+ $("msg").textContent=m+(c.Q>.05?"Gaz issiqlik oldi (Q > 0). ":c.Q<-.05?"Gaz issiqlik berdi (Q < 0). ":"")+"ΔU = Q + A ✔"}
+function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;
+ if(run){s=Math.min(1,s+dt/3.5);if(s>=1)run=false}
+ const col=getComputedStyle(document.body).color,c=calc(s);
+ drawC(col,c.r,c);drawG(col,c);show(c);requestAnimationFrame(frame)}
+setMode(0);requestAnimationFrame(frame);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+const FOOT="9-sinf Fizika • 16-mavzu: Termodinamik ish",BEGIN="Termodinamik ish • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: gaz ishi",t:"Salom, aziz oʻquvchilar! Bugun termodinamik ish haqida gaplashamiz: gaz qachon ish bajaradi va uni qanday hisoblaymiz."},
+{d:40,h:"Gaz kengayganda ish bajaradi",t:"Gaz kengayganda porshenni suradi va ish bajaradi. Bosim oʻzgarmas boʻlsa, gazning bajargan ishi A shtrix teng p karra delta V, bunda delta V — hajm oʻzgarishi. Hajm qancha koʻp ortsa, ish shuncha katta. Ish paskal karra kub metr, ya’ni joulda oʻlchanadi. Hisoblashda bosimni paskalda, hajmni kub metrda oling."},
+{d:50,h:"p–V grafigida ish — yuza",t:"Endi p–V grafigi. Termodinamik ish grafik chizigʻi ostidagi yuzaga teng. Kengayishda hajm ortadi, ish musbat va yuza yashil rangda boʻyaladi. Siqilishda hajm kamayadi, gaz bajargan ish manfiy va yuza toʻq sariq rangda boʻyaladi. Bosim oʻzgarmas boʻlganda yuza oddiy toʻgʻri toʻrtburchak: balandligi p, kengligi delta V."},
+{d:35,h:"1-masala. Kengayish ishi",t:"Birinchi masala. Gaz 2 karra 10 ning 5-darajasi paskal bosimda 0,5 karra 10 ning minus 3-darajasi kub metrga kengaydi. Gaz bajargan ishni topamiz. A shtrix teng p delta V, 2 karra 10 ning 5-darajasi karra 0,5 karra 10 ning minus 3-darajasi, bu 100 joul."},
+{d:40,h:"Siqilganda ish ishorasi",t:"Gaz siqilganda hajm kamayadi, delta V manfiy, shuning uchun gazning bajargan ishi ham manfiy: A shtrix kichik nol. Gaz ustida esa tashqi kuchlar ish bajaradi: A teng minus A shtrix, bu musbat. Mana, porshen gazni siqmoqda. Ekranda bajarilgan ish gaz ustida musbat ekanini koʻrasiz."},
+{d:45,h:"Termodinamikaning birinchi qonuni",t:"Termodinamikaning birinchi qonuni: ichki energiyaning oʻzgarishi delta U teng Q plyus A, bunda A — gaz ustida bajarilgan ish. Masalan, gazga 300 joul issiqlik berildi va gaz 100 joul ish bajardi. Demak, gaz ustida bajarilgan ish minus 100 joul. Delta U teng 300 plyus minus 100, ya’ni 200 joul. Ichki energiya ortdi."},
+{d:30,h:"Hajm oʻzgarmasa (V = const)",t:"Hajm oʻzgarmasa, delta V nolga teng, demak gaz ish bajarmaydi. Berilgan issiqlikning hammasi ichki energiyani oshirishga ketadi: Q teng delta U. Berk idishdagi gazni isitsak, porshen harakatlanmaydi, lekin gaz qiziydi."},
+{d:35,h:"Bir atomli ideal gaz",t:"Bir atomli ideal gaz uchun ichki energiyaning oʻzgarishi delta U teng bir butun besh oʻndan nyu R delta T. Simulyatsiyada nyu R teng 1 joul boʻlinsin kelvin deb olingan. Misol: bosim oʻzgarmas holda gaz 300 dan 400 kelvingacha qizdirilsa, delta U 150 joul, ish 100 joul, issiqlik miqdori Q esa 250 joul."},
+{d:10,h:"Xulosa",t:"Xulosa: A shtrix teng p delta V, delta U teng Q plyus A. Eʼtiboringiz uchun rahmat!"}
+];
+const R3=mkR([1,6,12,20,28],[["p = 2·10⁵ Pa",E],["ΔV = 0,5·10⁻³ m³",E],["A′ = p·ΔV",Y],["A′ = 2·10⁵·0,5·10⁻³",Y],["A′ = 100 J",OK]]);
+const R4=mkR([1,8,17,28],[["Siqilish:  ΔV < 0",E],["A′ = p·ΔV < 0",Y],["Gaz ustida:  A = −A′ > 0",Y],["Tashqi kuchlar ish bajaradi",OK]]);
+let P=[];const CB=[50,110,250,370];
+function gg(i,p){const t=cl((p-.1)/.8);if(i==1)return{vf:(2+3*t)/6*.9,m:1,V:2+3*t};if(i==3)return{vf:.4+.15*t,m:1,V:1+.5*t};if(i==4)return{vf:.8-.4*t,m:Math.sqrt(1+.3*t),V:0};return{vf:.6,m:Math.sqrt(1+.3*t),V:0}}
+function sceneEnter(i){P=[];if(i==0||i==1||i==3||i==4||i==6)P=rp(40,CB,1.4,1.4)}
+function sceneStep(i,p){if(i==0)gas(P,1,[CB[0],CB[1]+60,CB[2],CB[3]],4);else if(i==1||i==3||i==4||i==6){const g=gg(i,p);gas(P,g.m,[CB[0],110+260*(1-g.vf),CB[2],CB[3]],4)}}
+function sceneDraw(i,p,lt){
+if(i==0){cylx(380,140,200,230,.55,{wt:"p",f:1,ph:lt});P.forEach(o=>dot(o.x+330,o.y+30,4,col(o.sp)));rich("A′ = p·ΔV",W/2,100,32,Y)}
+else if(i==1){const g=gg(1,p);cylx(CB[0],110,200,260,g.vf,{wt:"p",f:1,ph:lt});P.forEach(o=>dot(o.x,o.y,4,col(o.sp)));rich("p = 200 kPa = const",600,150,24,E);rich("A′ = p·ΔV",600,205,40,Y);rich("ΔV = "+fx(g.V-2)+" L",600,260,28,"#38bdf8");rich("A′ = "+Math.round(200*(g.V-2))+" J",600,310,32,OK);rich("1 kPa·L = 1 J",600,355,18,G)}
+else if(i==2){const x0=120,y0=120,w=420,h=250,mx=V=>x0+V/8*w,my=pp=>y0+h-pp/250*h,A=lt<24,tt=A?cl(lt/20):cl((lt-24)/20),V=A?2+4*tt:6-3*tt;axes(x0,y0,w,h,"V (L)","p (kPa)","");
+const yp=my(200);if(A){c.fillStyle="rgba(74,222,128,.4)";c.fillRect(mx(2),yp,mx(V)-mx(2),y0+h-yp)}else{c.fillStyle="rgba(251,146,60,.45)";c.fillRect(mx(V),yp,mx(6)-mx(V),y0+h-yp)}
+c.strokeStyle="#fbbf24";c.lineWidth=3;c.beginPath();c.moveTo(mx(A?2:Math.min(V,6)),yp);c.lineTo(mx(A?V:6),yp);c.stroke();dot(mx(V),yp,6,"#fbbf24");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";for(let k=0;k<=8;k+=2)c.fillText(k,mx(k),y0+h+16);c.fillText("p = 200",x0+50,yp-8);
+rich(A?"A′ = +"+Math.round(200*(V-2))+" J":"A′ = "+Math.round(-200*(6-V))+" J",x0+w/2,y0-24,26,A?OK:"#fb923c");
+const L=[["Kengayish: ΔV > 0, A′ > 0","#4ade80",2],["Siqilish: ΔV < 0, A′ < 0","#fb923c",26],["Yuza = ish",Y,36]];L.forEach((l,k)=>{const al=cl((lt-l[2])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,170+k*60,20,l[1],"l");c.globalAlpha=1})}
+else if(i==3){const g=gg(3,p);cylx(CB[0],110,200,260,g.vf,{wt:"p",f:1,ph:lt});P.forEach(o=>dot(o.x,o.y,4,col(o.sp)));panel(R3,lt,19)}
+else if(i==4){const g=gg(4,p);cylx(CB[0],110,200,260,g.vf,{wt:"p"});P.forEach(o=>dot(o.x,o.y,4,col(o.sp)));if(p>.05&&p<.9)arrow(150,60,150,92,"#fbbf24",6);rich("A′ < 0",410,200,34,"#fb923c");rich("A = −A′ > 0",410,250,28,OK);panel(R4,lt,19)}
+else if(i==5){c.fillStyle="rgba(30,41,59,.95)";c.fillRect(380,140,200,110);c.strokeStyle="#94a3b8";c.lineWidth=3;c.strokeRect(380,140,200,110);rich("Gaz",480,205,30,E);
+if(lt>3){arrow(240,195,378,195,"#f87171",6);rich("Q = 300 J",300,175,22,"#f87171")}if(lt>14){arrow(582,195,720,195,"#38bdf8",6);rich("A′ = 100 J",660,175,22,"#38bdf8")}
+if(lt>22){c.fillStyle="#22c55e";c.fillRect(380,270,200*cl((lt-22)/6)*2/3*1.5,16);rich("ΔU = 200 J",480,316,24,OK)}
+if(lt>30)rich("ΔU = Q + A = 300 + (−100) = 200 J",W/2,360,26,Y);if(lt>38)rich("ichki energiya ortdi",W/2,396,20,G)}
+else if(i==6){const g=gg(6,p);cylx(CB[0],110,200,260,g.vf,{lock:true,f:1,ph:lt});P.forEach(o=>dot(o.x,o.y,4,col(o.sp*g.m)));cardsL([["V = const",2,E],["ΔV = 0  ⇒  A′ = 0",10,Y],["Q = ΔU",18,OK]],lt,330,140,560,56,76,30)}
+else if(i==7)cardsL([["ΔU = 1,5·νR·ΔT",2,Y],["νR = 1 J/K",7,E],["T: 300 → 400 K  (p = const)",12,E],["ΔU = 1,5·1·100 = 150 J",18,Y],["A′ = νR·ΔT = 100 J",24,Y],["Q = ΔU + A′ = 250 J",30,OK]],lt,150,105,660,40,48,24)
+else if(i==8)bullets(["A′ = p·ΔV;   A = −A′","ΔU = Q + A"],lt,2.5,190,28)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ideal gazning holat tenglamalari</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f8ff;--cd:#fff;--tx:#14213d;--mu:#55627a;--ac:#2563eb;--fm:#fff3c4;--fb:#f5b700;--ok:#16a34a;--no:#dc2626;--bd:#d5e0f5;--cv:#fbfdff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--cd:#1b2540;--tx:#eef2ff;--mu:#a9b6d3;--ac:#60a5fa;--fm:#3a3210;--fb:#f5b700;--bd:#33415f;--cv:#111a30}}
+:root[data-theme="dark"]{--bg:#0f172a;--cd:#1b2540;--tx:#eef2ff;--mu:#a9b6d3;--ac:#60a5fa;--fm:#3a3210;--fb:#f5b700;--bd:#33415f;--cv:#111a30}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:clamp(17px,2.4vw,20px)/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:14px}
+h1{font-size:clamp(24px,5vw,34px);margin:6px 0 2px}h2{font-size:1.35em;margin:0 0 8px}h3{margin:14px 0 6px;font-size:1.1em}
+.sub{color:var(--mu);margin:0 0 12px}
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tabs button{flex:1;padding:12px;font:inherit;font-weight:700;border:2px solid var(--ac);background:var(--cd);color:var(--ac);border-radius:14px;cursor:pointer}
+.tabs button.on{background:var(--ac);color:#fff}
+section{display:none}section.on{display:block}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:18px;padding:16px;margin:12px 0}
+.fm{background:var(--fm);border-left:6px solid var(--fb);border-radius:10px;padding:8px 12px;margin:8px 0;font-weight:700;font-size:1.15em;overflow-x:auto}
+ul{padding-left:22px;margin:6px 0}
+canvas{width:100%;display:block;background:var(--cv);border:2px solid var(--bd);border-radius:12px}
+.row{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.row{grid-template-columns:1fr 1fr}}
+label{display:block;font-weight:700;margin-top:8px}
+input[type=range]{width:100%;height:32px;accent-color:var(--ac)}
+input[type=number]{font:inherit;width:100%;padding:6px 8px;border:2px solid var(--bd);border-radius:10px;background:var(--cv);color:var(--tx)}
+.btn{font:inherit;font-weight:700;padding:10px 14px;border-radius:12px;border:2px solid var(--ac);background:var(--cd);color:var(--ac);cursor:pointer}
+.btn.on{background:var(--ac);color:#fff}.btn.rs{border-color:var(--no);color:var(--no)}
+.bt{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.out{background:var(--cv);border:2px dashed var(--ac);border-radius:12px;padding:10px 12px;margin-top:10px;overflow-x:auto}
+.big{font-size:1.5em;font-weight:800;color:var(--ac)}
+.bar{height:16px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#f59e0b,#dc2626);width:0}
+details{background:var(--cv);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:700}
+.q{margin:10px 0}.q button{display:block;width:100%;text-align:left;font:inherit;margin:5px 0;padding:9px 12px;border-radius:10px;border:2px solid var(--bd);background:var(--cv);color:var(--tx);cursor:pointer}
+.q button.ok{border-color:var(--ok);background:rgba(22,163,74,.2)}.q button.no{border-color:var(--no);background:rgba(220,38,38,.2)}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar input[type=range]{width:auto;flex:1;min-width:140px;height:32px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:700;margin-top:0;font-size:.85em}
+.vbar select{font:inherit;padding:6px 8px;border-radius:10px;border:2px solid var(--bd);background:var(--cv);color:var(--tx)}
+.vbar .btn.rs{border-color:var(--mu);color:var(--mu)}
+.vnote{font-size:.8em;color:var(--mu);margin:6px 0 0}
+</style></head><body><main>
+<h1>⚛️ 9-mavzu: Ideal gazning holat tenglamalari</h1>
+<p class="sub">9-sinf fizika · interaktiv o'quv material</p>
+<div class="tabs"><button class="on" data-t="s1">1. Holat tenglamasi</button><button data-t="s2">2. Klapeyron tenglamasi</button></div>
+
+<section id="s1" class="on">
+<div class="card"><h2>📘 Nazariy ma'lumot</h2>
+<ul><li><b>Ideal gaz</b> — molekulalari moddiy nuqta, o'zaro ta'sirlashmaydi, faqat bir-biri va devor bilan to'qnashadi.</li>
+<li>Holat parametrlari: bosim <b>p</b> (Pa), hajm <b>V</b> (m³), temperatura <b>T</b> (K).</li>
+<li>Temperatura: T(K) = t(°C) + 273.</li></ul></div>
+<div class="card"><h2>📐 Formulalar</h2>
+<div class="fm">pV = (m/M)·RT = νRT &nbsp; (Mendeleyev–Klapeyron)</div>
+<div class="fm">p = nkT</div>
+<p>n — molekulalar konsentratsiyasi (m⁻³), k = 1,38·10⁻²³ J/K, R = 8,31 J/(mol·K).</p></div>
+<div class="card"><h2>🎮 Simulyatsiya: porshenli idish</h2>
+<canvas id="c1" style="height:230px"></canvas>
+<label>Temperatura T: <span id="v1T"></span> K</label><input type="range" id="T1" min="200" max="600" step="10" value="300">
+<label>Hajm V: <span id="v1V"></span> L</label><input type="range" id="V1" min="1" max="10" step="0.5" value="5">
+<label>Modda miqdori ν: <span id="v1n"></span> mol</label><input type="range" id="N1" min="1" max="5" step="1" value="2">
+<div class="out"><div>Bosim (manometr):</div><div class="bar"><i id="bar1"></i></div>
+<div id="eq1" style="margin-top:8px"></div><div class="big" id="p1"></div><div id="n1"></div></div>
+<p style="color:var(--mu)">🔵 sovuq — 🔴 issiq. Zarralar porshenga urilganda u yonib ketadi.</p>
+<div class="bt"><button class="btn rs" onclick="reset1()">🔄 Qayta boshlash</button></div></div>
+<div class="card"><h2>✏️ Masalalar</h2>
+<p><b>1-masala.</b> Hajmi 20 L balloda 27 °C da 2 mol ideal gaz bor. Gaz bosimini toping.</p>
+<details><summary>Yechimni ko'rish</summary>Berilgan: V = 20 L = 0,02 m³, T = 27 + 273 = 300 K, ν = 2 mol.<div class="fm">p = νRT/V = 2·8,31·300 / 0,02 = 249 300 Pa ≈ 249 kPa</div></details>
+<p><b>2-masala.</b> 27 °C da gaz molekulalari konsentratsiyasi 10²⁵ m⁻³. Bosimni toping.</p>
+<details><summary>Yechimni ko'rish</summary>T = 300 K.<div class="fm">p = nkT = 10²⁵·1,38·10⁻²³·300 = 41 400 Pa = 41,4 kPa</div></details></div>
+<div class="card"><h2>❓ Nazorat savollari</h2><div id="qz1"></div><div class="bt"><button class="btn rs" onclick="quiz('qz1',Q1)">🔄 Qayta boshlash</button></div></div>
+</section>
+
+<section id="s2">
+<div class="card"><h2>📘 Nazariy ma'lumot</h2>
+<ul><li>Gaz massasi o'zgarmas bo'lsa (m = const), holat o'zgarganda <b>pV/T</b> o'zgarmaydi.</li>
+<li><b>Izotermik</b> (T = const) — Boyl–Mariott qonuni.</li><li><b>Izobarik</b> (p = const) — Gey-Lyussak qonuni.</li><li><b>Izoxorik</b> (V = const) — Sharl qonuni.</li></ul></div>
+<div class="card"><h2>📐 Formulalar</h2>
+<div class="fm">pV/T = const</div><div class="fm">p₁V₁/T₁ = p₂V₂/T₂</div>
+<div class="fm">T = const: p₁V₁ = p₂V₂</div><div class="fm">p = const: V₁/T₁ = V₂/T₂</div><div class="fm">V = const: p₁/T₁ = p₂/T₂</div></div>
+<div class="card"><h2>🎮 Simulyatsiya: 1-holatdan 2-holatga</h2>
+<p style="margin:0"><b>1-holat</b> (o'zingiz kiriting):</p>
+<div class="row" style="grid-template-columns:repeat(3,1fr);gap:8px">
+<div><label>p₁ (kPa)</label><input type="number" id="p1i" value="100" min="1"></div>
+<div><label>V₁ (L)</label><input type="number" id="V1i" value="2" min="0.1" step="0.1"></div>
+<div><label>T₁ (K)</label><input type="number" id="T1i" value="300" min="1"></div></div>
+<div class="bt"><button class="btn on" data-m="0">Izotermik</button><button class="btn" data-m="1">Izobarik</button><button class="btn" data-m="2">Izoxorik</button></div>
+<label><span id="kl"></span>: <span id="kv"></span></label><input type="range" id="k" min="0.5" max="2" step="0.05" value="1.6">
+<div class="row"><canvas id="c2" style="height:220px"></canvas><canvas id="g2" style="height:220px"></canvas></div>
+<div class="out"><div id="st"></div></div>
+<div class="bt"><button class="btn rs" onclick="reset2()">🔄 Qayta boshlash</button></div></div>
+<div class="card"><h2>✏️ Masalalar</h2>
+<p><b>1-masala.</b> p₁ = 100 kPa, V₁ = 2 L, T₁ = 300 K bo'lgan gaz V₂ = 1 L gacha siqilib, T₂ = 600 K gacha qizdirildi. p₂ ni toping.</p>
+<details><summary>Yechimni ko'rish</summary><div class="fm">p₂ = p₁V₁T₂/(T₁V₂) = 100·2·600/(300·1) = 400 kPa</div></details>
+<p><b>2-masala.</b> Berk idishdagi gaz bosimi 27 °C da 150 kPa. Gaz 127 °C gacha qizdirilsa, bosim qancha bo'ladi?</p>
+<details><summary>Yechimni ko'rish</summary>V = const (izoxorik), T₁ = 300 K, T₂ = 400 K.<div class="fm">p₂ = p₁T₂/T₁ = 150·400/300 = 200 kPa</div></details></div>
+<div class="card"><h2>❓ Nazorat savollari</h2><div id="qz2"></div><div class="bt"><button class="btn rs" onclick="quiz('qz2',Q2)">🔄 Qayta boshlash</button></div></div>
+</section>
+<div class="card" id="vid"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="btn" id="vpp">▶ Boshlash</button><button class="btn rs" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const f=(x,d=2)=>String(+x.toFixed(d)).replace('.',',');
+const fp=x=>Math.round(x).toString().replace(/\B(?=(\d{3})+$)/g,' ');
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,section').forEach(e=>e.classList.remove('on'));b.classList.add('on');$(b.dataset.t).classList.add('on')});
+function Sim(c,get){const s={ps:[],fl:0},x=c.getContext('2d');
+s.n=n=>{while(s.ps.length<n)s.ps.push({x:30+Math.random()*80,y:20+Math.random()*150,a:Math.random()*6.28});s.ps.length=n};
+s.draw=()=>{const w=c.clientWidth,h=c.clientHeight;if(c.width!==w||c.height!==h){c.width=w;c.height=h}
+const st=get(),L=12,bw=(w-60)*st.fr,R=L+bw,cs=getComputedStyle(document.documentElement).getPropertyValue('--tx');
+x.clearRect(0,0,w,h);x.strokeStyle=cs;x.lineWidth=4;x.beginPath();x.moveTo(R,8);x.lineTo(L,8);x.lineTo(L,h-8);x.lineTo(R,h-8);x.stroke();
+x.fillStyle=s.fl>0.05?'rgb(255,'+Math.round(160-130*s.fl)+',40)':'#8892a6';x.fillRect(R,4,8,h-8);x.fillRect(R+8,h/2-4,w-R-20,8);x.fillRect(w-14,h/2-16,8,32);
+x.fillStyle='hsl('+st.h+',90%,50%)';
+for(const p of s.ps){p.x+=Math.cos(p.a)*st.v;p.y+=Math.sin(p.a)*st.v;
+if(p.x<L+5){p.x=L+5;p.a=Math.PI-p.a}if(p.x>R-5){p.x=R-5;p.a=Math.PI-p.a;s.fl=Math.min(1,s.fl+.25)}
+if(p.y<13){p.y=13;p.a=-p.a}if(p.y>h-13){p.y=h-13;p.a=-p.a}
+x.beginPath();x.arc(p.x,p.y,5,0,6.28);x.fill()}s.fl*=.92};return s}
+const hue=(T,a,b)=>Math.max(0,Math.min(240,240*(1-(T-a)/(b-a))));
+/* 1-reja */
+const S1=Sim($('c1'),()=>{const T=+$('T1').value,V=+$('V1').value;return{v:2.2*Math.sqrt(T/300),fr:V/10,h:hue(T,200,600)}});
+function upd1(){const T=+$('T1').value,V=+$('V1').value,n=+$('N1').value;
+$('v1T').textContent=T;$('v1V').textContent=f(V,1);$('v1n').textContent=n;S1.n(n*8);
+const p=n*8.31*T/(V/1000),nn=p/(1.38e-23*T);
+$('eq1').innerHTML='pV = νRT &nbsp;→&nbsp; p = νRT/V = '+n+' · 8,31 · '+T+' / '+f(V/1000,4)+'';
+$('p1').textContent='p = '+fp(p)+' Pa ≈ '+f(p/1000,1)+' kPa';
+$('n1').innerHTML='n = p/(kT) ≈ '+nn.toExponential(2).replace('e+','·10<sup>').replace('.',',')+'</sup> m⁻³';
+$('bar1').style.width=Math.min(100,100*Math.sqrt(p/25e6))+'%'}
+['T1','V1','N1'].forEach(i=>$(i).oninput=upd1);
+function reset1(){$('T1').value=300;$('V1').value=5;$('N1').value=2;upd1()}
+/* 2-reja */
+let mode=0,cur=null;
+const S2=Sim($('c2'),()=>{const T=cur.T,s=I();return{v:2.2*Math.sqrt(T/300),fr:cur.V/(2*s.V),h:hue(T,.4*s.T,2.2*s.T)}});
+S2.n(30);
+function I(){const g=(i,d)=>{const v=parseFloat($(i).value);return v>0?v:d};return{p:g('p1i',100),V:g('V1i',2),T:g('T1i',300)}}
+function tg(){const s=I(),k=+$('k').value;let V=s.V,T=s.T;if(mode==0)V=s.V*k;else T=s.T*k;return{p:s.p*s.V*T/(s.T*V),V,T}}
+const names=['Izotermik (T = const)','Izobarik (p = const)','Izoxorik (V = const)'],klab=['V₂ = V₁·k','T₂ = T₁·k','T₂ = T₁·k'];
+function upd2(){const s=I(),t=tg(),k=+$('k').value;$('kl').textContent=klab[mode];$('kv').textContent='k = '+f(k);
+const nm=['p₁V₁ = p₂V₂','V₁/T₁ = V₂/T₂','p₁/T₁ = p₂/T₂'][mode];
+$('st').innerHTML='<b>'+names[mode]+'</b> — '+nm+'<br>1) Formula: p₂ = p₁·V₁·T₂ / (T₁·V₂)<br>2) 2-holat: V₂ = '+f(t.V)+' L, T₂ = '+f(t.T,1)+' K<br>3) O\'rniga qo\'yamiz: p₂ = '+f(s.p)+' · '+f(s.V)+' · '+f(t.T,1)+' / ('+f(s.T)+' · '+f(t.V)+')<br>4) <span class="big">p₂ = '+f(t.p)+' kPa</span>'}
+function reset2(){mode=0;document.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m==0));$('p1i').value=100;$('V1i').value=2;$('T1i').value=300;$('k').value=1.6;const s=I();cur={...s};upd2()}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=+b.dataset.m;document.querySelectorAll('[data-m]').forEach(e=>e.classList.toggle('on',e==b));const s=I();cur={...s};$('k').value=1.6;upd2()});
+$('k').oninput=upd2;['p1i','V1i','T1i'].forEach(i=>$(i).oninput=()=>{const s=I();cur={...s};upd2()});
+const g2=$('g2'),gx=g2.getContext('2d');
+function graph(){const w=g2.clientWidth,h=g2.clientHeight;if(g2.width!==w||g2.height!==h){g2.width=w;g2.height=h}
+const s=I(),t=tg(),P=38,cs=getComputedStyle(document.documentElement).getPropertyValue('--tx'),ac=getComputedStyle(document.documentElement).getPropertyValue('--ac');
+const ax=[['V (L)','p (kPa)'],['T (K)','V (L)'],['T (K)','p (kPa)']][mode],
+ pick=o=>mode==0?[o.V,o.p]:mode==1?[o.T,o.V]:[o.T,o.p],
+ m=pick(s).map(v=>v*2.1),X=a=>P+a/m[0]*(w-P-12),Y=a=>h-P-a/m[1]*(h-P-14);
+gx.clearRect(0,0,w,h);gx.strokeStyle=cs;gx.fillStyle=cs;gx.lineWidth=2;gx.font='14px sans-serif';
+gx.beginPath();gx.moveTo(P,8);gx.lineTo(P,h-P);gx.lineTo(w-8,h-P);gx.stroke();
+gx.fillText(ax[0],w-70,h-P+20);gx.fillText(ax[1],4,18);
+gx.globalAlpha=.35;gx.beginPath();for(let i=0;i<=30;i++){const k=.5+i*.05,o=mode==0?{V:s.V*k,T:s.T,p:s.p/k}:mode==1?{V:s.V*k,T:s.T*k,p:s.p}:{V:s.V,T:s.T*k,p:s.p*k},q=pick(o);i?gx.lineTo(X(q[0]),Y(q[1])):gx.moveTo(X(q[0]),Y(q[1]))}gx.stroke();gx.globalAlpha=1;
+const a=pick(s),b=pick(t),c=pick(cur);
+gx.strokeStyle=ac;gx.lineWidth=4;gx.beginPath();gx.moveTo(X(a[0]),Y(a[1]));gx.lineTo(X(b[0]),Y(b[1]));gx.stroke();
+gx.fillStyle=cs;gx.beginPath();gx.arc(X(a[0]),Y(a[1]),6,0,6.28);gx.fill();gx.fillText('1',X(a[0])+8,Y(a[1])-8);
+gx.fillText('2',X(b[0])+8,Y(b[1])-8);
+gx.fillStyle='#ef4444';gx.beginPath();gx.arc(X(c[0]),Y(c[1]),8,0,6.28);gx.fill()}
+function loop(){if(cur){const t=tg();for(const q of['p','V','T'])cur[q]+=(t[q]-cur[q])*.06}
+S1.draw();S2.draw();graph();requestAnimationFrame(loop)}
+/* Savollar */
+const Q1=[{q:'27 °C temperatura Kelvinda qancha?',o:['246 K','300 K','273 K'],a:1},
+{q:'ν va V o\'zgarmas, T ikki marta oshsa, bosim qanday o\'zgaradi?',o:['2 marta ortadi','2 marta kamayadi','o\'zgarmaydi'],a:0},
+{q:'Ideal gaz molekulalari haqida qaysi gap to\'g\'ri?',o:['Katta hajmli sharlar','Moddiy nuqta, o\'zaro ta\'sirlashmaydi','Doimo bir-biriga tortiladi'],a:1}];
+const Q2=[{q:'pV = const qaysi qonun?',o:['Sharl','Gey-Lyussak','Boyl–Mariott'],a:2},
+{q:'Izobarik jarayonda V ikki marta ortsa, T qanday o\'zgaradi?',o:['2 marta ortadi','2 marta kamayadi','o\'zgarmaydi'],a:0},
+{q:'V = const, p₁ = 100 kPa, T ikki marta oshdi. p₂ = ?',o:['50 kPa','100 kPa','200 kPa'],a:2}];
+function quiz(id,Q){const d=$(id);d.innerHTML='';Q.forEach((e,i)=>{const q=document.createElement('div');q.className='q';q.innerHTML='<b>'+(i+1)+'. '+e.q+'</b>';
+e.o.forEach((o,j)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{if(q.dataset.d)return;q.dataset.d=1;b.classList.add(j==e.a?'ok':'no');if(j!=e.a)q.children[e.a+1].classList.add('ok')};q.appendChild(b)});d.appendChild(q)});
+d.closest('section').querySelectorAll('details').forEach(x=>x.open=false)}
+quiz('qz1',Q1);quiz('qz2',Q2);upd1();reset2();loop();
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const FOOT="9-sinf Fizika • Ideal gazning holat tenglamalari",BEGIN="Ideal gazning holat tenglamalari • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: ideal gaz",t:"Salom, aziz oʻquvchilar! Bugun ideal gazning holat tenglamalarini oʻrganamiz va ular yordamida masalalar yechamiz."},
+{d:35,h:"1. Ideal gaz va holat parametrlari",t:"Ideal gaz — molekulalari moddiy nuqta boʻlib, oʻzaro taʼsirlashmaydigan, faqat bir-biri va idish devori bilan toʻqnashadigan gazdir. Gazning holati uchta parametr bilan tavsiflanadi: bosim p paskalda, hajm V kub metrda va temperatura T kelvinda. Temperaturani kelvinga oʻtkazish uchun Selsiydagi temperaturaga 273 ni qoʻshamiz: T teng t plyus 273."},
+{d:40,h:"Mendeleyev–Klapeyron tenglamasi",t:"Mendeleyev–Klapeyron tenglamasi: p V teng m boʻlinsin M karra R T, ya’ni nyu R T. Bu yerda R — universal gaz doimiysi, 8 butun 31 jul boʻlinsin mol karra kelvin. Tenglamani molekulalar konsentratsiyasi orqali ham yozish mumkin: p teng n k T, bunda n — molekulalar konsentratsiyasi, k — Boltsman doimiysi, 1,38 karra 10 ning minus 23-darajasi jul boʻlinsin kelvin."},
+{d:45,h:"1-masala. Balondagi gaz bosimi",t:"Birinchi masala. Hajmi 20 litr balloda 27 daraja Selsiyda 2 mol ideal gaz bor. Gaz bosimini topamiz. Avval birliklarni oʻtkazamiz: hajm 20 litr, ya’ni nol butun nol ikki kub metr, temperatura 300 kelvin. Endi p teng nyu R T boʻlinsin V: 2 karra 8,31 karra 300 boʻlinsin nol butun nol ikki. Natija 249 ming 300 paskal, taxminan 249 kilopaskal."},
+{d:35,h:"2-masala. p = n·k·T",t:"Ikkinchi masala. 27 daraja Selsiyda gaz molekulalari konsentratsiyasi 10 ning 25-darajasi bir boʻlinsin kub metr. Bosimni topamiz. Temperatura 300 kelvin. Formula: p teng n k T. Qiymatlarni qoʻyamiz: 10 ning 25-darajasi karra 1,38 karra 10 ning minus 23-darajasi karra 300. Natija 41 ming 400 paskal, ya’ni 41 butun 4 kilopaskal."},
+{d:40,h:"2. Klapeyron tenglamasi",t:"Gaz massasi oʻzgarmas boʻlsa, holat oʻzgarganda p V boʻlinsin T oʻzgarmaydi. Bu Klapeyron tenglamasi: p bir V bir boʻlinsin T bir teng p ikki V ikki boʻlinsin T ikki. Uning xususiy hollari: temperatura oʻzgarmas boʻlsa, Boyl–Mariott qonuni; bosim oʻzgarmas boʻlsa, Gey-Lyussak qonuni; hajm oʻzgarmas boʻlsa, Sharl qonuni."},
+{d:45,h:"3-masala. Siqish va qizdirish",t:"Uchinchi masala. Bosimi 100 kilopaskal, hajmi 2 litr, temperaturasi 300 kelvin boʻlgan gaz 1 litrgacha siqilib, 600 kelvingacha qizdirildi. Oxirgi bosimni topamiz. Klapeyron tenglamasidan p ikki teng p bir V bir T ikki boʻlinsin T bir V ikki. Qiymatlarni qoʻyamiz: 100 karra 2 karra 600 boʻlinsin 300 karra 1. Natija 400 kilopaskal. Gaz avval siqildi, keyin qizdirildi, bosim 4 marta ortdi."},
+{d:35,h:"4-masala. Izoxorik jarayon",t:"Toʻrtinchi masala. Berk idishdagi gaz bosimi 27 darajada 150 kilopaskal. Gaz 127 darajagacha qizdirilsa, bosim qancha boʻladi? Idish berk, demak hajm oʻzgarmaydi, bu izoxorik jarayon. Temperaturalar 300 va 400 kelvin. p ikki teng p bir T ikki boʻlinsin T bir, 150 karra 400 boʻlinsin 300, 200 kilopaskal."},
+{d:10,h:"Xulosa",t:"Xulosa: p V teng nyu R T, p teng n k T va p V boʻlinsin T oʻzgarmas. Eʼtiboringiz uchun rahmat!"}
+];
+const T0=[1,5,11,18,25,32],mkR=a=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+const R=[null,null,null,
+mkR([["V = 20 L = 0,02 m³",E],["T = 27 + 273 = 300 K",E],["ν = 2 mol",E],["p = νRT / V",Y],["p = 2·8,31·300 / 0,02",Y],["p ≈ 249 kPa",OK]]),
+mkR([["n = 10²⁵ m⁻³,  t = 27 °C",E],["T = 300 K",E],["p = n·k·T",Y],["p = 10²⁵·1,38·10⁻²³·300",Y],["p = 41 400 Pa = 41,4 kPa",OK]]),
+null,
+mkR([["p₁ = 100 kPa,  V₁ = 2 L,  T₁ = 300 K",E],["V₂ = 1 L,  T₂ = 600 K",E],["p₂ = p₁V₁T₂ / (T₁V₂)",Y],["p₂ = 100·2·600 / (300·1)",Y],["p₂ = 400 kPa",OK]]),
+mkR([["V = const  (izoxorik)",E],["T₁ = 27 + 273 = 300 K",E],["T₂ = 127 + 273 = 400 K",E],["p₂ = p₁T₂ / T₁",Y],["p₂ = 150·400 / 300 = 200 kPa",OK]])];
+let P=[];
+const BX=[60,100,900,395];
+function cyl(x0,y0,w,h,vf,lock){const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8);if(lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val).replace(/,0$/,"")+" "+unit,cx,cy+48,26,Y)}
+function geo6(p){const t1=cl((p-.1)/.35),t2=cl((p-.5)/.35),V=2-t1,T=300+300*t2;return{V,T,pv:100*2/V*T/300,vf:V/2*.8}}
+function geo7(p){const t=cl((p-.1)/.8),T=300+100*t;return{T,pv:150*T/300,vf:.6}}
+function sceneEnter(i){P=[];if(i==0)P=rp(40,BX,1.2,3.4);if(i==1)P=rp(40,[80,110,300,370],1.4,1.4);if(i==2)P=rp(30,[50,110,380,370],1.2,3);if(i==4)P=rp(70,[50,110,330,360],1.6,1.6);if(i==6||i==7)P=rp(40,[60,110,260,370],1.4,1.4)}
+function sceneStep(i,p){if(i==0)gas(P,1,BX,5);else if(i==1){const vf=.55+.2*Math.sin(p*35*.5);gas(P,1,[80,110+260*(1-vf),300,370],4)}
+else if(i==2)gas(P,1,[50,110,380,370],5);else if(i==4)gas(P,1,[50,110,330,360],4);
+else if(i==6){const g=geo6(p);gas(P,Math.sqrt(g.T/300),[60,110+260*(1-g.vf),260,370],4)}else if(i==7){const g=geo7(p);gas(P,Math.sqrt(g.T/300),[60,110+260*(1-g.vf),260,370],4)}}
+function sceneDraw(i,p,lt){const tau=cl((p-.1)/.8);
+if(i==0){frame(BX);P.forEach(o=>dot(o.x,o.y,5,col(o.sp)));if(p>.35){c.fillStyle="rgba(2,6,23,.8)";c.fillRect(250,150,460,66);rich("p,   V,   T",W/2,198,40,Y)}}
+else if(i==1){const vf=.55+.2*Math.sin(lt*.5);cyl(80,110,220,260,vf);P.forEach(o=>dot(o.x,o.y,4,col(o.sp)));
+const C=[["p — bosim (Pa)","#f87171",4],["V — hajm (m³)","#38bdf8",12],["T — temperatura (K)","#fbbf24",20]];
+C.forEach((d,k)=>{const al=cl((lt-d[2])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(360,110+k*72,560,58);c.fillStyle=d[1];c.fillRect(360,110+k*72,6,58);rich(d[0],390,148+k*72,26,E,"l");c.globalAlpha=1});
+if(lt>27)rich("T = t + 273",640,365,44,Y)}
+else if(i==2){frame([50,110,380,370]);P.forEach(o=>dot(o.x,o.y,4,col(o.sp)));
+const D=[["pV = (m/M)·RT = νRT",3,108,34,"#fbbf24"],["p = n·k·T",14,198,34,"#38bdf8"]];
+D.forEach(d=>{const al=cl((lt-d[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(410,d[2],520,64);c.fillStyle=d[4];c.fillRect(410,d[2],6,64);rich(d[0],670,d[2]+44,d[3],Y);c.globalAlpha=1});
+const L=[["R = 8,31 J/(mol·K)",24],["k = 1,38·10⁻²³ J/K",28],["n — molekulalar konsentratsiyasi (m⁻³)",33]];
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],430,305+k*38,22,E,"l");c.globalAlpha=1})}
+else if(i==3){rich("ν = 2 mol,   V = 20 L,   t = 27 °C",300,125,20,G);gauge(300,310,130,249*tau,300,"kPa");panel(R[3],lt,19)}
+else if(i==4){frame([50,110,330,360]);P.forEach(o=>dot(o.x,o.y,3.5,col(o.sp)));rich("n = 10²⁵ m⁻³",190,385,20,G);gauge(460,330,85,41.4*tau,60,"kPa");panel(R[4],lt,19)}
+else if(i==5){const al1=cl((lt-3)*2),al2=cl((lt-9)*2);
+c.globalAlpha=al1;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(120,100,720,56);rich("pV / T = const",W/2,141,36,Y);c.globalAlpha=al2;c.fillRect(120,168,720,56);rich("p₁V₁ / T₁ = p₂V₂ / T₂",W/2,209,36,Y);c.globalAlpha=1;
+const Rw=[["T = const","p₁V₁ = p₂V₂","Boyl–Mariott",16],["p = const","V₁/T₁ = V₂/T₂","Gey-Lyussak",24],["V = const","p₁/T₁ = p₂/T₂","Sharl",32]];
+Rw.forEach((r,k)=>{const al=cl((lt-r[3])*2);if(al<=0)return;c.globalAlpha=al;const y=245+k*52;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(70,y,820,44);rich(r[0],90,y+31,24,"#fbbf24","l");rich(r[1],360,y+31,24,E,"l");rich(r[2],660,y+31,24,"#67e8f9","l");c.globalAlpha=1})}
+else if(i==6){const g=geo6(p),top=cyl(60,110,200,260,g.vf);P.forEach(o=>dot(o.x,o.y,4,col(o.sp*Math.sqrt(g.T/300))));gauge(420,300,100,g.pv,400,"kPa");rich("V = "+fx(g.V)+" L     T = "+Math.round(g.T)+" K",300,398,20,Y);panel(R[6],lt,18)}
+else if(i==7){const g=geo7(p),top=cyl(60,110,200,260,g.vf,true);P.forEach(o=>dot(o.x,o.y,4,col(o.sp*Math.sqrt(g.T/300))));gauge(420,300,100,g.pv,250,"kPa");rich("V = const     T = "+Math.round(g.T)+" K",300,398,20,Y);panel(R[7],lt,19)}
+else if(i==8){const L=["pV = νRT,    p = n·k·T","p₁V₁ / T₁ = p₂V₂ / T₂","T, p, V = const:   Boyl–Mariott, Gey-Lyussak, Sharl"];
+L.forEach((s,k)=>{if(lt>k*2.5){c.globalAlpha=Math.min(1,(lt-k*2.5)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 30px sans-serif";c.fillText((k+1)+".",60,190+k*70);rich(s,110,190+k*70,24,E,"l");c.globalAlpha=1}})}}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

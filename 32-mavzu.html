@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>32-mavzu. Ho'llash. Kapillyar hodisalar</title>
+<style>
+:root{--bg:#f2f6fb;--card:#fff;--fg:#14213d;--mut:#5b6b85;--acc:#1e88e5;--liq:#42a5f5;--ok:#2e7d32;--bad:#c62828;--line:#d5deea}
+[data-theme=dark]{--bg:#0e1621;--card:#16222f;--fg:#e8eef7;--mut:#9fb0c7;--acc:#64b5f6;--liq:#2f7fd1;--line:#2a3b4f;--ok:#66bb6a;--bad:#ef5350}
+*{box-sizing:border-box}body{margin:0;font:16px/1.55 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;background:linear-gradient(135deg,#1565c0,#26c6da);color:#fff}
+header h1{font-size:17px;margin:0;line-height:1.25}
+#th{border:0;border-radius:12px;padding:10px 14px;font-size:18px;background:#ffffff33;color:#fff}
+nav{position:sticky;top:0;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px;background:var(--bg);border-bottom:1px solid var(--line)}
+nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:12px 16px;border-radius:14px;font-size:15px;font-weight:600}
+nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{max-width:760px;margin:auto;padding:12px}
+h2{font-size:21px;margin:8px 0 12px}h3{margin:0 0 8px;font-size:17px;color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0000000d}
+.fm{font-size:19px;text-align:center;padding:12px;border-radius:12px;background:var(--bg);overflow-x:auto;font-family:Georgia,serif}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 4px}
+.fr span:first-child{border-bottom:2px solid var(--fg);padding:0 6px}
+canvas{width:100%;height:auto;display:block;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.ctl label{display:block;margin:12px 0 2px;font-weight:600;font-size:15px}.ctl b{color:var(--acc)}
+input[type=range]{width:100%;height:34px;accent-color:var(--acc)}
+select,input[type=number]{width:100%;padding:12px;font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.out{margin-top:10px;padding:10px;border-radius:12px;background:var(--bg);font-weight:600}
+.btn{width:100%;margin-top:10px;padding:14px;border:0;border-radius:14px;background:var(--acc);color:#fff;font-size:16px;font-weight:700}
+.fb{margin-top:8px;font-weight:600}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.q{margin-bottom:16px}.q p{font-weight:700}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-size:15px}
+.opt.r{background:#2e7d32;color:#fff}.opt.w{background:#c62828;color:#fff}
+details{margin:6px 0;padding:8px 10px;border:1px solid var(--line);border-radius:12px}summary{font-weight:700;padding:6px 0}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:10px;padding:10px 16px;background:var(--acc);color:#fff;font:inherit;font-weight:700;cursor:pointer;min-height:44px}
+.vbar button.alt{background:var(--line);color:var(--fg)}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.vbar select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.vnote{font-size:13px;color:var(--mut);margin:6px 0 0}
+</style></head><body>
+<header><h1>32-mavzu. Ho'llash. Kapillyar hodisalar<br><small>9-sinf fizika</small></h1><button id="th" aria-label="Mavzu">🌓</button></header>
+<nav id="nav"></nav><main id="main"></main>
+<main id="vmain"><div class="vid" id="vid" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></main>
+<script>
+const g=9.8,$=s=>document.querySelector(s);let C={},DT=.016,cur=0;
+const fr=(n,d)=>`<span class=fr><span>${n}</span><span>${d}</span></span>`;
+const hmm=(s,cs,rho,r)=>2e6*s*cs/(rho*g*r);
+const cl=(a,l,h)=>Math.min(h,Math.max(l,a));
+function cols(){const s=getComputedStyle(document.documentElement);['fg','liq','acc','mut','line','card'].forEach(k=>C[k]=s.getPropertyValue('--'+k).trim())}
+function mol(x,a,b,r,c){x.fillStyle=c;x.beginPath();x.arc(a,b,r,0,7);x.fill();x.strokeStyle=C.fg;x.lineWidth=1;x.stroke()}
+function arr(x,x1,y1,x2,y2,c,w=2){x.strokeStyle=x.fillStyle=c;x.lineWidth=w;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();const a=Math.atan2(y2-y1,x2-x1);x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-9*Math.cos(a-.4),y2-9*Math.sin(a-.4));x.lineTo(x2-9*Math.cos(a+.4),y2-9*Math.sin(a+.4));x.fill();x.lineWidth=1}
+function txt(x,s,a,b,sz=14,c){x.fillStyle=c||C.fg;x.font=`600 ${sz}px system-ui`;x.fillText(s,a,b)}
+function water(x,y,h){x.globalAlpha=.35;x.fillStyle=C.liq;x.fillRect(0,y,360,h);x.globalAlpha=1}
+function cap(x,c,y0,th,col){th=cl(th,.32,Math.PI);const cs=Math.min(Math.cos(th),.95),R=42*Math.cbrt(2/((2+cs)*(1-cs)**2)),cy=y0+R*cs;x.beginPath();for(let p=-th;p<=th;p+=.05){const px=c+R*Math.sin(p),py=cy-R*Math.cos(p);p==-th?x.moveTo(px,py):x.lineTo(px,py)}x.closePath();x.fillStyle=col;x.fill();x.strokeStyle=C.fg;x.stroke()}
+function mens(x,cx,hw,top,bot,lvl,cs,col){const pts=[];for(let u=-1;u<=1.001;u+=.1)pts.push([cx+u*hw,lvl-26*cs*u*u]);x.beginPath();x.moveTo(cx-hw,bot);pts.forEach(p=>x.lineTo(p[0],p[1]));x.lineTo(cx+hw,bot);x.closePath();x.fillStyle=col;x.fill();x.strokeStyle=C.fg;x.lineWidth=2;x.beginPath();x.moveTo(cx-hw,top);x.lineTo(cx-hw,bot);x.lineTo(cx+hw,bot);x.lineTo(cx+hw,top);x.stroke();x.lineWidth=1}
+function tube(x,cx,w,yL,hp,col,top,bot){const ly=yL-hp;x.fillStyle=C.card;x.fillRect(cx-w/2,top,w,bot-top);x.fillStyle=col;x.fillRect(cx-w/2,ly,w,bot-ly);x.strokeStyle=C.fg;x.lineWidth=2;x.strokeRect(cx-w/2,top,w,bot-top);x.lineWidth=1}
+const LQ=[{n:'Suv',s:.072,r:1000,c:'#42a5f5'},{n:'Simob',s:.47,r:13600,c:'#9e9e9e'},{n:'Spirt',s:.022,r:800,c:'#ffb74d'}];
+const TH=[[10,140,5],[105,150,20]]; /* [idish][suyuqlik] */
+const sol=(a,b,c,d)=>`<b>Berilgan:</b> ${a}<br><b>Topish kerak:</b> ${b}<br><b>Yechim:</b> ${c}<br><b>Javob:</b> ${d}`;
+
+const P=[
+{t:"Suyuqlik sirtidagi molekulyar kuchlar",
+th:"<b>Kogeziya</b> — bir xil modda molekulalarining o'zaro tortishishi. <b>Adgeziya</b> — turli moddalar molekulalarining tortishishi. Suyuqlik ichidagi molekulaga qo'shni molekulalar hamma tomondan tortadi, natijaviy kuch nolga teng. Sirt qatlamidagi molekulani esa faqat pastdagi va yon tomondagilar tortadi, shuning uchun natijaviy kuch <b>suyuqlik ichiga</b> yo'nalgan. Shu sababli sirt tarang parda kabi qisqarishga intiladi — bu <b>sirt taranglik</b>.",
+fm:"σ = "+fr("F","l")+" &nbsp; (N/m)",
+ex:"Suv tomchisi sharsimon shaklga intiladi (sirt eng kichik bo'lishi uchun). Shishadagi simob ham mayda sharchalarga bo'linadi.",
+sim:{c:[{id:'k',l:'Kogeziya kuchi',min:.5,max:2,step:.1,val:1}],d(x,v){water(x,100,140);x.strokeStyle=C.acc;x.beginPath();x.moveTo(0,100);x.lineTo(360,100);x.stroke();
+const M=(cx,cy,half)=>{for(let i=0;i<6;i++){const a=i*Math.PI/3,s=Math.sin(a);if(half&&s<-.01)continue;mol(x,cx+Math.cos(a)*30,cy+s*30,6,C.liq);arr(x,cx,cy,cx+Math.cos(a)*(14+10*v.k),cy+s*(14+10*v.k),C.mut,2)}mol(x,cx,cy,8,C.acc)};
+M(95,175,0);M(265,100,1);arr(x,265,100,265,100+22+22*v.k,'#e53935',4);
+txt(x,'Ichkarida: F = 0',30,222);txt(x,'Sirtda: F ↓',215,60);txt(x,'(ichkariga)',222,78);return`Sirtdagi natijaviy kuch ichkariga yo'nalgan; kogeziya ${v.k.toFixed(1)} marta → kuch kattaroq.`}},
+an(x,t,S){S.m=S.m||Array.from({length:30},()=>({x:Math.random()*340+10,y:125+Math.random()*100,vx:(Math.random()-.5)*60,vy:(Math.random()-.5)*60}));water(x,110,130);x.strokeStyle=C.acc;x.beginPath();x.moveTo(0,110);x.lineTo(360,110);x.stroke();
+S.m.forEach((m,i)=>{m.x+=m.vx*DT;m.y+=m.vy*DT;if(m.x<8||m.x>352)m.vx*=-1;if(m.y<114||m.y>232)m.vy*=-1;m.x=cl(m.x,8,352);m.y=cl(m.y,114,232);mol(x,m.x,m.y,7,C.acc);if(m.y<135)arr(x,m.x,m.y+9,m.x,m.y+20+7*Math.sin(t*3+i),'#e53935',2)});txt(x,'Sirtga yaqin molekulalar ichkariga tortiladi',8,98,13)},
+pr:{q:"Suv pardasi chegarasining uzunligi l = 2 cm = 0,02 m, σ = 0,072 N/m. Sirt taranglik kuchi F necha mN (F = σ·l)?",a:1.44,u:"mN",s:sol("σ = 0,072 N/m; l = 0,02 m","F","F = σ·l = 0,072·0,02 = 0,00144 N","F = 1,44 mN")}},
+
+{t:"Ho'llash va ho'llamaslik",
+th:"Adgeziya kuchi kogeziyadan <b>katta</b> bo'lsa, suyuqlik qattiq jismni <b>ho'llaydi</b> (suv–shisha) va sirt bo'ylab yoyiladi. Adgeziya kogeziyadan <b>kichik</b> bo'lsa, <b>ho'llamaydi</b> (simob–shisha, suv–mum) va tomchi sharsimon bo'lib dumalaydi.",
+fm:"F<sub>adg</sub> &gt; F<sub>kog</sub> → ho'llaydi<br>F<sub>adg</sub> &lt; F<sub>kog</sub> → ho'llamaydi",
+ex:"Yog'langan qush patlari suvni ho'llamaydi — suv tomchilari dumalab tushadi. Kir yuvishda suvning kirni ho'llashi muhim. Suv o'tkazmaydigan matolar maxsus qoplama bilan ho'llanmaydigan qilinadi.",
+sim:{c:[{id:'r',l:'Adgeziya / kogeziya nisbati',min:.3,max:2,step:.05,val:1.5}],d(x,v){x.fillStyle=C.mut;x.globalAlpha=.4;x.fillRect(0,190,360,50);x.globalAlpha=1;const th=Math.acos(cl((v.r-1)*1.5,-1,1));cap(x,180,190,th,C.liq);return`θ ≈ ${Math.round(th*180/Math.PI)}° — ${th<Math.PI/2?"ho'llaydi (tomchi yoyiladi)":th>Math.PI/2?"ho'llamaydi (tomchi sharsimon)":"chegara holat"}`}},
+an(x,t,S){const q=t%6;x.fillStyle=C.mut;x.globalAlpha=.4;x.fillRect(0,190,360,50);x.globalAlpha=1;
+[[90,35],[270,140]].forEach(([c,d],k)=>{if(q<1){const y=20+156*q*q;mol(x,c,y,14,C.liq)}else{const p=cl((q-1)/1.2,0,1),e=p*p*(3-2*p),th=Math.PI+(d*Math.PI/180-Math.PI)*e;let cx=c;if(k&&q>2.6)cx=c+(q-2.6)*45;cap(x,cx,190,th,C.liq)}});
+txt(x,"Shisha: yoyiladi",25,225,13);txt(x,"Mum: dumalaydi",205,225,13)},
+pr:{q:"Suv tomchisi shisha bilan θ = 40° burchak hosil qildi. cosθ ni toping (2 xona aniqlikda).",a:.77,u:"",s:sol("θ = 40°","cosθ","cos 40° ≈ 0,766","≈ 0,77 (θ&lt;90° — ho'llaydi)")}},
+
+{t:"Menisk va chegaraviy burchak",
+th:"Idish devori yonida suyuqlik sirti egilgan bo'ladi — bu <b>menisk</b>. Ho'llovchi suyuqlikda menisk <b>botiq</b>, ho'llamaydigan suyuqlikda <b>qavariq</b>. Suyuqlik sirtiga o'tkazilgan urinma bilan devor orasidagi (suyuqlik tomonidagi) burchak <b>chegaraviy burchak θ</b> deyiladi. θ &lt; 90° — ho'llash, θ &gt; 90° — ho'llamaslik.",
+fm:"θ &lt; 90° ⇒ cosθ &gt; 0 (botiq menisk)<br>θ &gt; 90° ⇒ cosθ &lt; 0 (qavariq menisk)",
+ex:"O'lchov silindrida suvning meniski botiq, simobniki qavariq. Hajmni o'qiyotganda ko'z menisk sathida bo'lishi kerak: suvda pastki chizig'i, simobda yuqori chizig'i bo'yicha o'qiladi.",
+sim:{c:[{id:'l',t:'s',l:'Suyuqlik',o:['Suv','Simob','Spirt']},{id:'m',t:'s',l:'Idish materiali',o:['Shisha','Plastik (yog\'li)']}],d(x,v){const th=TH[v.m][v.l],cs=Math.cos(th*Math.PI/180);mens(x,180,60,20,225,120,cs,LQ[v.l].c);txt(x,'θ = '+th+'°',250,60,18,C.acc);return`${LQ[v.l].n}: θ = ${th}° — ${th<90?"ho'llaydi, menisk botiq":"ho'llamaydi, menisk qavariq"}`}},
+an(x,t,S){const p=cl((t%7)/5,0,1),lv=215-150*p;if(p<1){x.fillStyle=C.liq;x.fillRect(178,10,4,lv-10)}mens(x,180,32,20,225,lv,.95*cl(p*3,0,1),C.liq);txt(x,'Probirkaga suv quyilmoqda',90,16,13)},
+pr:{q:"Simobning shisha bilan chegaraviy burchagi 140°. U 90° dan necha gradusga katta?",a:50,u:"°",s:sol("θ = 140°","θ − 90°","140° − 90° = 50°","50° (θ&gt;90° — ho'llamaydi)")}},
+
+{t:"Kapillyar hodisalar",
+th:"<b>Kapillyar</b> — juda ingichka naycha. Ho'llovchi suyuqlik (suv–shisha) kapillyarda tashqi sathdan <b>yuqoriga ko'tariladi</b>, ho'llamaydigan suyuqlik (simob–shisha) <b>pastga tushadi</b>. Naycha qancha ingichka bo'lsa, ko'tarilish (pasayish) shuncha katta.",
+fm:"h ∼ "+fr("1","r"),
+ex:"Sochiq va salfetka suvni kapillyar shimadi. Qand bo'lagining chetini choyga tegizsangiz, butun bo'lak ho'llanadi.",
+sim:{c:[{id:'q',t:'s',l:'Suyuqlik',o:['Suv','Simob']},{id:'r',l:'Naycha radiusi r (mm)',min:.2,max:1,step:.05,val:.4}],d(x,v){const L=LQ[v.q],cs=v.q?-.766:1,yL=200;x.fillStyle=L.c;x.fillRect(0,yL,360,40);const rs=[v.r,2*v.r,3*v.r],xs=[70,180,290];let s='';rs.forEach((r,i)=>{const h=hmm(L.s,cs,L.r,r);tube(x,xs[i],6+r*14,yL,h*2,L.c,20,235);s+=`r=${r.toFixed(2)} mm: h=${h.toFixed(1)} mm; `});return s},},
+an(x,t,S){const p=cl((t%6)/4,0,1),e=p*p*(3-2*p),yL=190;[[0,170,'#42a5f5',1,[.3,.8],[50,110]],[190,360,'#9e9e9e',-.766,[.3,.8],[240,300]]].forEach(([a,b,c,cs,rs,xs])=>{x.fillStyle=c;x.fillRect(a,yL,b-a,50);const L=cs>0?LQ[0]:LQ[1];rs.forEach((r,i)=>tube(x,xs[i],6+r*14,yL,hmm(L.s,cs,L.r,r)*2*e,c,20,235))});txt(x,'Suv ↑',60,14);txt(x,'Simob ↓',250,14)},
+pr:{q:"r = 1 mm radiusli kapillyarda suv h = 14,7 mm ko'tarildi. r = 0,25 mm bo'lsa, h necha mm bo'ladi (h ∼ 1/r)?",a:58.8,u:"mm",s:sol("r₁ = 1 mm; h₁ = 14,7 mm; r₂ = 0,25 mm","h₂","r 4 marta kichik → h 4 marta katta: h₂ = 14,7·4","h₂ = 58,8 mm")}},
+
+{t:"Kapillyar ko'tarilish balandligi formulasi",
+th:"Kapillyardagi suyuqlik ustunining og'irligi sirt taranglik kuchi bilan muvozanatlashadi. Bundan: h <b>σ ga to'g'ri</b>, ρ va r ga <b>teskari</b> proporsional. Ho'llovchi suyuqlikda (θ ≈ 0) cosθ ≈ 1. Ho'llamaydigan suyuqlikda cosθ &lt; 0, h manfiy — suyuqlik pasayadi.",
+fm:"h = "+fr("2σ·cosθ","ρ·g·r")+"<br><small>σ — sirt taranglik (N/m), ρ — zichlik (kg/m³), g = 9,8 m/s², r — radius (m)</small><br>h ∝ 1/r &nbsp; h ∝ σ &nbsp; h ∝ 1/ρ",
+ex:"<b>Misol.</b> Suv, r = 0,5 mm = 5·10⁻⁴ m, σ = 0,072 N/m, ρ = 1000 kg/m³, cosθ = 1.<br>h = "+fr("2·0,072","1000·9,8·5·10⁻⁴")+" = "+fr("0,144","4,9")+" ≈ 0,0294 m ≈ <b>29,4 mm</b>",
+sim:{c:[{id:'r',l:'r (mm)',min:.1,max:2,step:.05,val:.5},{id:'s',l:'σ (N/m)',min:.02,max:.08,step:.002,val:.072},{id:'p',l:'ρ (kg/m³)',min:700,max:1400,step:10,val:1000}],d(x,v){const h=hmm(v.s,1,v.p,v.r),hp=Math.min(h*.9,200),yL=225;x.fillStyle=C.liq;x.fillRect(0,yL,170,15);tube(x,80,6+v.r*14,yL,hp,C.liq,10,240);
+const X=a=>195+(a-.1)/1.9*150,Y=b=>200-cl(b,0,250)/250*180;x.strokeStyle=C.fg;x.beginPath();x.moveTo(195,15);x.lineTo(195,200);x.lineTo(350,200);x.stroke();txt(x,'h',180,22,12);txt(x,'r',340,215,12);x.strokeStyle=C.acc;x.lineWidth=2;x.beginPath();for(let r=.1;r<=2.001;r+=.05){const y=Y(hmm(v.s,1,v.p,r));r<.11?x.moveTo(X(r),y):x.lineTo(X(r),y)}x.stroke();x.lineWidth=1;mol(x,X(v.r),Y(h),6,'#e53935');return`h = 2σ/(ρgr) = ${h.toFixed(1)} mm`}},
+an(x,t,S){const r=.25+.9*(.5+.5*Math.sin(t*.8)),h=hmm(.072,1,1000,r),yL=225;x.fillStyle=C.liq;x.fillRect(0,yL,360,15);tube(x,120,6+r*14,yL,Math.min(h*.9,200),C.liq,10,240);txt(x,'r = '+r.toFixed(2)+' mm',200,80,18,C.acc);txt(x,'h = '+h.toFixed(1)+' mm',200,115,18);txt(x,'r kamaysa — h ortadi',200,150,13)},
+pr:{q:"Suv (σ = 0,072 N/m, ρ = 1000 kg/m³), r = 0,2 mm, cosθ = 1. h necha mm ko'tariladi (g = 9,8 m/s²)?",a:73.5,u:"mm",s:sol("σ=0,072 N/m; ρ=1000 kg/m³; r=2·10⁻⁴ m","h","h = 2σ/(ρgr) = 0,144/(1000·9,8·2·10⁻⁴) = 0,144/1,96 ≈ 0,0735 m","h ≈ 73,5 mm")}},
+
+{t:"Tabiat va texnikada kapillyar hodisalar, masalalar",
+th:"O'simlik ildizidan suv poyaga kapillyarlar orqali ko'tariladi. Tuproqda suv kapillyar yo'llar bilan yuzaga chiqib bug'lanadi: <b>shudgorlash</b> kapillyarlarni buzadi, <b>mulchalash</b> bug'lanishni kamaytiradi — namlik saqlanadi. Qurilishda devor poydevordan suv shimadi — <b>gidroizolyatsiya</b> (suv o'tkazmaydigan qatlam) qo'yiladi. Qalam, sham va moy lampa fitili suyuqlikni kapillyar ko'taradi. Suv o'tkazmaydigan matolar ho'llanmaydigan qoplama bilan ishlanadi.",
+fm:"h = "+fr("2σ","ρ·g·r")+" &nbsp; (cosθ = 1)",
+ex:"Mayda zarrali zich tuproqda kapillyarlar ingichka — suv baland ko'tariladi, lekin sekin. G'ovak tuproqda kapillyarlar keng — suv kam ko'tariladi.",
+sim:{c:[{id:'m',t:'s',l:'Tizim',o:['Zich tuproq','G\'ovak tuproq','Fitil (lampa)']},{id:'p',l:'Vaqt (%)',min:0,max:100,step:1,val:50}],d(x,v){const p=v.p/100;if(v.m<2){x.fillStyle='#4e8cd9';x.fillRect(60,205,240,35);const f=v.m?55:150,wh=f*p,sp=v.m?20:9,r=v.m?9:4;x.globalAlpha=.5;x.fillStyle=C.liq;x.fillRect(100,205-wh,160,wh);x.globalAlpha=1;for(let i=105;i<260;i+=sp)for(let j=205-sp/2;j>55;j-=sp)mol(x,i,j,r*.8,'#8d6e63');x.strokeStyle=C.fg;x.strokeRect(100,55,160,150);return`${v.m?"G'ovak":"Zich"} tuproqda suv ${Math.round(wh/1.5)} sm ga ko'tarildi (shartli).`}
+x.fillStyle='#ffca28';x.beginPath();x.ellipse(180,215,70,22,0,0,7);x.fill();x.strokeStyle=C.fg;x.stroke();x.fillStyle=C.mut;x.fillRect(175,100,10,115);x.fillStyle='#ff9800';const wh=110*p;x.fillRect(175,210-wh,10,wh);if(p>.7){x.fillStyle='#ff5722';x.beginPath();x.ellipse(180,86,10,18,0,0,7);x.fill()}return p>.7?"Moy fitil bo'ylab yuqoriga ko'tarildi — lampa yonadi.":"Moy fitil bo'ylab kapillyar ko'tarilmoqda..."}},
+an(x,t,S){x.fillStyle='#8d6e63';x.fillRect(0,170,360,70);x.strokeStyle='#4caf50';x.lineWidth=8;x.beginPath();x.moveTo(180,170);x.lineTo(180,45);x.stroke();x.lineWidth=2;x.strokeStyle='#a1887f';[[-50,225],[-25,235],[0,238],[25,235],[50,225]].forEach(([a,b])=>{x.beginPath();x.moveTo(180,170);x.lineTo(180+a,b);x.stroke()});x.fillStyle='#66bb6a';[[-40,70],[40,100],[-35,130]].forEach(([a,b])=>{x.beginPath();x.ellipse(180+a,b,28,12,a>0?-.4:.4,0,7);x.fill()});x.lineWidth=1;for(let i=0;i<9;i++){const y=235-((t*45+i*24)%195);mol(x,180+(i%2?3:-3),y,3,C.liq)}txt(x,'Suv ildizdan barglargacha ko\'tariladi',40,16,13)},
+pr:{q:"Spirt (σ = 0,022 N/m, ρ = 800 kg/m³), r = 0,5 mm kapillyarda necha mm ko'tariladi (cosθ = 1)?",a:11.2,u:"mm",s:sol("σ=0,022; ρ=800; r=5·10⁻⁴ m","h","h = 2·0,022/(800·9,8·5·10⁻⁴) = 0,044/3,92","h ≈ 0,0112 m = 11,2 mm")},
+extra:`<div class=card><h3>📝 4 ta masala (yechimi bilan)</h3>
+<details><summary>1-masala. Suv, r = 0,1 mm</summary>${sol("σ=0,072 N/m; ρ=1000; r=10⁻⁴ m","h","h = 2σ/(ρgr) = 0,144/(1000·9,8·10⁻⁴) = 0,144/0,98","h ≈ 0,147 m = 147 mm")}</details>
+<details><summary>2-masala. Radius 2 marta kamaysa</summary>${sol("r₂ = r₁/2","h₂/h₁","h ∼ 1/r, shuning uchun h₂ = 2h₁","h 2 marta ortadi")}</details>
+<details><summary>3-masala. Simob, r = 1 mm, θ = 140°</summary>${sol("σ=0,47 N/m; ρ=13600; r=10⁻³ m; cosθ=−0,766","h","h = 2·0,47·(−0,766)/(13600·9,8·10⁻³) = −0,720/133,3","h ≈ −5,4 mm (simob 5,4 mm pasayadi)")}</details>
+<details><summary>4-masala. Tuproq kapillyari r = 0,05 mm</summary>${sol("σ=0,072; ρ=1000; r=5·10⁻⁵ m","h","h = 0,144/(1000·9,8·5·10⁻⁵) = 0,144/0,49","h ≈ 0,294 m ≈ 29 sm")}</details></div>`}
+];
+
+const TQ=[["Kogeziya nima?",["Turli modda molekulalarining tortishishi","Bir xil modda molekulalarining o'zaro tortishishi","Molekulalarning itarilishi","Sirt taranglik kuchi"],1],
+["Simob shishani nima uchun ho'llamaydi?",["Adgeziya kogeziyadan katta","Kogeziya adgeziyadan katta","Simob zichligi kichik","Kuchlar nolga teng"],1],
+["θ = 140° bo'lsa, menisk va ho'llash qanday?",["Botiq, ho'llaydi","Qavariq, ho'llamaydi","Botiq, ho'llamaydi","Qavariq, ho'llaydi"],1],
+["Kapillyar radiusi 2 marta kamaytirilsa, ko'tarilish balandligi...",["2 marta ortadi","2 marta kamayadi","4 marta ortadi","o'zgarmaydi"],0],
+["Qaysi biri kapillyar hodisa?",["Sovun pufagining hosil bo'lishi","Sochiqning suvni shimishi","Suvning muzlashi","Suvning bug'lanishi"],1]];
+
+function ctlHTML(i,c){return c.t=='s'?`<label>${c.l}</label><select data-c=${i}${c.id}>${c.o.map((o,k)=>`<option value=${k}>${o}</option>`).join('')}</select>`:`<label>${c.l}: <b id=b${i}${c.id}>${c.val}</b></label><input type=range data-c=${i}${c.id} min=${c.min} max=${c.max} step=${c.step} value=${c.val}>`}
+function build(){
+$('#nav').innerHTML=P.map((p,i)=>`<button data-i=${i}>${i+1}-reja</button>`).join('')+'<button data-i=6>✅ Test</button>';
+$('#main').innerHTML=P.map((p,i)=>`<section id=pg${i} hidden><h2>${i+1}-reja. ${p.t}</h2>
+<div class=card><h3>📘 Nazariya</h3>${p.th}</div><div class=card><h3>🧮 Formula</h3><div class=fm>${p.fm}</div></div>
+<div class=card><h3>🌍 Hayotiy misol</h3>${p.ex}</div>
+<div class=card><h3>🎛 Simulyatsiya</h3><canvas id=s${i} width=360 height=240></canvas><div class=ctl>${p.sim.c.map(c=>ctlHTML(i,c)).join('')}</div><div class=out id=o${i}></div></div>
+<div class=card><h3>🎬 Animatsiya</h3><canvas id=a${i} width=360 height=240></canvas></div>${p.extra||''}
+<div class=card><h3>✍️ Mustaqil masala</h3><p>${p.pr.q}</p><input type=number step=any id=in${i} placeholder="Javob (${p.pr.u||'son'})"><button class=btn data-chk=${i}>Tekshirish</button><div class=fb id=fb${i}></div></div></section>`).join('')+
+`<section id=pg6 hidden><h2>Test</h2><div class=card id=tq>${TQ.map((q,i)=>`<div class=q><p>${i+1}. ${q[0]}</p>${q[1].map((o,k)=>`<button class=opt data-q=${i} data-k=${k}>${'ABCD'[k]}) ${o}</button>`).join('')}</div>`).join('')}<div class=out id=score>Natija: 0 / 5</div></div></section>`}
+function show(i){cur=i;document.querySelectorAll('section').forEach((s,k)=>s.hidden=k!=i);document.querySelectorAll('nav button').forEach((b,k)=>b.classList.toggle('on',k==i));window.scrollTo(0,0)}
+document.addEventListener('click',e=>{const b=e.target;if(b.dataset.i!=null)show(+b.dataset.i);
+if(b.dataset.chk!=null){const i=+b.dataset.chk,p=P[i].pr,v=parseFloat($('#in'+i).value.replace(',','.')),f=$('#fb'+i);if(isNaN(v)){f.textContent='Javobni kiriting';f.className='fb';return}
+if(Math.abs(v-p.a)<=Math.max(Math.abs(p.a)*.02,.011)){f.className='fb ok';f.innerHTML='✅ To\'g\'ri!<br>'+p.s}else{f.className='fb bad';f.innerHTML='❌ Noto\'g\'ri. Qayta urinib ko\'ring yoki yechimni ko\'ring:<br><details><summary>Yechim</summary>'+p.s+'</details>'}}
+if(b.dataset.q!=null&&!b.parentNode.dataset.done){const q=+b.dataset.q,k=+b.dataset.k;b.parentNode.dataset.done=1;const ok=TQ[q][2];b.parentNode.querySelectorAll('.opt').forEach((o,j)=>{if(j==ok)o.classList.add('r');else if(j==k)o.classList.add('w')});let s=document.querySelectorAll('.opt.r').length-document.querySelectorAll('.opt.r.w').length;const ans=document.querySelectorAll('.q[data-done]').length;const sc=[...document.querySelectorAll('.q')].filter(d=>d.dataset.done&&d.querySelector('.opt.w')==null).length;$('#score').textContent=`Natija: ${sc} / 5`+(ans==5?(sc==5?' 🏆 A\'lo!':sc>=3?' 👍 Yaxshi':' 📚 Mavzuni takrorlang'):'')}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.c){const b=$('#b'+t.dataset.c);if(b)b.textContent=t.value}});
+$('#th').onclick=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme=='dark'?'light':'dark';cols()};
+function vals(i){const v={};P[i].sim.c.forEach(c=>{v[c.id]=+document.querySelector(`[data-c="${i}${c.id}"]`).value});return v}
+let last=0;function loop(ts){DT=Math.min(.05,(ts-last)/1000||.016);last=ts;if(cur<6){const p=P[cur];p.S=p.S||{};p.A=p.A||{};const sx=$('#s'+cur).getContext('2d'),ax=$('#a'+cur).getContext('2d');sx.clearRect(0,0,360,240);sx.fillStyle=C.card;sx.fillRect(0,0,360,240);const o=p.sim.d(sx,vals(cur),p.S);$('#o'+cur).textContent=o||'';ax.fillStyle=C.card;ax.fillRect(0,0,360,240);p.an(ax,ts/1000,p.A)}requestAnimationFrame(loop)}
+cols();build();show(0);requestAnimationFrame(loop);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+function engd(cx,lt,q1,a,q2,u){c.fillStyle="#7f1d1d";c.fillRect(cx-150,105,300,40);rich("Isitgich T₁",cx,133,20,"#fff");c.fillStyle="#1e3a8a";c.fillRect(cx-150,335,300,40);rich("Sovutgich T₂",cx,363,20,"#fff");dot(cx,235,45,"#475569");rich("Dvigatel",cx,241,16,"#fff");
+if(lt>2){arrow(cx,147,cx,188,"#f87171",5);rich("Q₁ = "+q1+" "+u,cx+95,175,18,"#f87171")}if(lt>6){arrow(cx+45,235,cx+210,235,OK,5);rich("A = "+a+" "+u,cx+210,215,18,OK)}if(lt>10){arrow(cx,282,cx,333,"#60a5fa",5);rich("Q₂ = "+q2+" "+u,cx+100,315,18,"#60a5fa")}}
+function carnot(lt,x0,y0,w,h){const X=v=>x0+(v-.8)/2.6*w,Y=p=>y0+h-(p-.8)/3.6*h;axes(x0,y0,w,h,"V","p","");
+const F=[v=>4/v,v=>2*Math.pow(2/v,1.4),v=>3.314/v,v=>2.071*Math.pow(1.6/v,1.4)],R=[[1,2],[2,3.2],[3.2,1.6],[1.6,1]],CC=["#ef5b5b","#f5a54a","#4f7cff","#7a8bd1"],NM=["1→2 izoterma (T₁)","2→3 adiabata","3→4 izoterma (T₂)","4→1 adiabata"],pts=[];
+F.forEach((f,k)=>{for(let j=0;j<=30;j++){const v=R[k][0]+(R[k][1]-R[k][0])*j/30;pts.push([X(v),Y(f(v)),k])}});const n=Math.floor((pts.length-1)*cl(lt/16));
+for(let k=0;k<4;k++){c.strokeStyle=CC[k];c.lineWidth=4;c.beginPath();let st=0;for(let j=0;j<=n;j++){if(pts[j][2]!=k)continue;st?c.lineTo(pts[j][0],pts[j][1]):c.moveTo(pts[j][0],pts[j][1]);st=1}c.stroke()}
+dot(pts[n][0],pts[n][1],6,"#fbbf24");NM.forEach((s,k)=>{if(lt>k*4){c.font="600 13px sans-serif";c.fillStyle=CC[k];c.textAlign="right";c.fillText(s,x0+w-8,y0+20+k*18);c.textAlign="center"}})}
+function tubeV(cx,w,y0,y1,lv,cc,md){c.fillStyle=cc;c.beginPath();if(md>0){c.moveTo(cx-w/2,lv-6);c.quadraticCurveTo(cx,lv+8,cx+w/2,lv-6)}else if(md<0){c.moveTo(cx-w/2,lv+6);c.quadraticCurveTo(cx,lv-14,cx+w/2,lv+6)}else{c.moveTo(cx-w/2,lv);c.lineTo(cx+w/2,lv)}c.lineTo(cx+w/2,y1);c.lineTo(cx-w/2,y1);c.closePath();c.fill();
+c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(cx-w/2,y0);c.lineTo(cx-w/2,y1);c.moveTo(cx+w/2,y0);c.lineTo(cx+w/2,y1);c.stroke()}
+function latt(x0,y0,cols,rows,gap,jit,r,cc,lt){for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)dot(x0+i*gap+Math.sin(lt*9+i*3+j)*jit,y0+j*gap+Math.cos(lt*8+j*2+i)*jit,r,cc)}
+function spring2(x1,x2,y,n,amp){c.strokeStyle="#e2e8f0";c.lineWidth=2.5;c.beginPath();c.moveTo(x1,y);for(let i=1;i<n;i++)c.lineTo(x1+(x2-x1)*i/n,y+(i%2?-amp:amp));c.lineTo(x2,y);c.stroke()}
+const FOOT="9-sinf Fizika • 32-mavzu: Hoʻllash. Kapillyar hodisalar",BEGIN="Hoʻllash. Kapillyar hodisalar • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: hoʻllash va kapillyarlik",t:"Salom, aziz oʻquvchilar! Bugun hoʻllash va kapillyar hodisalarni oʻrganamiz."},
+{d:45,h:"1-reja. Kogeziya va adgeziya",t:"Kogeziya — bir xil modda molekulalarining oʻzaro tortishishi. Adgeziya — turli moddalar molekulalarining tortishishi. Suyuqlik ichidagi molekulani qoʻshnilari hamma tomondan tortadi, natijaviy kuch nolga teng. Sirt qatlamidagi molekulani esa faqat pastdagi va yon tomondagilar tortadi, shuning uchun natijaviy kuch suyuqlik ichiga yoʻnalgan. Shu sababli sirt tarang parda kabi qisqarishga intiladi, bu sirt taranglik. Suv tomchisi sharsimon shaklga intiladi."},
+{d:45,h:"2-reja. Hoʻllash va hoʻllamaslik",t:"Adgeziya kuchi kogeziyadan katta boʻlsa, suyuqlik qattiq jismni hoʻllaydi, masalan suv va shisha, u sirt boʻylab yoyiladi. Adgeziya kogeziyadan kichik boʻlsa, hoʻllamaydi: simob va shisha, suv va mum, tomchi sharsimon boʻlib dumalaydi. Yogʻlangan qush patlari suvni hoʻllamaydi. Chegaraviy burchak teta: masalan, 40 daraja boʻlsa, kosinus teta taxminan 0,77 va suyuqlik hoʻllaydi."},
+{d:40,h:"3-reja. Menisk va chegaraviy burchak",t:"Idish devori yonida suyuqlik sirti egilgan boʻladi, bu menisk. Hoʻllovchi suyuqlikda menisk botiq, hoʻllamaydigan suyuqlikda qavariq. Chegaraviy burchak teta — suyuqlik sirtiga oʻtkazilgan urinma bilan devor orasidagi burchak. Teta 90 darajadan kichik boʻlsa hoʻllash, katta boʻlsa hoʻllamaslik. Simob uchun teta 140 daraja, bu 90 dan 50 daraja katta. Hajmni oʻqiganda koʻz menisk sathida boʻlishi kerak."},
+{d:50,h:"4-reja. Kapillyar koʻtarilish balandligi",t:"Kapillyar — juda ingichka naycha. Hoʻllovchi suyuqlik kapillyarda tashqi sathdan yuqoriga koʻtariladi, hoʻllamaydigani pasayadi. Suyuqlik ustunining ogʻirligi sirt taranglik kuchi bilan muvozanatlashadi: h teng ikki sigma kosinus teta boʻlinsin ro g r. Demak, h r ga teskari proporsional. Masalan, suv, r teng 0,5 millimetr: h taxminan 29 millimetr. Radius 4 marta kichik boʻlsa, balandlik 4 marta katta."},
+{d:40,h:"5-reja. Tabiat va texnikada",t:"Tabiat va texnikada: oʻsimlik ildizidan suv poyaga kapillyarlar orqali koʻtariladi. Tuproqda suv kapillyar yoʻllar bilan yuzaga chiqib bugʻlanadi: shudgorlash kapillyarlarni buzadi, mulchalash bugʻlanishni kamaytiradi. Qurilishda devor poydevordan suv shimadi — gidroizolyatsiya qoʻyiladi. Qalam, sham va moy lampa fitili suyuqlikni kapillyar koʻtaradi."},
+{d:50,h:"6-reja. Masalalar",t:"Masalalar. Birinchi: suv, r teng 0,1 millimetr, h teng 0,144 boʻlinsin 0,98, taxminan 147 millimetr. Ikkinchi: radius 2 marta kamaysa, h ikki marta ortadi. Uchinchi: simob, r 1 millimetr, teta 140 daraja, h taxminan minus 5,4 millimetr — simob pasayadi. Toʻrtinchi: tuproq kapillyari r 0,05 millimetr, h taxminan 0,294 metr, ya’ni 29 santimetr."},
+{d:15,h:"Xulosa",t:"Xulosa: adgeziya kogeziyadan katta boʻlsa hoʻllaydi, menisk botiq; kapillyarda h teng ikki sigma kosinus teta boʻlinsin ro g r. Eʼtiboringiz uchun rahmat!"}
+];
+function sceneEnter(i){}function sceneStep(i,p){}
+function drop(cx,y0,R,th,cc){c.save();c.beginPath();c.rect(0,0,W,y0);c.clip();c.beginPath();c.arc(cx,y0+R*Math.cos(th*Math.PI/180),R,0,6.283);c.fillStyle=cc;c.fill();c.restore()}
+function sceneDraw(i,p,lt){
+if(i==0){["Kogeziya va adgeziya","Menisk, chegaraviy burchak θ","h = 2σ·cosθ / (ρ·g·r)"].forEach((s,k)=>{const al=cl((lt-1-k*3)*2);if(al<=0)return;c.globalAlpha=al;rich(s,W/2,170+k*60,30,["#38bdf8","#fbbf24","#4ade80"][k]);c.globalAlpha=1})}
+else if(i==1){c.fillStyle="rgba(56,189,248,.35)";c.fillRect(70,230,320,130);c.strokeStyle="#7dd3fc";c.lineWidth=3;c.beginPath();c.moveTo(70,230);c.lineTo(390,230);c.stroke();dot(230,310,9,"#38bdf8");for(let k=0;k<8;k++){const a=k*Math.PI/4;arrow(230+11*Math.cos(a),310+11*Math.sin(a),230+34*Math.cos(a),310+34*Math.sin(a),"#94a3b8",2)}
+dot(230,230,9,"#38bdf8");if(lt>14){[[-1,0],[1,0],[0,1]].forEach(([dx,dy])=>arrow(230+11*dx,230+11*dy,230+38*dx,230+38*dy,"#f87171",3));arrow(230,242,230,282,"#fbbf24",5)}
+cardsL([["Kogeziya — bir xil molekulalar tortishishi",3,E],["Adgeziya — turli moddalar tortishishi",10,E],["Sirtda natijaviy kuch ichkariga ⇒ sirt taranglik",20,Y],["Tomchi — sharsimon",32,OK]],lt,430,115,490,56,68,18)}
+else if(i==2){const y0=300;c.fillStyle="#475569";c.fillRect(50,y0,420,16);c.fillStyle="#7c6a4a";c.fillRect(490,y0,420,16);drop(250,y0,80,35,"rgba(56,189,248,.8)");drop(700,y0,64,142,"rgba(148,163,184,.9)");rich("shisha + suv:  F_{adg} > F_{kog}",250,355,19,OK);rich("mum + suv:  F_{adg} < F_{kog}",700,355,19,"#fb923c");if(lt>6)rich("hoʻllaydi",250,150,28,OK);if(lt>12)rich("hoʻllamaydi",700,150,28,"#fb923c");if(lt>26)rich("θ = 40°:  cosθ ≈ 0,77",250,200,24,Y)}
+else if(i==3){[[210,1,"#38bdf8","Suv: θ < 90°, botiq"],[650,-1,"#94a3b8","Simob: θ = 140°, qavariq"]].forEach(([x,md,cc,t1],k)=>{tubeV(x,70,120,360,250,cc,md);rich(t1,x,392,20,E)});if(lt>22)rich("140° − 90° = 50°",650,125,26,Y)}
+else if(i==4){const f=cl((lt-3)/16),base=330,R=[[110,40,2],[210,24,1],[310,12,.5]];c.fillStyle="rgba(56,189,248,.4)";c.fillRect(40,base,520,60);c.strokeStyle="#7dd3fc";c.lineWidth=2;c.beginPath();c.moveTo(40,base);c.lineTo(560,base);c.stroke();R.forEach(([x,w,r])=>{const hmm=14.7/r,hp=hmm*5.5*f;tubeV(x,w,100,base+40,base-hp,"#38bdf8",1);rich("r = "+r+" mm",x,base+72,15,E)});
+cardsL([["h = 2σ·cosθ / (ρ·g·r)",2,Y],["h ∝ 1/r;   h ∝ σ;   h ∝ 1/ρ",12,E],["Suv, r = 0,5 mm:  h ≈ 29 mm",24,OK],["r 4 marta kichik  ⇒  h 4 marta katta",34,G]],lt,470,125,450,58,72,20)}
+else if(i==5)cardsL([["Oʻsimlik ildizidan poyaga suv — kapillyarlar orqali",2,E],["Tuproq: shudgorlash kapillyarlarni buzadi, mulchalash — bugʻlanish ↓",10,E],["Devor poydevordan suv shimadi — gidroizolyatsiya",20,E],["Fitil (qalam, sham, moy lampa) suyuqlikni koʻtaradi",28,OK]],lt,60,115,840,60,76,20)
+else if(i==6){const D=[[50,110,"Suv, r = 0,1 mm","h ≈ 0,147 m = 147 mm",2],[490,110,"r 2 marta kamaysa","h 2 marta ortadi",14],[50,235,"Simob, r = 1 mm, θ = 140°","h ≈ −5,4 mm  (pasayadi)",26],[490,235,"Tuproq kapillyari, r = 0,05 mm","h ≈ 0,294 m ≈ 29 sm",38]];
+D.forEach(d=>{const al=cl((lt-d[4])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(d[0],d[1],420,105);c.fillStyle="#fbbf24";c.fillRect(d[0],d[1],420,5);rich(d[2],d[0]+210,d[1]+40,19,G);rich(d[3],d[0]+210,d[1]+82,24,Y);c.globalAlpha=1})}
+else if(i==7)bullets(["F_{adg} > F_{kog}  ⇒  hoʻllaydi, menisk botiq","θ < 90° — hoʻllash;  θ > 90° — hoʻllamaslik","Kapillyarda  h = 2σ·cosθ / (ρ·g·r)"],lt,3.5,180,22)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

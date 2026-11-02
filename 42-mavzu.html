@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>42-mavzu: Havoning nisbiy namligi</title>
+<style>
+:root{--bg:#f2f7fb;--cd:#fff;--tx:#13222d;--mu:#5a6b78;--bd:#d3dfe8;--w:#29b6f6;--st:#e6ebef;--hot:#fb8c00;--cold:#81d4fa;--hg:#e53935;--ok:#2e9d4f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1820;--cd:#18242e;--tx:#e8f0f5;--mu:#9fb0bc;--bd:#2b3b47;--st:#cfd8de}}
+:root[data-theme=dark]{--bg:#0f1820;--cd:#18242e;--tx:#e8f0f5;--mu:#9fb0bc;--bd:#2b3b47;--st:#cfd8de}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--bd)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:8px}
+.top h1{font-size:15px;margin:0}
+nav{display:flex;gap:6px;overflow-x:auto;padding:0 12px 8px}
+nav button{flex:none;min-height:44px;padding:0 16px;border:1px solid var(--bd);border-radius:22px;background:var(--cd);color:var(--tx);font-size:15px}
+nav button.on{background:var(--w);color:#05222f;border-color:var(--w);font-weight:700}
+main{max-width:760px;margin:0 auto;padding:12px}
+h2{font-size:19px;margin:6px 0 10px}h3{font-size:15px;margin:0 0 8px;color:var(--w)}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:12px}
+.fm{border:2px solid var(--hot);border-radius:14px;padding:12px;margin-bottom:12px;text-align:center;font-size:18px;font-weight:700;background:var(--cd)}
+.fm small{display:block;color:var(--mu);font-weight:400;font-size:13px;margin-bottom:4px}
+.b{min-height:46px;padding:0 16px;border:0;border-radius:12px;background:var(--w);color:#05222f;font-size:16px;font-weight:700;margin:4px 4px 0 0}
+.b.h{background:var(--hot)}.b.g{background:var(--st);color:#13222d}
+.sl{display:block;margin:8px 0}.sl input{width:100%;height:34px}
+.out{background:var(--bg);border-radius:10px;padding:10px;margin-top:8px}
+canvas{width:100%;height:220px;border-radius:10px;background:var(--bg);display:block}
+.sc{overflow-x:auto}table{border-collapse:collapse;font-size:13px}td,th{border:1px solid var(--bd);padding:5px 8px;text-align:center}
+td.hl{background:var(--hot);color:#111;font-weight:700;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.45}}
+input[type=number],input[type=text]{width:90px;min-height:40px;font-size:16px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);padding:0 6px}
+.q{border-top:1px dashed var(--bd);padding-top:8px;margin-top:8px}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--hg);font-weight:700}
+.pt{cursor:pointer}.pt.on{filter:drop-shadow(0 0 4px var(--hot))}
+.op{display:block;width:100%;text-align:left;min-height:44px;margin:5px 0;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:15px;padding:6px 10px}
+.op.t{background:var(--ok);color:#fff}.op.f{background:var(--hg);color:#fff}
+details{margin-top:8px}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:12px;padding:10px 16px;background:var(--w);color:#fff;font:inherit;font-weight:700;cursor:pointer;min-height:44px}
+.vbar button.alt{background:var(--st);color:var(--tx)}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.vbar select{font:inherit;padding:6px 8px;border-radius:10px;border:1px solid var(--bd);background:var(--cd);color:var(--tx)}
+.vnote{font-size:13px;color:var(--mu);margin:6px 0 0}
+</style></head><body>
+<header><div class="top"><h1>42-mavzu · Havoning nisbiy namligi</h1><button class="b g" id="thm" style="min-height:40px">🌓 Mavzu</button></div><nav id="nav"></nav></header>
+<main id="main"></main>
+<div style="max-width:900px;margin:0 auto;padding:0 12px 24px"><div class="vid" id="vid" style="background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:12px"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></div>
+<script>
+const $=s=>document.querySelector(s),v=id=>+$('#'+id).value,C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const T=[[15,[100,90,80,71,61,52,44,36]],[16,[100,90,81,71,62,54,46,37]],[18,[100,91,82,73,65,56,49,41]],[20,[100,91,83,74,66,59,51,44]],[22,[100,92,83,76,68,61,54,47]],[24,[100,92,84,77,69,62,56,49]],[26,[100,92,85,78,71,65,59,53]]];
+const S=[[10,1.23,9.4],[12,1.40,10.7],[14,1.60,12.1],[16,1.81,13.6],[18,2.07,15.4],[20,2.34,17.3],[22,2.64,19.4],[24,2.99,21.8],[26,3.36,24.4],[28,3.78,27.2],[30,4.24,30.3]];
+function lerp(a,x,g){const n=a.length;if(x<=a[0][0])return g(a[0]);if(x>=a[n-1][0])return g(a[n-1]);for(let i=1;i<n;i++)if(x<=a[i][0]){const p=a[i-1],q=a[i],k=(x-p[0])/(q[0]-p[0]);return g(p)+k*(g(q)-g(p))}}
+const rt=t=>lerp(S,t,r=>r[2]);
+function phi(td,dt){dt=Math.max(0,Math.min(7,dt));const f=Math.floor(dt),c=Math.min(7,f+1),k=dt-f;return lerp(T,td,r=>r[1][f]+k*(r[1][c]-r[1][f]))}
+function dew(r){for(let i=1;i<S.length;i++)if(r<=S[i][2]){const a=S[i-1],b=S[i];return a[0]+(r-a[2])/(b[2]-a[2])*(b[0]-a[0])}return 30}
+const rnd=(i,s)=>{const x=Math.sin(i*12.9898+s*78.233)*43758.5453;return x-Math.floor(x)};
+const tri=(u,L)=>{u=((u%(2*L))+2*L)%(2*L);return u<L?u:2*L-u};
+const sl=(id,l,a,b,s,x,u)=>`<label class="sl">${l}: <b id="${id}v">${x}</b> ${u}<input type="range" id="${id}" min="${a}" max="${b}" step="${s}" value="${x}"></label>`;
+const psy=()=>'<div class="sc"><table><tr><th>t \\ Δt</th>'+[0,1,2,3,4,5,6,7].map(d=>`<th>${d}</th>`).join('')+'</tr>'+T.map((r,i)=>`<tr><th>${r[0]}°</th>`+r[1].map((x,j)=>`<td id="m${i}_${j}">${x}</td>`).join('')+'</tr>').join('')+'</table></div>';
+const sat='<details><summary>To‘yingan bug‘ jadvali</summary><div class="sc"><table><tr><th>t,°C</th>'+S.map(r=>`<td>${r[0]}</td>`).join('')+'</tr><tr><th>p_t,kPa</th>'+S.map(r=>`<td>${r[1]}</td>`).join('')+'</tr><tr><th>ρ_t,g/m³</th>'+S.map(r=>`<td>${r[2]}</td>`).join('')+'</tr></table></div></details>';
+const ST=[['Xona haroratini o‘lchang','Quruq termometrni xona havosida ushlab, t_quruq ni yozib oling.','Termometr'],['Nam termometrni doka bilan o‘rang','Ikkinchi termometr sharchasini toza doka (batist) bilan o‘rang.','Doka'],['Dokani suvga namlang','Doka uchini suvli stakanga tushiring, doka to‘la nam bo‘lsin.','Stakan'],['Psixrometrni o‘rnating','Ikkala termometrni yonma-yon, shamol va nafasdan uzoqda o‘rnating.','Psixrometr'],['Barqarorlashishini kuting','3–5 daqiqa kuting: nam termometr pasayib, o‘zgarmay qoladi.','Soat'],['Ko‘rsatkichlarni yozing','t_quruq va t_nam ni yozib, Δt = t_quruq − t_nam ni hisoblang.','Daftar'],['Jadvaldan φ ni toping','Qator — t_quruq, ustun — Δt. Kesishgan katak — φ.','Jadval']];
+const PT=['Quruq termometr: xona havosining haqiqiy haroratini (t_quruq) ko‘rsatadi.','Nam termometr: sharchasi nam doka bilan o‘ralgan; bug‘lanish tufayli past harorat (t_nam) ko‘rsatadi.','Doka (batist): suvni shimib, termometr sharchasini doimo nam tutadi.','Stakan: toza suv. Doka uchi suvga tushiriladi.','Psixrometrik jadval: t_quruq va Δt bo‘yicha φ ni topish uchun.'];
+const svg2=`<svg viewBox="0 0 320 200" style="width:100%;max-width:440px;color:var(--tx)">
+<g class="pt" data-i="0"><rect x="40" y="20" width="14" height="110" rx="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="44" y="55" width="6" height="75" fill="#e53935"/><circle cx="47" cy="138" r="12" fill="#e53935"/><text x="47" y="172" font-size="11" text-anchor="middle" fill="currentColor">quruq</text></g>
+<g class="pt" data-i="1"><rect x="120" y="20" width="14" height="110" rx="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="124" y="80" width="6" height="50" fill="#e53935"/><circle cx="127" cy="138" r="12" fill="#e53935"/><text x="127" y="172" font-size="11" text-anchor="middle" fill="currentColor">nam</text></g>
+<g class="pt" data-i="2"><ellipse cx="127" cy="140" rx="19" ry="20" fill="#e6ebef" fill-opacity=".7" stroke="#29b6f6" stroke-dasharray="3"/><path d="M127 160 Q140 185 215 180" fill="none" stroke="#29b6f6" stroke-width="5"/></g>
+<g class="pt" data-i="3"><rect x="190" y="140" width="60" height="55" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><rect x="192" y="160" width="56" height="33" fill="#29b6f6" fill-opacity=".6"/><text x="220" y="130" font-size="11" text-anchor="middle" fill="currentColor">suv</text></g>
+<g class="pt" data-i="4"><rect x="245" y="15" width="65" height="80" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><text x="277" y="60" font-size="11" text-anchor="middle" fill="currentColor">jadval</text></g></svg>`;
+const P=[
+{t:'1-reja. Ishning maqsadi va nazariy asos',
+th:`<p><b>Maqsad:</b> psixrometr yordamida havoning nisbiy namligini aniqlash.</p><p><b>Absolyut namlik ρ</b> — 1 m³ havodagi suv bug‘i massasi (g/m³). <b>To‘yingan bug‘</b> — o‘z suyuqligi bilan dinamik muvozanatdagi bug‘; berilgan t da ρ eng ko‘pi ρ_t bo‘ladi. <b>Nisbiy namlik φ</b> — ρ ning shu haroratdagi ρ_t ga nisbati. <b>Shudring nuqtasi</b> — havo sovitilganda bug‘ to‘yinadigan harorat.</p>${sat}`,
+f:`<small>Nisbiy namlik</small>φ = (p / p<sub>t</sub>)·100% = (ρ / ρ<sub>t</sub>)·100%`,
+ex:`Toshkentda yozgi kunduzi havo 35°C gacha qiziydi, lekin quruq bo‘lgani uchun φ ko‘pincha 20–30% bo‘ladi. Kechasi sovigach φ ortadi, ertalab Samarqand bog‘larida shudring tushadi.`,
+sim:sl('a1','Harorat t',10,30,1,22,'°C')+sl('b1','Bug‘ miqdori ρ',1,30,.5,9.7,'g/m³')+'<div class="out" id="o1"></div>',
+qs:[{q:`Xonada 22°C da ρ = 9,7 g/m³ (ρ_t = 19,4 g/m³). φ necha %?`,a:50,t:.6,s:`φ = 9,7/19,4·100% = 50%`}]},
+{t:'2-reja. Asbob-jihozlar va xavfsizlik',
+th:`<p><b>Asboblar:</b> psixrometr (quruq va nam termometr), psixrometrik jadval, suv, doka (batist), stakan.</p><p><b>Nam termometr nega past?</b> Doka namligi bug‘lanadi. Bug‘lanishda eng tez molekulalar ketadi va issiqlik olinadi, shuning uchun nam termometr soviydi. Havo quruq bo‘lsa, bug‘lanish tez, Δt katta.</p><p><b>Xavfsizlik:</b> termometrni sindirmang; shisha buyumlarni ehtiyot bilan ushlang; singan bo‘lsa, o‘qituvchiga xabar bering.</p>`,
+f:`<small>Bug‘lanishda sovish</small>Q = L · m  (bug‘lanish issiqlik oladi)`,
+ex:`Buxoro va Xorazmda sopol ko‘za (xum) suvni salqin saqlaydi: ko‘za devoridan sizgan suv bug‘lanib, ko‘zani va ichidagi suvni sovitadi — nam termometr bilan bir xil hodisa.`,
+sim:`<p>Qismlar ustiga bosing:</p>${svg2}<div class="out" id="o2">Qismni tanlang.</div>`,
+qs:[{q:`Quruq termometr 21°C, nam termometr 17°C. Δt necha °C?`,a:4,t:.05,s:`Δt = 21 − 17 = 4°C`}]},
+{t:'3-reja. Ishchi formula va psixrometrik jadval',
+th:`<p>Avval Δt = t_quruq − t_nam hisoblanadi. Jadvalda <b>qator</b> — quruq termometr harorati, <b>ustun</b> — Δt; kesishgan katakda φ (%) turadi.</p><p><b>Δt qancha katta bo‘lsa, φ shuncha kichik:</b> havo quruq bo‘lsa, nam termometr ko‘proq soviydi.</p>`,
+f:`<small>Ishchi formula</small>Δt = t<sub>quruq</sub> − t<sub>nam</sub>`,
+ex:`Toshkentda yoz kechasi quruq termometr 24°C, nam termometr 20°C: Δt = 4°C, jadvaldan φ = 69%. Havo ancha nam, bu hol sezilarli dim bo‘lishini beradi.`,
+sim:sl('a3','t_quruq',15,26,1,22,'°C')+sl('b3','t_nam',8,26,1,18,'°C')+'<div class="out" id="o3"></div>'+psy(),
+qs:[{q:`t_quruq = 22°C, t_nam = 18°C. Jadvaldan φ (%) ni toping.`,a:68,t:.6,s:`Δt = 4°C, 22°C qatori, 4-ustun: 68%`}]},
+{t:'4-reja. Ishni bajarish tartibi',
+th:`<p>Ish 7 qadamda bajariladi. Eng muhimi: nam termometr ko‘rsatkichi to‘liq barqarorlashmaguncha o‘qimang va shamoldan, nafasdan uzoqda turing.</p>`,
+f:`<small>Hisoblash</small>Δt = t<sub>quruq</sub> − t<sub>nam</sub>  →  φ (jadvaldan)`,
+ex:`Maktab fizika xonasida darsdan oldin xonani shamollatib, so‘ng psixrometrni oynadan uzoqroqqa qo‘ysangiz, Farg‘ona vodiysidagi qishki sinfda ham aniq natija olinadi.`,
+sim:sl('a4','Qadam',1,7,1,1,'/ 7')+'<button class="b h" id="n4">Keyingi qadam</button><svg id="lab" viewBox="0 0 320 150" style="width:100%;color:var(--tx)"></svg><ol id="l4"></ol>',
+qs:[{q:`Tajribada quruq 20°C, nam 14°C. φ (%) necha?`,a:51,t:.6,s:`Δt = 6°C, 20°C qatori: 51%`}]},
+{t:'5-reja. O‘lchash natijalari va hisoblash',
+th:`<p>Tajriba 3 marta takrorlanadi va φ o‘rtachasi olinadi. Qiymatlarni o‘zgartirib ko‘ring. Tekshirish uchun <b>shudring nuqtasi usuli</b>: shudring nuqtasida ρ_shudring = ρ_t(t_sh).</p>`,
+f:`<small>O‘rtacha va shudring usuli</small>φ<sub>o‘rt</sub> = (φ₁+φ₂+φ₃)/3;  φ = ρ<sub>shudring</sub> / ρ<sub>t</sub>(t) · 100%`,
+ex:`Andijon xonadonida 22°C da quruq va nam termometr 22 va 17°C ko‘rsatsa, φ ≈ 61% — odam uchun biroz nam, shamollatish foydali.`,
+sim:`<div class="sc"><table><tr><th>№</th><th>t_quruq</th><th>t_nam</th><th>Δt</th><th>φ,%</th></tr>${[[22,17],[22,16],[23,17]].map((r,i)=>`<tr><td>${i+1}</td><td><input type="number" id="td5_${i}" value="${r[0]}"></td><td><input type="number" id="tw5_${i}" value="${r[1]}"></td><td id="d5_${i}"></td><td id="f5_${i}"></td></tr>`).join('')}</table></div><label class="sl">Shudring nuqtasi t_sh, °C: <input type="number" id="sh5" value="14"></label><div class="out" id="o5"></div>`,
+qs:[{q:`φ₁ = 61%, φ₂ = 54%, φ₃ = 55%. φ_o‘rt (%) ni toping.`,a:56.7,t:.2,s:`(61+54+55)/3 = 56,7%`}]},
+{t:'6-reja. Xatoliklar, xulosa va masalalar',
+th:`<p><b>Xato sabablari:</b> doka quruq bo‘lishi, shamol, termometrni kech o‘qish, nafas ta‘siri.</p><p><b>Qulay nisbiy namlik:</b> 40–60%. Past namlik terini, shilliq qavatni quritadi; yuqori namlik mog‘or va dimlik beradi.</p><p><b>Xulosa namunasi:</b> «Psixrometr yordamida xona havosining nisbiy namligi φ_o‘rt = ...% ekani aniqlandi. Natija me‘yorda (40–60%). Nisbiy xatolik ε = ...%.»</p>`,
+f:`<small>Xatoliklar</small>Δφ = |φ<sub>o‘lch</sub> − φ<sub>o‘rt</sub>|;  ε = Δφ / φ<sub>o‘rt</sub> · 100%`,
+ex:`Qishda markaziy isitish Toshkent xonalarida havoni quritadi (φ ~ 20–30%). Ho‘l sochiq osish yoki idishda suv qo‘yish namlikni 40–60% ga yaqinlashtiradi.`,
+sim:sl('a6','φ_o‘lch',20,90,.1,54,'%')+sl('b6','φ_o‘rt',20,90,.1,56.7,'%')+'<div class="out" id="o6"></div>',
+qs:[{q:`1) φ_o‘rt = 56,7%, φ_o‘lch = 54%. Δφ (%) ni toping.`,a:2.7,t:.1,s:`Δφ = |54−56,7| = 2,7`},{q:`2) Yuqoridagi masalada ε (%) ni toping.`,a:4.8,t:.2,s:`ε = 2,7/56,7·100% ≈ 4,8%`},{q:`3) 20°C da φ = 40%. ρ (g/m³) ni toping (ρ_t = 17,3).`,a:6.92,t:.1,s:`ρ = 0,4·17,3 ≈ 6,92`},{q:`4) 26°C da ρ = 12,1 g/m³ (ρ_t = 24,4). φ (%) ni toping.`,a:49.6,t:.5,s:`φ = 12,1/24,4·100% ≈ 49,6%`}]}];
+const TQ=[[`Nisbiy namlik formulasi qaysi?`,['φ = (ρ / ρ_t)·100%','φ = (ρ_t / ρ)·100%','φ = ρ + ρ_t','φ = ρ·ρ_t'],0],[`Nam termometr nega past harorat ko‘rsatadi?`,['Doka sovuq','Bug‘lanish issiqlik oladi','Suv og‘ir','Termometr buzuq'],1],[`Δt kattalashsa, φ qanday o‘zgaradi?`,['Ortadi','O‘zgarmaydi','Kamayadi','Avval ortadi'],2],[`Shudring nuqtasi nima?`,['Suv qaynash harorati','Bug‘ to‘yinadigan harorat','Muz erish harorati','Eng yuqori harorat'],1],[`t=22°C, Δt=3°C bo‘lsa, jadvaldan φ ≈ ?`,['68%','83%','76%','61%'],2],[`Inson uchun qulay nisbiy namlik?`,['10–20%','40–60%','70–90%','95–100%'],1],[`Termometr sinsa nima qilasiz?`,['O‘zim yig‘aman','Mensimayman','O‘qituvchiga xabar beraman','Suv bilan yuvaman'],2],[`φ_o‘rt=50%, φ_o‘lch=47%. ε ≈ ?`,['3%','6%','0,06%','47%'],1]];
+const U=[],D=[],R=[],TM=[],st={};let cur=0;
+U[0]=()=>{const t=v('a1'),r=v('b1'),s=rt(t),f=Math.min(100,r/s*100);$('#o1').innerHTML=`ρ_t(${t}°C) = <b>${s.toFixed(1)}</b> g/m³<br>φ = <b>${f.toFixed(0)}%</b> ${r>s?'— havo to‘yingan, ortiqcha bug‘ kondensatlanadi':''}<br>Shudring nuqtasi ≈ <b>${dew(Math.min(r,s)).toFixed(1)}°C</b>`;rd(0)};
+D[0]=(c,w,h,tm)=>{const t=v('a1'),r=v('b1'),s=rt(t),n=Math.round(r*2),dr=r>s?Math.round((r-s)/r*n):0,x0=20,y0=15,bw=w-40,bh=h-30,k=(t-10)/20;
+c.fillStyle=C('--hot');c.globalAlpha=k*.25;c.fillRect(x0,y0,bw,bh);c.fillStyle=C('--cold');c.globalAlpha=(1-k)*.3;c.fillRect(x0,y0,bw,bh);c.globalAlpha=1;c.strokeStyle=C('--tx');c.lineWidth=2;c.strokeRect(x0,y0,bw,bh);
+const sp=50+(t-10)*5;for(let i=0;i<n-dr;i++){const x=x0+4+tri(rnd(i,1)*bw+(rnd(i,2)-.5)*sp*tm,bw-8),y=y0+4+tri(rnd(i,3)*bh+(rnd(i,4)-.5)*sp*tm,bh-30);c.fillStyle='#f4f6f8';c.strokeStyle='#8899a6';c.lineWidth=1;c.beginPath();c.arc(x,y,4,0,7);c.fill();c.stroke()}
+c.fillStyle=C('--w');for(let i=0;i<dr;i++){c.beginPath();c.arc(x0+10+rnd(i,9)*(bw-20),y0+bh-6-rnd(i,8)*8,4,0,7);c.fill()}
+c.fillStyle=C('--tx');c.font='bold 14px sans-serif';c.fillText(`t=${t}°C  φ=${Math.min(100,r/s*100).toFixed(0)}%`,x0+8,y0+bh-12+(dr?-16:0))};
+U[1]=()=>{};
+D[1]=(c,w,h,tm)=>{const cx=w/2,by=150;c.strokeStyle=C('--tx');c.lineWidth=2;c.beginPath();c.roundRect(cx-6,15,12,125,6);c.stroke();c.fillStyle='#e53935';c.fillRect(cx-3,75,6,65);c.beginPath();c.arc(cx,by,12,0,7);c.fill();c.fillStyle='rgba(230,235,239,.8)';c.strokeStyle=C('--w');c.beginPath();c.ellipse(cx,by,24,24,0,0,7);c.fill();c.stroke();
+for(let i=0;i<18;i++){const p=(tm*.4+i/18)%1,x=cx+(rnd(i,3)-.5)*70+Math.sin(p*6+i)*8,y=by-20-p*110;c.globalAlpha=1-p;c.fillStyle='#eef1f4';c.strokeStyle='#8899a6';c.beginPath();c.arc(x,y,3.5,0,7);c.fill();c.stroke()}c.globalAlpha=1;
+c.fillStyle=C('--hot');c.font='13px sans-serif';const o=Math.sin(tm*4)*5;c.fillText('→',cx-80+o,by);c.fillText('←',cx+62-o,by);c.fillText('issiqlik',cx-110,by+20);c.fillText('issiqlik',cx+55,by+20);c.fillStyle=C('--tx');c.fillText('Bug‘lanish issiqlikni oladi → t_nam pasayadi',10,212)};
+U[2]=()=>{let td=v('a3'),tw=v('b3');if(tw>td){tw=td;$('#b3').value=tw;$('#b3v').textContent=tw}const dt=td-tw,f=phi(td,dt);document.querySelectorAll('td.hl').forEach(e=>e.classList.remove('hl'));let r=0;T.forEach((x,i)=>{if(Math.abs(x[0]-td)<Math.abs(T[r][0]-td))r=i});const e=$(`#m${r}_${Math.min(7,Math.round(dt))}`);e&&e.classList.add('hl');$('#o3').innerHTML=`Δt = <b>${dt}°C</b> → φ ≈ <b>${f.toFixed(0)}%</b>${dt>7?' (jadvaldan tashqari, 7 ga tenglashtirildi)':''}`;rd(2)};
+function th(c,x,y,h,val,lab,wet,p){const tx=C('--tx');c.strokeStyle=tx;c.lineWidth=2;c.beginPath();c.roundRect(x-7,y,14,h,7);c.stroke();const m=(val-5)/25*h*p;c.fillStyle='#e53935';c.fillRect(x-3,y+h-m,6,m);c.beginPath();c.arc(x,y+h+10,12,0,7);c.fill();if(wet){c.fillStyle='rgba(200,215,225,.6)';c.strokeStyle=C('--w');c.beginPath();c.arc(x,y+h+10,17,0,7);c.fill();c.stroke()}c.fillStyle=tx;c.font='13px sans-serif';c.textAlign='center';c.fillText(lab+' '+(5+(val-5)*p).toFixed(1)+'°C',x,y+h+42);c.textAlign='left'}
+D[2]=(c,w,h,tm)=>{const p=tm>0?Math.min(1,tm/2):1,td=v('a3'),tw=Math.min(td,v('b3'));th(c,w*.3,12,130,td,'quruq',0,p);th(c,w*.7,12,130,tw,'nam',1,p);c.fillStyle=C('--hot');c.font='bold 16px sans-serif';c.textAlign='center';c.fillText('Δt = '+(td-tw)+'°C',w/2,80);c.textAlign='left'};
+U[3]=()=>{const k=v('a4');$('#l4').innerHTML=ST.slice(0,k).map((s,i)=>`<li${i==k-1?' style="font-weight:700"':''}>${s[0]}. <span style="color:var(--mu)">${s[1]}</span></li>`).join('');$('#lab').innerHTML=ST.map((s,i)=>{const x=8+(i%4)*78,y=8+Math.floor(i/4)*70,a=i==k-1;return `<g opacity="${a?1:.4}"><rect x="${x}" y="${y}" width="70" height="58" rx="8" fill="${a?'#fb8c00':'none'}" fill-opacity=".3" stroke="${a?'#fb8c00':'currentColor'}" stroke-width="${a?3:1}"/><text x="${x+35}" y="${y+34}" font-size="11" text-anchor="middle" fill="currentColor">${s[2]}</text></g>`}).join('');rd(3)};
+D[3]=(c,w,h,tm)=>{const s=tm>0?Math.min(tm,8):8,X=40,Y=15,W=w-60,H=165,f=t=>Y+H-(t-15)/10*H,g=u=>X+u/8*W,Tw=u=>17+5*Math.exp(-u/1.3);c.strokeStyle=C('--tx');c.lineWidth=1.5;c.beginPath();c.moveTo(X,Y);c.lineTo(X,Y+H);c.lineTo(X+W,Y+H);c.stroke();c.setLineDash([5,4]);c.strokeStyle=C('--hot');c.beginPath();c.moveTo(X,f(22));c.lineTo(X+W,f(22));c.stroke();c.setLineDash([]);
+c.strokeStyle='#e53935';c.lineWidth=3;c.beginPath();for(let u=0;u<=s;u+=.05){u?c.lineTo(g(u),f(Tw(u))):c.moveTo(g(u),f(Tw(u)))}c.stroke();c.fillStyle='#e53935';c.beginPath();c.arc(g(s),f(Tw(s)),5,0,7);c.fill();c.fillStyle=C('--tx');c.font='12px sans-serif';c.fillText('t_quruq=22°C',X+6,f(22)-5);c.fillText('t_nam = '+Tw(s).toFixed(1)+'°C',X+W-95,f(Tw(s))+22);c.fillText('vaqt →',X+W-45,Y+H+16);c.fillText('t,°C',4,Y+8)};
+U[4]=()=>{let s=0,tm=0;for(let i=0;i<3;i++){const td=v('td5_'+i),dt=td-v('tw5_'+i),f=phi(td,dt);$('#d5_'+i).textContent=dt.toFixed(1);$('#f5_'+i).textContent=f.toFixed(0);s+=f;tm+=td}st.m=s/3;const sh=v('sh5'),fs=rt(sh)/rt(tm/3)*100;$('#o5').innerHTML=`φ_o‘rt = <b>${st.m.toFixed(1)}%</b><br>Shudring usuli: φ = ρ_t(${sh}°C)/ρ_t(${(tm/3).toFixed(1)}°C)·100% = <b>${fs.toFixed(1)}%</b><br>Farq: ${Math.abs(fs-st.m).toFixed(1)}%`;rd(4)};
+D[4]=(c,w,h,tm)=>{const p=tm>0?Math.min(1,tm/2):1,m=st.m||0,val=m*(1-Math.pow(1-p,2)),cx=w/2,cy=165,Rr=Math.min(w/2-20,130),a=x=>Math.PI+x/100*Math.PI;[[0,40,C('--hot')],[40,60,'#43a047'],[60,100,C('--w')]].forEach(z=>{c.strokeStyle=z[2];c.lineWidth=18;c.beginPath();c.arc(cx,cy,Rr,a(z[0]),a(z[1]));c.stroke()});
+c.strokeStyle=C('--tx');c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(a(val))*(Rr-12),cy+Math.sin(a(val))*(Rr-12));c.stroke();c.fillStyle=C('--tx');c.textAlign='center';c.font='bold 18px sans-serif';c.fillText(val.toFixed(0)+'%',cx,cy+24);c.font='14px sans-serif';c.fillText(val<40?'Havo quruq':val<=60?'Me‘yorda':'Havo nam',cx,cy+44);c.textAlign='left'};
+U[5]=()=>{const a=v('a6'),b=v('b6'),d=Math.abs(a-b),e=d/b*100;st.v=b;$('#o6').innerHTML=`Δφ = <b>${d.toFixed(1)}%</b>, ε = <b>${e.toFixed(1)}%</b><br>Namlik: ${b<40?'past (havo quruq)':b<=60?'qulay (40–60%)':'yuqori (nam)'}`;rd(5)};
+D[5]=(c,w,h,tm)=>{const p=tm>0?Math.min(1,tm/2):1,v6=(st.v||50)*p,X=20,W=w-40,y=90,g=u=>X+u/100*W;[[0,40,C('--hot')],[40,60,'#43a047'],[60,100,C('--w')]].forEach(z=>{c.fillStyle=z[2];c.globalAlpha=.8;c.fillRect(g(z[0]),y,g(z[1])-g(z[0]),30)});c.globalAlpha=1;c.fillStyle=C('--tx');c.font='12px sans-serif';c.fillText('quruq',g(12),y+50);c.fillText('qulay 40–60%',g(41),y+50);c.fillText('nam',g(78),y+50);c.beginPath();c.moveTo(g(v6),y-2);c.lineTo(g(v6)-9,y-20);c.lineTo(g(v6)+9,y-20);c.fill();c.font='bold 15px sans-serif';c.fillText('φ = '+v6.toFixed(1)+'%',Math.min(g(v6)-30,w-90),y-28)};
+function rd(i){const c=$('#c'+i);if(!c||!c.clientWidth)return;const x=c.getContext('2d');x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,c.width,c.height);const d=devicePixelRatio||1;x.setTransform(d,0,0,d,0,0);D[i](x,c.clientWidth,220,TM[i])}
+function fit(i){const c=$('#c'+i),d=devicePixelRatio||1;c.width=c.clientWidth*d;c.height=220*d}
+let last=0;function loop(ts){const d=(ts-last)/1000;last=ts;R.forEach((on,i)=>{if(on&&i==cur){TM[i]+=Math.min(d,.05);rd(i)}});requestAnimationFrame(loop)}
+const M=$('#main'),N=$('#nav');
+P.forEach((p,i)=>{R[i]=0;TM[i]=0;N.innerHTML+=`<button data-s="${i}">${i+1}-reja</button>`;M.innerHTML+=`<section id="s${i}" hidden><h2>${p.t}</h2><div class="card"><h3>1) Nazariya</h3>${p.th}</div><div class="fm"><h3>2) Asosiy formula</h3>${p.f}</div><div class="card"><h3>3) Hayotiy misol (O‘zbekiston)</h3>${p.ex}</div><div class="card"><h3>4) Interaktiv simulyatsiya</h3>${p.sim}</div><div class="card"><h3>5) Animatsiya</h3><canvas id="c${i}"></canvas><button class="b" data-a="1" data-p="${i}">Boshlash</button><button class="b g" data-a="0" data-p="${i}">To‘xtatish</button><button class="b h" data-a="2" data-p="${i}">Qayta boshlash</button></div><div class="card"><h3>6) Mustaqil masala</h3>${p.qs.map((q,j)=>`<div class="q"><p>${q.q}</p><input type="text" inputmode="decimal" id="q${i}_${j}"> <button class="b" data-c="${i},${j}">Tekshirish</button><div id="r${i}_${j}"></div></div>`).join('')}</div></section>`});
+N.innerHTML+='<button data-s="6">Test</button>';let sc=0,ans={};
+M.innerHTML+=`<section id="s6" hidden><h2>Test</h2><div class="card">Natija: <b id="sc">0</b> / ${TQ.length}</div>${TQ.map((q,i)=>`<div class="card"><p><b>${i+1}.</b> ${q[0]}</p>${q[1].map((o,j)=>`<button class="op" data-t="${i},${j}">${'ABCD'[j]}) ${o}</button>`).join('')}</div>`).join('')}</section>`;
+function show(i){cur=i;document.querySelectorAll('section').forEach((s,k)=>s.hidden=k!=i);document.querySelectorAll('nav button').forEach((b,k)=>b.classList.toggle('on',k==i));scrollTo(0,0);if(i<6){fit(i);U[i]();rd(i)}}
+document.addEventListener('click',e=>{const b=e.target.closest('button,.pt');if(!b)return;const d=b.dataset;
+if(d.s!=null)show(+d.s);
+else if(d.a!=null){const i=+d.p;if(d.a=='2'){TM[i]=0;R[i]=1}else R[i]=+d.a;if(d.a=='1'&&TM[i]==0)TM[i]=.001}
+else if(d.c){const [i,j]=d.c.split(',').map(Number),q=P[i].qs[j],x=parseFloat($(`#q${i}_${j}`).value.replace(',','.'));$(`#r${i}_${j}`).innerHTML=Math.abs(x-q.a)<=q.t?`<span class="ok">To‘g‘ri ✓</span> ${q.s}`:`<span class="no">Noto‘g‘ri. Qayta urinib ko‘ring.</span>`}
+else if(d.t){const [i,j]=d.t.split(',').map(Number);if(ans[i]!=null)return;ans[i]=j;b.classList.add(j==TQ[i][2]?'t':'f');if(j==TQ[i][2])sc++;else b.parentNode.querySelectorAll('.op')[TQ[i][2]].classList.add('t');$('#sc').textContent=sc}
+else if(b.id=='n4'){const s=$('#a4');s.value=Math.min(7,+s.value+1);$('#a4v').textContent=s.value;U[3]()}
+else if(b.classList.contains('pt')){document.querySelectorAll('.pt').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('#o2').textContent=PT[+d.i]}
+else if(b.id=='thm'){const r=document.documentElement,dk=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))=='dark';r.dataset.theme=dk?'light':'dark';rd(cur)}});
+document.addEventListener('input',e=>{const t=e.target;if(t.type=='range')$('#'+t.id+'v').textContent=t.value;if(cur<6&&t.closest('section'))U[cur]()});
+addEventListener('resize',()=>{if(cur<6){fit(cur);rd(cur)}});
+show(0);requestAnimationFrame(loop);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+function engd(cx,lt,q1,a,q2,u){c.fillStyle="#7f1d1d";c.fillRect(cx-150,105,300,40);rich("Isitgich T₁",cx,133,20,"#fff");c.fillStyle="#1e3a8a";c.fillRect(cx-150,335,300,40);rich("Sovutgich T₂",cx,363,20,"#fff");dot(cx,235,45,"#475569");rich("Dvigatel",cx,241,16,"#fff");
+if(lt>2){arrow(cx,147,cx,188,"#f87171",5);rich("Q₁ = "+q1+" "+u,cx+95,175,18,"#f87171")}if(lt>6){arrow(cx+45,235,cx+210,235,OK,5);rich("A = "+a+" "+u,cx+210,215,18,OK)}if(lt>10){arrow(cx,282,cx,333,"#60a5fa",5);rich("Q₂ = "+q2+" "+u,cx+100,315,18,"#60a5fa")}}
+function carnot(lt,x0,y0,w,h){const X=v=>x0+(v-.8)/2.6*w,Y=p=>y0+h-(p-.8)/3.6*h;axes(x0,y0,w,h,"V","p","");
+const F=[v=>4/v,v=>2*Math.pow(2/v,1.4),v=>3.314/v,v=>2.071*Math.pow(1.6/v,1.4)],R=[[1,2],[2,3.2],[3.2,1.6],[1.6,1]],CC=["#ef5b5b","#f5a54a","#4f7cff","#7a8bd1"],NM=["1→2 izoterma (T₁)","2→3 adiabata","3→4 izoterma (T₂)","4→1 adiabata"],pts=[];
+F.forEach((f,k)=>{for(let j=0;j<=30;j++){const v=R[k][0]+(R[k][1]-R[k][0])*j/30;pts.push([X(v),Y(f(v)),k])}});const n=Math.floor((pts.length-1)*cl(lt/16));
+for(let k=0;k<4;k++){c.strokeStyle=CC[k];c.lineWidth=4;c.beginPath();let st=0;for(let j=0;j<=n;j++){if(pts[j][2]!=k)continue;st?c.lineTo(pts[j][0],pts[j][1]):c.moveTo(pts[j][0],pts[j][1]);st=1}c.stroke()}
+dot(pts[n][0],pts[n][1],6,"#fbbf24");NM.forEach((s,k)=>{if(lt>k*4){c.font="600 13px sans-serif";c.fillStyle=CC[k];c.textAlign="right";c.fillText(s,x0+w-8,y0+20+k*18);c.textAlign="center"}})}
+function tubeV(cx,w,y0,y1,lv,cc,md){c.fillStyle=cc;c.beginPath();if(md>0){c.moveTo(cx-w/2,lv-6);c.quadraticCurveTo(cx,lv+8,cx+w/2,lv-6)}else if(md<0){c.moveTo(cx-w/2,lv+6);c.quadraticCurveTo(cx,lv-14,cx+w/2,lv+6)}else{c.moveTo(cx-w/2,lv);c.lineTo(cx+w/2,lv)}c.lineTo(cx+w/2,y1);c.lineTo(cx-w/2,y1);c.closePath();c.fill();
+c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(cx-w/2,y0);c.lineTo(cx-w/2,y1);c.moveTo(cx+w/2,y0);c.lineTo(cx+w/2,y1);c.stroke()}
+function latt(x0,y0,cols,rows,gap,jit,r,cc,lt){for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)dot(x0+i*gap+Math.sin(lt*9+i*3+j)*jit,y0+j*gap+Math.cos(lt*8+j*2+i)*jit,r,cc)}
+function spring2(x1,x2,y,n,amp){c.strokeStyle="#e2e8f0";c.lineWidth=2.5;c.beginPath();c.moveTo(x1,y);for(let i=1;i<n;i++)c.lineTo(x1+(x2-x1)*i/n,y+(i%2?-amp:amp));c.lineTo(x2,y);c.stroke()}
+function tgraph(x0,y0,w,h,r,kind){axes(x0,y0,w,h,"τ","t","");const X=u=>x0+u/40*w,Y=t=>y0+h-(t+30)/70*h,f=u=>kind=="cr"?(u<10?-20+2*u:u<30?0:(u-30)*2.5):-20+55/(1+Math.exp(-(u-20)/6));
+c.strokeStyle="#38bdf8";c.lineWidth=4;c.beginPath();for(let u=0;u<=40*r;u+=.5){const x=X(u),y=Y(f(u));u?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+if(kind=="cr"&&r>.25){c.strokeStyle="#f59e0b";c.lineWidth=7;c.beginPath();c.moveTo(X(10),Y(0));c.lineTo(X(Math.min(30,40*r)),Y(0));c.stroke()}
+const u=40*r;dot(X(u),Y(f(u)),6,"#fbbf24");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="right";c.fillText("0 °C",x0-4,Y(0)+4);c.textAlign="center"}
+const FOOT="9-sinf Fizika • 42-mavzu: Havoning nisbiy namligi (laboratoriya)",BEGIN="Havoning nisbiy namligi • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: laboratoriya ishi",t:"Salom, aziz oʻquvchilar! Bugun laboratoriya ishi: psixrometr yordamida havoning nisbiy namligini aniqlaymiz."},
+{d:40,h:"1. Maqsad va nazariy asos",t:"Absolyut namlik ro — 1 kub metr havodagi suv bugʻining massasi. Toʻyingan bugʻ — oʻz suyuqligi bilan dinamik muvozanatdagi bugʻ; berilgan temperaturada ro eng koʻpi ro t boʻladi. Nisbiy namlik fi — ro ning shu temperaturadagi ro t ga nisbati: fi teng ro boʻlinsin ro t karra 100 foiz. Shudring nuqtasi — havo sovitilganda bugʻ toʻyinadigan temperatura. Masalan, xonada 22 darajada ro 9,7, ro t 19,4 gramm: nisbiy namlik 50 foiz."},
+{d:45,h:"2. Asbob-jihozlar va xavfsizlik",t:"Asboblar: psixrometr — quruq va nam termometr, psixrometrik jadval, suv, doka va stakan. Quruq termometr xona havosining haqiqiy haroratini koʻrsatadi. Nam termometr sharchasi nam doka bilan oʻralgan: bugʻlanishda eng tez molekulalar ketadi va issiqlik olinadi, shuning uchun u past temperatura koʻrsatadi. Havo quruq boʻlsa, bugʻlanish tez, farq katta. Xavfsizlik: termometrni sindirmang, singan boʻlsa oʻqituvchiga xabar bering. Xuddi shunday sopol koʻza ichidagi suvni salqin saqlaydi."},
+{d:45,h:"3. Ishchi formula va psixrometrik jadval",t:"Ishchi formula: delta t teng t quruq minus t nam. Jadvalda qator — quruq termometr harorati, ustun — delta t, kesishgan katakda nisbiy namlik. Delta t qancha katta boʻlsa, nisbiy namlik shuncha kichik. Masalan, quruq 22, nam 18: delta t 4 daraja, jadvaldan 68 foiz. Quruq 24, nam 20: 69 foiz. Quruq 20, nam 14: delta t 6, nisbiy namlik 51 foiz."},
+{d:45,h:"4. Ishni bajarish tartibi",t:"Ish tartibi yetti qadamda. Birinchi: xona haroratini oʻlchang. Ikkinchi: quruq termometrni xonada ushlab, t quruq ni yozing. Uchinchi: ikkinchi termometr sharchasini toza doka bilan oʻrang. Toʻrtinchi: doka uchini suvli stakanga tushiring. Beshinchi: ikkala termometrni yonma-yon, shamol va nafasdan uzoqda oʻrnating. Oltinchi: 3–5 daqiqa kuting, nam termometr barqarorlashsin. Yettinchi: ikkalasini yozib, delta t ni hisoblang."},
+{d:45,h:"5. Oʻlchash natijalari va hisoblash",t:"Natijalar. Tajriba 3 marta takrorlanadi va oʻrtachasi olinadi. Masalan, fi bir 61, fi ikki 54, fi uch 55 foiz: oʻrtacha 170 boʻlinsin 3, taxminan 56,7 foiz. Tekshirish uchun shudring nuqtasi usuli: shudring nuqtasida ro shudring teng ro t. Yana misol: 22 va 17 darajada fi taxminan 61 foiz — odam uchun biroz nam, shamollatish foydali."},
+{d:45,h:"6. Xatoliklar va xulosa",t:"Xatolik va xulosa. Mutlaq xatolik delta fi teng modul fi oʻlchangan minus fi oʻrtacha. Masalan, oʻrtacha 56,7, oʻlchangan 54: delta fi 2,7 foiz. Nisbiy xatolik epsilon teng delta fi boʻlinsin fi oʻrtacha karra 100 foiz, taxminan 4,8 foiz. Xato sabablari: doka quruq boʻlishi, shamol, nafas taʼsiri. Qulay nisbiy namlik 40 dan 60 foizgacha. Past namlik terini quritadi, yuqori namlik mogʻor va dimlik beradi."},
+{d:20,h:"Xulosa",t:"Xulosa: delta t teng t quruq minus t nam, delta t katta boʻlsa nisbiy namlik kichik, qulay namlik 40–60 foiz. Eʼtiboringiz uchun rahmat!"}
+];
+function sceneEnter(i){}function sceneStep(i,p){}
+function sceneDraw(i,p,lt){
+if(i==0){["Quruq va nam termometr","Δt = t_{quruq} − t_{nam}","φ — jadvaldan"].forEach((s,k)=>{const al=cl((lt-1-k*3)*2);if(al<=0)return;c.globalAlpha=al;rich(s,W/2,170+k*60,30,["#38bdf8","#fbbf24","#4ade80"][k]);c.globalAlpha=1})}
+else if(i==1)cardsL([["ρ — absolyut namlik   [g/m³]",3,E],["φ = ρ / ρ_t · 100 %",12,Y],["Shudring nuqtasi — bugʻ toʻyinadigan t",22,E],["22 °C:  ρ = 9,7,  ρ_t = 19,4  →  φ = 50 %",30,OK]],lt,80,115,800,58,72,22)
+else if(i==2){const tw=21-4*(1-Math.exp(-Math.max(0,lt-5)/8)),f=t=>(t-10)/20;thermo(200,120,320,f(21));thermo(360,120,320,f(tw));c.fillStyle="rgba(241,245,249,.85)";c.fillRect(342,300,36,52);c.strokeStyle="#cbd5e1";c.lineWidth=1.5;c.strokeRect(342,300,36,52);beaker(430,300,50,60,40,"rgba(56,189,248,.5)");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.beginPath();c.moveTo(430,330);c.lineTo(380,345);c.stroke();
+for(let k=0;k<5;k++){const ph=((lt*.4+k*.2)%1);c.globalAlpha=1-ph;dot(350+k*7,298-ph*50,3,"#7dd3fc");c.globalAlpha=1}rich("t_{quruq} = 21 °C",200,395,17,"#fca5a5");rich("t_{nam} = "+fx(tw)+" °C",360,395,17,"#7dd3fc");
+cardsL([["Nam termometr: bugʻlanish → issiqlik olinadi",6,E],["Havo quruq ⇒ bugʻlanish tez ⇒ Δt katta",20,Y],["Sopol koʻza suvni shunday sovitadi",32,OK]],lt,520,125,410,66,82,16)}
+else if(i==3)cardsL([["Δt = t_{quruq} − t_{nam}",2,Y],["22 °C, 18 °C:   Δt = 4   →   φ = 68 %",10,OK],["24 °C, 20 °C:   Δt = 4   →   φ = 69 %",18,OK],["20 °C, 14 °C:   Δt = 6   →   φ = 51 %",26,OK],["Δt ↑   ⇒   φ ↓",34,E]],lt,100,108,760,50,60,23)
+else if(i==4)["Xona haroratini oʻlchang","Quruq termometr: t_{quruq} ni yozing","Ikkinchi termometrni toza doka bilan oʻrang","Doka uchini suvli stakanga tushiring","Termometrlarni shamol va nafasdan uzoqqa qoʻying","3–5 daqiqa kuting (barqarorlashsin)","t_{nam} ni yozing, Δt ni hisoblang"].forEach((s,k)=>{const al=cl((lt-1-k*6)*2);if(al<=0)return;c.globalAlpha=al;const y=130+k*44;dot(65,y,15,"#16a34a");rich(String(k+1),65,y+6,17,"#fff");rich(s,95,y+7,21,E,"l");c.globalAlpha=1})
+else if(i==5)cardsL([["φ₁ = 61 %,   φ₂ = 54 %,   φ₃ = 55 %",2,E],["φ_{oʻrt} = (61 + 54 + 55) / 3 ≈ 56,7 %",12,OK],["Tekshirish: shudring usuli  ρ_{sh} = ρ_t",24,E],["22 °C va 17 °C:  φ ≈ 61 % — biroz nam, shamollatish foydali",34,Y]],lt,70,115,820,58,72,21)
+else if(i==6)cardsL([["Δφ = |φ_{oʻlch} − φ_{oʻrt}| = |54 − 56,7| = 2,7 %",2,E],["ε = Δφ / φ_{oʻrt} · 100 % ≈ 4,8 %",12,OK],["Sabab: doka quruq, shamol, nafas taʼsiri",22,E],["Qulay namlik: 40–60 %",32,Y]],lt,70,115,820,58,72,22)
+else if(i==7)bullets(["Δt = t_{quruq} − t_{nam}","Δt ↑  ⇒  φ ↓;   qulay namlik 40–60 %","3 marta takrorlab, φ_{oʻrt} ni oling"],lt,4.5,180,23)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>39-mavzu: Solishtirma erish issiqligi</title>
+<style>
+:root{--bg:#f3f8fd;--card:#fff;--tx:#14212e;--mu:#5b6b7b;--ice:#2f80ed;--heat:#e8760c;--liq:#2bb4e6;--bd:#d3e0ec;--ok:#1e9e5a;--no:#d93636;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--card:#16222f;--tx:#e8eff6;--mu:#93a4b5;--ice:#5a9dff;--heat:#ff9a3d;--liq:#5fd0f5;--bd:#2a3b4c}}
+:root[data-theme="dark"]{--bg:#0e1621;--card:#16222f;--tx:#e8eff6;--mu:#93a4b5;--ice:#5a9dff;--heat:#ff9a3d;--liq:#5fd0f5;--bd:#2a3b4c}
+html,body{height:auto}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px}
+header h1{font-size:17px;margin:0;line-height:1.25}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--bd)}
+nav button{flex:0 0 auto;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;font-size:15px;font-weight:600;cursor:pointer}
+nav button.on{background:var(--ice);color:#fff;border-color:var(--ice)}
+main{max-width:820px;margin:0 auto;padding:12px}
+h2{font-size:20px;margin:6px 0 12px;color:var(--ice)}h3{margin:0 0 8px;font-size:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px;overflow-x:auto}
+.formula{background:var(--card);border:2px solid var(--heat);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center;font-size:20px;font-weight:700;color:var(--heat);overflow-x:auto}
+canvas{display:block;width:100%;height:230px;background:var(--bg);border-radius:12px;margin:8px 0}
+button.b,.btns button,.card>button,.card button.b{background:var(--ice);color:#fff;border:0;border-radius:12px;padding:13px 16px;font-size:16px;font-weight:600;cursor:pointer;margin:4px 4px 4px 0;min-height:48px}
+.btns{display:flex;flex-wrap:wrap}.btns button:nth-child(1){background:var(--heat)}.btns button:nth-child(2){background:var(--mu)}
+label{display:block;margin:8px 0;font-size:15px}input[type=range]{width:100%;height:36px;accent-color:var(--ice)}
+select,input[type=number]{font-size:17px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);width:100%;max-width:220px}
+.out{font-weight:600;color:var(--liq);min-height:26px}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border:1px solid var(--bd);padding:7px;text-align:center}th{background:var(--bg)}
+.step{padding:8px 10px;margin:6px 0;border-left:4px solid var(--heat);background:var(--bg);border-radius:8px}
+.res{margin-top:8px;font-weight:700}.good{color:var(--ok)}.bad{color:var(--no)}
+.q{margin-bottom:12px}.q button{display:block;width:100%;text-align:left;margin:6px 0;padding:13px;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--tx);font-size:16px;cursor:pointer}
+.q button.ok{background:var(--ok);border-color:var(--ok);color:#fff}.q button.no{background:var(--no);border-color:var(--no);color:#fff}
+details{margin:6px 0 12px}summary{cursor:pointer;color:var(--ice);font-weight:600;padding:6px 0}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:12px;padding:10px 16px;background:var(--ice);color:#fff;font:inherit;font-weight:700;cursor:pointer;min-height:44px}
+.vbar button.alt{background:var(--bd);color:var(--tx)}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.vbar select{font:inherit;padding:6px 8px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+.vnote{font-size:13px;color:var(--mu);margin:6px 0 0}
+</style></head><body>
+<header><h1>39-mavzu. Moddaning solishtirma erish issiqligi. Amorf jismlarning erishi va qotishi</h1><button class="b" id="th" style="margin:0">🌓</button></header>
+<nav id="nav"></nav><main id="main"></main>
+<div style="max-width:900px;margin:0 auto;padding:0 12px 24px"><div class="vid" id="vid" style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></div>
+<script>
+const $=s=>document.querySelector(s),css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim(),val=id=>+$('#'+id).value;
+const fmt=n=>{let[a,b]=(+n.toFixed(2)+'').split('.');a=a.replace(/\B(?=(\d{3})+$)/g,' ');return b?a+','+b:a};
+const rnd=(i,j)=>{const x=Math.sin(i*127.1+j*311.7)*43758.5453;return x-Math.floor(x)};
+const M=[["Muz",0,3.4e5],["Alyuminiy",660,3.9e5],["Mis",1085,2.1e5],["Qo'rg'oshin",327,0.25e5],["Temir",1539,2.7e5]];
+function setup(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.max(1,r.width*d);cv.height=Math.max(1,r.height*d);const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);c.w=r.width;c.h=r.height;return c}
+function txt(c,s,x,y,sz,col,al){c.font='600 '+sz+'px system-ui,sans-serif';c.fillStyle=col;c.textAlign=al||'left';c.fillText(s,x,y)}
+function lat(c,x,y,cols,rows,sp,amp,d,t,col){c.fillStyle=col;for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){const a=rnd(i,j)*6.28,b=rnd(j,i+9)*6.28,dx=(rnd(i+3,j)-.5)*sp*.9*d+Math.sin(t/120*(1+rnd(i,j))+a)*amp,dy=(rnd(i,j+5)-.5)*sp*.9*d+Math.cos(t/130*(1+rnd(j,i))+b)*amp;c.beginPath();c.arc(x+i*sp+dx,y+j*sp+dy,sp*.28,0,6.283);c.fill()}}
+function graph(c,x,y,w,h,Tm,p,k,col,ttl){const a=Tm-40,b=Tm+40,f=u=>k?(u<.3?a+(Tm-a)*u/.3:u<.7?Tm:Tm+(b-Tm)*(u-.7)/.3):a+(b-a)*(u+.1*Math.sin(6.283*u));
+const X=u=>x+u*w,Y=T=>y+h-(T-a)/(b-a)*h;c.strokeStyle=css('--mu');c.lineWidth=1;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.stroke();
+txt(c,'t, °C',x+4,y-6,11,css('--mu'));txt(c,'τ',x+w-4,y+h-5,13,css('--mu'),'right');
+if(k){c.setLineDash([4,4]);c.beginPath();c.moveTo(x,Y(Tm));c.lineTo(x+w,Y(Tm));c.stroke();c.setLineDash([]);txt(c,Tm+' °C',x+6,Y(Tm)-5,11,col)}
+c.strokeStyle=col;c.lineWidth=3;c.beginPath();for(let i=0;i<=100*p;i++){const u=Math.min(i/100,p);i?c.lineTo(X(u),Y(f(u))):c.moveTo(X(u),Y(f(u)))}c.lineTo(X(p),Y(f(p)));c.stroke();
+c.fillStyle=css('--heat');c.beginPath();c.arc(X(p),Y(f(p)),5,0,6.283);c.fill();if(ttl)txt(c,ttl,x+w/2,y-6,12,css('--tx'),'center');
+return k?(p<.3?'qattiq':p<.7?'erish':'suyuq'):'asta-sekin yumshaydi'}
+const rng=(id,l,mn,mx,st,v,u)=>`<label>${l}: <b id="${id}v">${v}</b> ${u}<input type="range" id="${id}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`;
+const sel=id=>`<label>Modda:<br><select id="${id}">${M.map((m,i)=>`<option value="${i}">${m[0]}</option>`).join('')}</select></label>`;
+const bar=(c,x,y,w,h,f,col)=>{c.strokeStyle=css('--mu');c.lineWidth=1;c.strokeRect(x,y,w,h);c.fillStyle=col;c.fillRect(x,y,w*Math.min(1,f),h)};
+function draw2(c,p,Tm,t){const gw=c.w*.6;const ph=graph(c,40,26,gw-40,c.h-60,Tm,p,true,css('--heat'));const d=p<.3?0:p<.7?(p-.3)/.4:1,am=p<.3?1+p*10:p<.7?3:3+(p-.7)*7,sp=16,cols=Math.floor((c.w*.36-6)/sp);
+lat(c,c.w*.64,c.h/2-45,cols,6,sp,am,d,t,d<.5?css('--ice'):css('--liq'));txt(c,ph==='erish'?'Erish (t = const)':ph==='qattiq'?'Qattiq':'Suyuq',c.w*.64,c.h-14,13,css('--tx'));return ph}
+function draw4(c,m,i,lab){const L=M[i][2],Q=L*m;bar(c,20,30,c.w-40,26,Q/3.9e6,css('--heat'));txt(c,'Energiya shkalasi',20,22,12,css('--mu'));const s=14+m*6;c.fillStyle=css('--ice');c.globalAlpha=.85;c.fillRect(c.w/2-s/2,c.h-s-20,s,s);c.globalAlpha=1;
+txt(c,lab+'m = '+fmt(m)+' kg',20,c.h-8,14,css('--tx'));txt(c,'Q = '+fmt(Q)+' J',c.w-20,c.h-8,15,css('--heat'),'right');txt(c,'Q = λ·m',c.w/2,100,18,css('--tx'),'center');return`${M[i][0]}: λ = ${fmt(L)} J/kg, Q = ${fmt(Q)} J = ${fmt(Q/1000)} kJ`}
+const E=[3,3,3,3];
+const S=[
+{t:"1-reja. Erish va qotish jarayonlari",
+th:"<p><b>Erish</b> — moddaning qattiq holatdan suyuq holatga o'tishi. <b>Qotish</b> — suyuq holatdan qattiq holatga o'tishi.</p><p>Qizdirilganda molekulalar tez tebranadi, o'zaro ta'sir kuchlari zaiflashadi va kristall panjara buziladi. Sovitilganda molekulalar sekinlashadi va yana tartibli joylashadi.</p>",
+f:"qattiq ⇄ suyuq",ex:"Issiq choyga tushgan muz bo'lagi erib suvga aylanadi, ayozda ko'lmak suvi muzlaydi.",
+ctl:rng('s0t',"Temperatura",-30,30,1,-20,"°C"),
+sim:c=>{const T=val('s0t'),d=T<0?0:T==0?.5:1,sp=22,cols=Math.floor((c.w-30)/sp);lat(c,(c.w-(cols-1)*sp)/2,(c.h-5*sp)/2,cols,6,sp,1+(T+30)/12,d,performance.now(),d<.5?css('--ice'):css('--liq'));return T<0?`${T} °C: qattiq (muz), panjara tartibli`:T==0?'0 °C: erish — panjara buzilmoqda':`${T} °C: suyuq (suv), panjara buzilgan`},
+an:(c,p,t)=>{const d=1-Math.abs(2*p-1),sp=22,cols=Math.floor((c.w-30)/sp);lat(c,(c.w-(cols-1)*sp)/2,(c.h-5*sp)/2,cols,6,sp,2.5,d,t,d>.5?css('--liq'):css('--ice'));txt(c,p<.5?'Erish: muz → suv':'Qotish: suv → muz',c.w/2,22,16,css('--tx'),'center')},dur:7000,
+pq:"Suv normal sharoitda necha °C da qotadi?",pu:"°C",ans:0},
+{t:"2-reja. Kristall jismlarning erishi va qotishi",
+th:`<p>Kristall jismlarning erish temperaturasi aniq va doimiy. Qotish temperaturasi erish temperaturasiga teng.</p><p>Erish davomida temperatura o'zgarmaydi: energiya kristall panjarani buzishga sarflanadi.</p><table><tr><th>Modda</th><th>t<sub>erish</sub>, °C</th></tr>${M.map(m=>`<tr><td>${m[0]}</td><td>${m[1]}</td></tr>`).join('')}</table>`,
+f:"t<sub>erish</sub> = t<sub>qotish</sub>",ex:"Muz va suv aralashmasi erish tugaguncha 0 °C da qoladi.",
+ctl:sel('s1m')+rng('s1p',"Jarayon (τ)",0,100,1,50,"%"),
+sim:c=>{const i=val('s1m'),p=val('s1p')/100,ph=draw2(c,p,M[i][1],performance.now());return`${M[i][0]}: t = ${M[i][1]} °C — ${ph}`},
+an:(c,p,t)=>draw2(c,p,0,t),dur:9000,pq:"Qo'rg'oshin necha °C da qotadi?",pu:"°C",ans:327},
+{t:"3-reja. Amorf jismlarning erishi va qotishi",
+th:"<p>Amorf jismlar (shisha, smola, mum, plastmassa, asfalt) aniq erish temperaturasiga ega emas. Qizdirilganda asta-sekin yumshaydi, quyuqligi kamayadi; qotishda ham asta-sekin qotadi. Molekulalari tartibsiz joylashgan.</p>",
+f:"t–τ grafikda gorizontal qism yo'q",ex:"Shisha puflash, asfaltning issiqda yumshashi, sham mumining yumshab oqishi.",
+ctl:rng('s2p',"Qizdirish (τ)",0,100,1,60,"%"),
+sim:c=>{const p=val('s2p')/100,w=(c.w-50)/2;const a=graph(c,24,28,w,c.h-56,100,p,true,css('--ice'),'Kristall'),b=graph(c,c.w/2+10,28,w,c.h-56,100,p,false,css('--heat'),'Amorf');return`Kristall: ${a} · Amorf: ${b}`},
+an:(c,p,t)=>{const w0=c.w*.4,cx=c.w/2,hh=110*(1-.7*p),ww=w0*(1+.5*p),y0=c.h-20-hh;c.fillStyle=css('--liq');c.globalAlpha=.35;c.fillRect(cx-ww/2,y0,ww,hh);c.fillStyle=css('--heat');c.globalAlpha=p*.5;c.fillRect(cx-ww/2,y0,ww,hh);c.globalAlpha=1;c.fillStyle=css('--tx');for(let k=0;k<60;k++){const a=rnd(k,1)*6.28;c.beginPath();c.arc(cx-ww/2+rnd(k,2)*ww+Math.sin(t/100+a)*(1+3*p),y0+rnd(k,3)*hh+Math.cos(t/110+a)*(1+3*p),3,0,6.283);c.fill()}txt(c,'Shisha yumshab oqmoqda — tartibsiz molekulalar',cx,22,13,css('--tx'),'center')},dur:8000,
+pq:"Quyidagilardan nechtasi amorf jism: shisha, mis, mum, muz, asfalt?",pu:"ta",ans:3},
+{t:"4-reja. Solishtirma erish issiqligi",
+th:`<p>Massasi 1 kg bo'lgan kristall jismni erish temperaturasida to'liq suyuqlikka aylantirish uchun zarur issiqlik miqdori <b>solishtirma erish issiqligi</b> deyiladi. Belgisi λ (lambda), birligi J/kg (kJ/kg). Qotishda xuddi shuncha issiqlik ajralib chiqadi.</p><table><tr><th>Modda</th><th>λ, J/kg</th></tr>${M.map(m=>`<tr><td>${m[0]}</td><td>${fmt(m[2])}</td></tr>`).join('')}</table>`,
+f:"λ = Q / m &nbsp;[J/kg]",ex:"Muzning λ i katta: shuning uchun muz sharbatni uzoq sovuq saqlaydi.",
+ctl:sel('s3m')+rng('s3k',"Massa",0.1,10,0.1,2,"kg"),
+sim:c=>draw4(c,val('s3k'),val('s3m'),''),an:(c,p)=>{draw4(c,p*10,0,'Muz: ')},dur:8000,pq:"Muzning λ = 3,4·10⁵ J/kg. 3 kg muzni eritish uchun Q necha kJ kerak?",pu:"kJ",ans:1020},
+{t:"5-reja. Q = λ·m formulasi va masalalar",
+th:"<p>Erish temperaturasidagi jismni to'liq eritish uchun kerak bo'lgan issiqlik λ va massaga to'g'ri proporsional. Birliklar: Q — J, λ — J/kg, m — kg.</p>",
+f:"Q = λ·m &nbsp; λ = Q/m &nbsp; m = Q/λ",ex:"Zavodda 5 kg qo'rg'oshinni eritish uchun hisoblangan issiqlik sarflanadi.",
+ctl:rng('s4m',"Massa m",0.1,10,0.1,2,"kg")+rng('s4l',"λ (×10⁵ J/kg)",0.1,5,0.05,3.4,"·10⁵"),
+sim:c=>{const m=val('s4m'),l=val('s4l'),Q=l*1e5*m;bar(c,20,60,c.w-40,28,Q/5e6,css('--heat'));txt(c,'Q = λ·m = '+fmt(l*1e5)+' · '+fmt(m),c.w/2,40,15,css('--tx'),'center');txt(c,'Q = '+fmt(Q)+' J',c.w/2,140,24,css('--heat'),'center');return`Q = ${fmt(Q/1000)} kJ`},
+an:(c,p)=>{const s=60*(1-p)+4;c.fillStyle=css('--ice');c.fillRect(c.w/2-s/2,c.h-80-s+30,s,s);c.fillStyle=css('--liq');c.fillRect(c.w/2-60,c.h-50,120,10+40*p*.5);const l=['Berilgan: m = 2 kg, λ = 3,4·10⁵ J/kg','Formula: Q = λ·m','Hisoblash: Q = 3,4·10⁵ · 2','Javob: Q = 6,8·10⁵ J'];txt(c,l[Math.min(3,Math.floor(p*4))],c.w/2,30,15,css('--tx'),'center')},dur:8000,
+extra:`<div class="card"><h3>🧮 Bosqichma-bosqich masalalar</h3><div class="btns" id="tk"></div><div id="stp"></div><button class="b" id="nx">Keyingi qadam</button></div>`,
+pq:"Q = 6,8·10⁵ J, λ = 3,4·10⁵ J/kg. Massa m necha kg?",pu:"kg",ans:2},
+{t:"6-reja. Tabiat va texnikada qo'llanilishi + aralash masalalar",
+th:"<p>Metallurgiyada quyma tayyorlash, muzlik va qorning erishi, muzxona, metallarni payvandlash, ayozli kunlarda idishlarga suv qo'yish — hammasi erish/qotishga bog'liq.</p><p><b>Nima uchun bahorda qor erishida havo sovuq bo'ladi?</b> Qor erishi uchun atrofdan issiqlik yutiladi, shuning uchun havo soviydi.</p>",
+f:"Q = c·m·Δt + λ·m + c<sub>suv</sub>·m·Δt",ex:"Ayozda sabzavot yonida suv idishi qo'yilsa, suv qotganda issiqlik ajralib sabzavotni muzlashdan saqlaydi.",
+ctl:rng('s5m',"Muz massasi (−20 °C → suv 20 °C)",0.5,5,0.1,1,"kg"),
+sim:c=>{const m=val('s5m'),q=[2100*m*20,3.4e5*m,4200*m*20],cl=[css('--ice'),css('--heat'),css('--liq')],nm=['Muzni qizdirish','Erish','Suvni qizdirish'],mx=3.4e5*5+84000*5+42000*5;q.forEach((v,i)=>{bar(c,20,34+i*52,c.w-40,24,v/mx,cl[i]);txt(c,nm[i]+': '+fmt(v/1000)+' kJ',20,28+i*52,13,css('--tx'))});return'Jami: Q = '+fmt((q[0]+q[1]+q[2])/1000)+' kJ'},
+an:(c,p)=>{const m=val('s5m'),q1=42000*m,q2=3.4e5*m,q3=84000*m,tot=q1+q2+q3;let T,Q,ice;if(p<.3){T=-20+20*p/.3;Q=q1*p/.3;ice=1}else if(p<.7){T=0;Q=q1+q2*(p-.3)/.4;ice=1-(p-.3)/.4}else{T=20*(p-.7)/.3;Q=q1+q2+q3*(p-.7)/.3;ice=0}
+c.fillStyle=css('--liq');c.fillRect(30,c.h-30-100*(1-ice),90,100*(1-ice));c.fillStyle=css('--ice');c.fillRect(30,c.h-30-100*(1-ice)-100*ice,90,100*ice);txt(c,'t = '+fmt(T)+' °C',150,60,22,css('--tx'));txt(c,'Q = '+fmt(Q/1000)+' kJ',150,100,22,css('--heat'));bar(c,150,125,c.w-170,22,Q/tot,css('--heat'));txt(c,p<.3?'Muz qizmoqda':p<.7?'Muz erimoqda (t = 0 °C)':'Suv qizmoqda',150,175,15,css('--mu'))},dur:10000,
+extra:`<div class="card"><h3>📝 Aralash masalalar</h3>
+<p><b>a)</b> 2 kg muz −10 °C dan 0 °C gacha qizdirilib, so'ng eritiladi (c = 2100 J/(kg·°C), λ = 3,4·10⁵). Q = ?</p><details><summary>Yechim</summary>Q₁ = 2100·2·10 = 42 000 J; Q₂ = 3,4·10⁵·2 = 680 000 J; Q = 722 000 J = 722 kJ</details>
+<p><b>b)</b> Muzni eritishga 1,02·10⁶ J sarflandi. Massa?</p><details><summary>Yechim</summary>m = Q/λ = 1,02·10⁶ / 3,4·10⁵ = 3 kg</details>
+<p><b>c)</b> 0,4 kg moddani eritishga 1,08·10⁵ J kerak. λ = ? Qaysi modda?</p><details><summary>Yechim</summary>λ = 1,08·10⁵/0,4 = 2,7·10⁵ J/kg — temir</details>
+<p><b>d)</b> 0,2 kg muz (0 °C) 1 kg 20 °C li suvga tashlandi. Oxirgi temperatura?</p><details><summary>Yechim</summary>Suv 0 °C gacha soviganda: 4200·1·20 = 84 000 J. Muz erishi: 0,2·3,4·10⁵ = 68 000 J. Qolgan 16 000 J ni 1,2 kg suv oladi: Δt = 16 000/(4200·1,2) ≈ 3,2 °C</details></div>`,
+pq:"1 kg muz −10 °C dan 0 °C gacha qizdirilib eritiladi (c = 2100 J/(kg·°C)). Q necha kJ?",pu:"kJ",ans:361}];
+const TK=[["2 kg muzni 0 °C da eritish uchun qancha issiqlik kerak?",["Berilgan: m = 2 kg; λ = 3,4·10⁵ J/kg","Topish kerak: Q = ?","Formula: Q = λ·m","Hisoblash: Q = 3,4·10⁵ · 2 = 6,8·10⁵ J","Javob: Q = 6,8·10⁵ J = 680 kJ"]],
+["5 kg qo'rg'oshin erish temperaturasida to'liq erishi uchun qancha energiya sarflanadi?",["Berilgan: m = 5 kg; λ = 0,25·10⁵ J/kg","Topish kerak: Q = ?","Formula: Q = λ·m","Hisoblash: Q = 0,25·10⁵ · 5 = 1,25·10⁵ J","Javob: Q = 1,25·10⁵ J = 125 kJ"]],
+["0,5 kg suv 0 °C da qotganda qancha issiqlik ajraladi?",["Berilgan: m = 0,5 kg; λ = 3,4·10⁵ J/kg","Topish kerak: Q = ?","Formula: Q = λ·m (qotishda shuncha ajraladi)","Hisoblash: Q = 3,4·10⁵ · 0,5 = 1,7·10⁵ J","Javob: Q = 1,7·10⁵ J = 170 kJ ajraladi"]]];
+const AN=[],NAV=['1 Erish','2 Kristall','3 Amorf','4 λ','5 Q=λm','6 Qo\'llanish','Test'];let cur=0;
+function Anim(cv,draw,dur){let p=0,run=false,last=0;const render=()=>draw(setup(cv),p,performance.now());
+function loop(t){if(!run)return;p+=(t-last)/dur;last=t;if(p>=1){p=1;run=false}render();if(run)requestAnimationFrame(loop)}
+return{start(){if(run)return;if(p>=1)p=0;run=true;last=performance.now();requestAnimationFrame(loop)},stop(){run=false},reset(){run=false;p=0;render()},render}}
+function rs(i){const sc=$('#sec'+i);sc.querySelectorAll('input[type=range]').forEach(r=>{const v=$('#'+r.id+'v');if(v)v.textContent=r.value});$('#out'+i).innerHTML=S[i].sim(setup($('#sim'+i)))}
+function chk(i){const v=parseFloat($('#pi'+i).value.replace(',','.')),a=S[i].ans,r=$('#pr'+i);if(isNaN(v)){r.textContent='Javobni kiriting';r.className='res';return}
+const ok=Math.abs(v-a)<=Math.max(Math.abs(a)*.01,.01);r.className='res '+(ok?'good':'bad');r.textContent=ok?'✅ To\'g\'ri!':'❌ Noto\'g\'ri. Qayta urinib ko\'ring.'}
+const main=$('#main');
+S.forEach((s,i)=>{const d=document.createElement('section');d.id='sec'+i;d.hidden=true;d.innerHTML=`<h2>${s.t}</h2><div class="card"><h3>📘 Nazariya</h3>${s.th}</div><div class="formula">${s.f}</div><div class="card"><h3>🌍 Hayotiy misol</h3>${s.ex}</div><div class="card"><h3>🎚 Simulyatsiya</h3>${s.ctl}<canvas id="sim${i}"></canvas><div class="out" id="out${i}"></div></div><div class="card"><h3>🎬 Animatsiya</h3><canvas id="an${i}"></canvas><div class="btns"><button data-a="start">▶ Boshlash</button><button data-a="stop">⏸ To'xtatish</button><button data-a="reset">↺ Qayta boshlash</button></div></div>${s.extra||''}<div class="card"><h3>✍ Mustaqil masala</h3><p>${s.pq}</p><input id="pi${i}" type="number" step="any" inputmode="decimal"> ${s.pu}<br><button class="b" onclick="chk(${i})">Javobni tekshirish</button><div class="res" id="pr${i}"></div></div>`;main.appendChild(d);
+d.querySelectorAll('input[type=range],select').forEach(e=>e.addEventListener('input',()=>rs(i)));
+const a=Anim(d.querySelector('#an'+i),s.an,s.dur);AN[i]=a;d.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>a[b.dataset.a]())});
+const T=document.createElement('section');T.id='sec6';T.hidden=true;
+const QS=[["Kristall jismning erish va qotish temperaturalari o'zaro qanday?",["Erish temperaturasi katta","Qotish temperaturasi katta","Ular teng","Bog'liq emas"],2],
+["Amorf jismlarning xossasi qaysi?",["Aniq erish temperaturasi bor","Asta-sekin yumshaydi","Erishda t o'zgarmaydi","Panjarasi qat'iy tartibli"],1],
+["Solishtirma erish issiqligi λ ning birligi qaysi?",["J","J/(kg·°C)","kg/J","J/kg"],3],
+["λ = 3,4·10⁵ J/kg bo'lgan 4 kg muzni eritish uchun Q = ?",["8,5·10⁴ J","1,36·10⁶ J","3,4·10⁵ J","1,36·10⁵ J"],1],
+["Kristall jism erish davomida uning temperaturasi...",["ortadi","kamayadi","o'zgarmaydi","avval ortib, keyin kamayadi"],2]];
+let sc=0,an=0;
+function buildTest(){sc=0;an=0;T.innerHTML='<h2>Test (5 ta savol)</h2>'+QS.map((q,i)=>`<div class="card q"><b>${i+1}. ${q[0]}</b>${q[1].map((o,j)=>`<button data-q="${i}" data-j="${j}">${'ABCD'[j]}) ${o}</button>`).join('')}</div>`).join('')+'<div class="card" id="tres" hidden></div>';
+T.querySelectorAll('.q button').forEach(b=>b.onclick=()=>{const i=+b.dataset.q,j=+b.dataset.j,bs=b.parentNode.querySelectorAll('button');if(bs[0].disabled)return;bs.forEach(x=>x.disabled=true);bs[QS[i][2]].classList.add('ok');if(j===QS[i][2])sc++;else b.classList.add('no');an++;
+if(an===5){const r=$('#tres');r.hidden=false;r.innerHTML=`<h3>Natija: ${sc} / 5</h3><button class="b" id="rt">Qayta topshirish</button>`;$('#rt').onclick=()=>{buildTest();window.scrollTo(0,0)}}})}
+buildTest();main.appendChild(T);
+const nav=$('#nav');NAV.forEach((n,i)=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>show(i);nav.appendChild(b)});
+function show(i){cur=i;nav.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i));main.querySelectorAll('section').forEach((s,k)=>s.hidden=k!==i);window.scrollTo(0,0);if(i<6){rs(i);AN[i].render()}}
+let st={k:0,s:0};
+function stp(){$('#tk').innerHTML=TK.map((t,k)=>`<button class="b" style="background:${k===st.k?'var(--heat)':'var(--mu)'}" data-k="${k}">${'abc'[k]})</button>`).join('');$('#tk').querySelectorAll('button').forEach(b=>b.onclick=()=>{st={k:+b.dataset.k,s:0};stp()});
+const t=TK[st.k];$('#stp').innerHTML=`<p><b>${'abc'[st.k]}) ${t[0]}</b></p>`+t[1].slice(0,st.s).map(x=>`<div class="step">${x}</div>`).join('');$('#nx').textContent=st.s>=5?'Keyingi masala →':'Keyingi qadam'}
+$('#nx').onclick=()=>{if(st.s>=5)st={k:(st.k+1)%3,s:0};else st.s++;stp()};stp();
+$('#th').onclick=()=>{const d=document.documentElement,dark=getComputedStyle(d).getPropertyValue('--bg').trim()==='#0e1621';d.dataset.theme=dark?'light':'dark';show(cur)};
+document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+window.addEventListener('resize',()=>{if(cur<6){rs(cur);AN[cur].render()}});
+(function tick(){if(cur===0)rs(0);else if(cur===1)rs(1);requestAnimationFrame(tick)})();
+show(0);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+function engd(cx,lt,q1,a,q2,u){c.fillStyle="#7f1d1d";c.fillRect(cx-150,105,300,40);rich("Isitgich T₁",cx,133,20,"#fff");c.fillStyle="#1e3a8a";c.fillRect(cx-150,335,300,40);rich("Sovutgich T₂",cx,363,20,"#fff");dot(cx,235,45,"#475569");rich("Dvigatel",cx,241,16,"#fff");
+if(lt>2){arrow(cx,147,cx,188,"#f87171",5);rich("Q₁ = "+q1+" "+u,cx+95,175,18,"#f87171")}if(lt>6){arrow(cx+45,235,cx+210,235,OK,5);rich("A = "+a+" "+u,cx+210,215,18,OK)}if(lt>10){arrow(cx,282,cx,333,"#60a5fa",5);rich("Q₂ = "+q2+" "+u,cx+100,315,18,"#60a5fa")}}
+function carnot(lt,x0,y0,w,h){const X=v=>x0+(v-.8)/2.6*w,Y=p=>y0+h-(p-.8)/3.6*h;axes(x0,y0,w,h,"V","p","");
+const F=[v=>4/v,v=>2*Math.pow(2/v,1.4),v=>3.314/v,v=>2.071*Math.pow(1.6/v,1.4)],R=[[1,2],[2,3.2],[3.2,1.6],[1.6,1]],CC=["#ef5b5b","#f5a54a","#4f7cff","#7a8bd1"],NM=["1→2 izoterma (T₁)","2→3 adiabata","3→4 izoterma (T₂)","4→1 adiabata"],pts=[];
+F.forEach((f,k)=>{for(let j=0;j<=30;j++){const v=R[k][0]+(R[k][1]-R[k][0])*j/30;pts.push([X(v),Y(f(v)),k])}});const n=Math.floor((pts.length-1)*cl(lt/16));
+for(let k=0;k<4;k++){c.strokeStyle=CC[k];c.lineWidth=4;c.beginPath();let st=0;for(let j=0;j<=n;j++){if(pts[j][2]!=k)continue;st?c.lineTo(pts[j][0],pts[j][1]):c.moveTo(pts[j][0],pts[j][1]);st=1}c.stroke()}
+dot(pts[n][0],pts[n][1],6,"#fbbf24");NM.forEach((s,k)=>{if(lt>k*4){c.font="600 13px sans-serif";c.fillStyle=CC[k];c.textAlign="right";c.fillText(s,x0+w-8,y0+20+k*18);c.textAlign="center"}})}
+function tubeV(cx,w,y0,y1,lv,cc,md){c.fillStyle=cc;c.beginPath();if(md>0){c.moveTo(cx-w/2,lv-6);c.quadraticCurveTo(cx,lv+8,cx+w/2,lv-6)}else if(md<0){c.moveTo(cx-w/2,lv+6);c.quadraticCurveTo(cx,lv-14,cx+w/2,lv+6)}else{c.moveTo(cx-w/2,lv);c.lineTo(cx+w/2,lv)}c.lineTo(cx+w/2,y1);c.lineTo(cx-w/2,y1);c.closePath();c.fill();
+c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(cx-w/2,y0);c.lineTo(cx-w/2,y1);c.moveTo(cx+w/2,y0);c.lineTo(cx+w/2,y1);c.stroke()}
+function latt(x0,y0,cols,rows,gap,jit,r,cc,lt){for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)dot(x0+i*gap+Math.sin(lt*9+i*3+j)*jit,y0+j*gap+Math.cos(lt*8+j*2+i)*jit,r,cc)}
+function spring2(x1,x2,y,n,amp){c.strokeStyle="#e2e8f0";c.lineWidth=2.5;c.beginPath();c.moveTo(x1,y);for(let i=1;i<n;i++)c.lineTo(x1+(x2-x1)*i/n,y+(i%2?-amp:amp));c.lineTo(x2,y);c.stroke()}
+function tgraph(x0,y0,w,h,r,kind){axes(x0,y0,w,h,"τ","t","");const X=u=>x0+u/40*w,Y=t=>y0+h-(t+30)/70*h,f=u=>kind=="cr"?(u<10?-20+2*u:u<30?0:(u-30)*2.5):-20+55/(1+Math.exp(-(u-20)/6));
+c.strokeStyle="#38bdf8";c.lineWidth=4;c.beginPath();for(let u=0;u<=40*r;u+=.5){const x=X(u),y=Y(f(u));u?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+if(kind=="cr"&&r>.25){c.strokeStyle="#f59e0b";c.lineWidth=7;c.beginPath();c.moveTo(X(10),Y(0));c.lineTo(X(Math.min(30,40*r)),Y(0));c.stroke()}
+const u=40*r;dot(X(u),Y(f(u)),6,"#fbbf24");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="right";c.fillText("0 °C",x0-4,Y(0)+4);c.textAlign="center"}
+const FOOT="9-sinf Fizika • 39-mavzu: Solishtirma erish issiqligi",BEGIN="Solishtirma erish issiqligi • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: solishtirma erish issiqligi",t:"Salom, aziz oʻquvchilar! Bugun solishtirma erish issiqligi va amorf jismlarning erishini oʻrganamiz."},
+{d:35,h:"1-reja. Erish va qotish jarayonlari",t:"Erish — moddaning qattiq holatdan suyuq holatga oʻtishi, qotish — suyuq holatdan qattiq holatga oʻtishi. Qizdirilganda molekulalar tez tebranadi, oʻzaro taʼsir kuchlari zaiflashadi va kristall panjara buziladi. Sovitilganda molekulalar sekinlashadi va yana tartibli joylashadi. Issiq choyga tushgan muz erib suvga aylanadi, ayozda koʻlmak suvi muzlaydi."},
+{d:35,h:"2-reja. Kristall jismlarning erishi va qotishi",t:"Kristall jismlarning erishi va qotishi. Muz va suv aralashmasi erish tugaguncha 0 darajada qoladi. Qoʻrgʻoshin 327 darajada qotadi. Erish va qotish temperaturalari bir xil. Grafikda erish va qotish vaqtida gorizontal qism, ya’ni temperatura oʻzgarmaydi."},
+{d:35,h:"3-reja. Amorf jismlarning erishi",t:"Amorf jismlar: shisha, smola, mum, plastmassa, asfalt — aniq erish temperaturasiga ega emas. Qizdirilganda asta-sekin yumshaydi, quyuqligi kamayadi, qotishda ham asta-sekin qotadi. Molekulalari tartibsiz joylashgan. t–tau grafikda gorizontal qism yoʻq. Misol: shisha puflash, asfaltning issiqda yumshashi, sham mumining yumshab oqishi."},
+{d:40,h:"4-reja. Solishtirma erish issiqligi",t:"Solishtirma erish issiqligi lambda — 1 kilogramm moddani erish temperaturasida toʻliq eritish uchun kerak issiqlik. Muzning lambdasi 3,4 karra 10 ning 5-darajasi joul boʻlinsin kilogramm, bu katta qiymat, shuning uchun muz sharbatni uzoq sovuq saqlaydi. Masalan, 3 kilogramm muzni eritish uchun Q teng 3,4 karra 10 ning 5-darajasi karra 3, ya’ni 1 million 20 ming joul, 1020 kilojoul."},
+{d:55,h:"5-reja. Q = λ·m va masalalar",t:"Q teng lambda m formulasi va masalalar. Birinchi: 2 kilogramm muz, Q teng 3,4 karra 10 ning 5-darajasi karra 2, 6,8 karra 10 ning 5-darajasi joul, 680 kilojoul. Ikkinchi: 5 kilogramm qoʻrgʻoshin, lambda teng 0,25 karra 10 ning 5-darajasi, Q teng 1,25 karra 10 ning 5-darajasi joul, 125 kilojoul. Uchinchi: 0,5 kilogramm suv 0 darajada qotsa, Q teng 3,4 karra 10 ning 5-darajasi karra 0,5, 170 kilojoul issiqlik ajraladi. Toʻrtinchi: Q 6,8 karra 10 ning 5-darajasi joul boʻlsa, m teng Q boʻlinsin lambda, 2 kilogramm."},
+{d:55,h:"6-reja. Aralash masalalar",t:"Aralash masalalar. A: 2 kilogramm muz minus 10 darajadan 0 gacha qizdirilib eritiladi. Q bir teng 2100 karra 2 karra 10, 42 ming joul. Q ikki teng lambda m, 680 ming joul. Jami 722 kilojoul. B: muzni eritishga 1,02 karra 10 ning 6-darajasi joul sarflandi, massa teng Q boʻlinsin lambda, 3 kilogramm. V: 0,4 kilogramm moddani eritishga 1,08 karra 10 ning 5-darajasi joul kerak, lambda teng 2,7 karra 10 ning 5-darajasi, bu temir. G: 0,2 kilogramm muz 1 kilogramm 20 darajali suvga tashlandi. Suv 0 gacha soviganda 84 ming joul beradi, muz erishi 68 ming joul talab qiladi, qolgan 16 ming joul 1,2 kilogramm suvni taxminan 3,2 darajaga isitadi."},
+{d:20,h:"Tabiat va texnikada qoʻllanilishi",t:"Tabiat va texnikada: metallurgiyada quyma tayyorlash, muzlik va qorning erishi, muzxona, payvandlash. Bahorda qor erishi uchun atrofdan issiqlik yutiladi, shuning uchun havo soviydi. Ayozda sabzavot yonida suv idishi qoʻyilsa, suv qotganda ajralgan issiqlik uni muzlashdan saqlaydi."},
+{d:10,h:"Xulosa",t:"Xulosa: Q teng lambda m, amorf jismlar aniq erish temperaturasiga ega emas. Eʼtiboringiz uchun rahmat!"}
+];
+function sceneEnter(i){}function sceneStep(i,p){}
+function grid4(D,lt){D.forEach(d=>{const al=cl((lt-d[4])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(d[0],d[1],420,112);c.fillStyle="#fbbf24";c.fillRect(d[0],d[1],420,5);rich(d[2],d[0]+210,d[1]+40,18,G);rich(d[3],d[0]+210,d[1]+88,23,Y);c.globalAlpha=1})}
+function sceneDraw(i,p,lt){
+if(i==0){["Erish va qotish","Amorf jismlar","Q = λ·m"].forEach((s,k)=>{const al=cl((lt-1-k*3)*2);if(al<=0)return;c.globalAlpha=al;rich(s,W/2,170+k*60,32,["#f97316","#38bdf8","#4ade80"][k]);c.globalAlpha=1})}
+else if(i==1){const f=cl((lt-8)/18),jit=2+6*cl(lt/8);for(let a=0;a<6;a++)for(let b=0;b<4;b++){const k=a*4+b;dot(80+a*58+Math.sin(lt*9+k*3)*jit+f*60*Math.sin(lt*1.3+k*1.7),150+b*58+Math.cos(lt*8+k*2)*jit+f*50*Math.cos(lt*1.1+k*2.3),11,f<.5?"#60a5fa":"#38bdf8")}c.strokeStyle="#475569";c.lineWidth=2;c.strokeRect(50,115,380,250);
+cardsL([["Qizdirilganda panjara buziladi",4,E],["Sovitilganda yana tartibli joylashadi",14,E],["Muz choyda eriydi, koʻlmak ayozda muzlaydi",24,OK]],lt,450,130,470,62,80,17)}
+else if(i==2){tgraph(50,120,440,250,cl(lt/22),"cr");cardsL([["Muz + suv: erish tugaguncha 0 °C",4,E],["Qoʻrgʻoshin 327 °C da qotadi",12,E],["t_{er} = t_{qotish};  plato: t = const",20,Y]],lt,530,130,400,62,80,17)}
+else if(i==3){tgraph(50,120,440,250,cl(lt/22),"am");cardsL([["Shisha, smola, mum, plastmassa, asfalt",4,E],["Aniq t_{er} yoʻq — asta-sekin yumshaydi",12,Y],["t–τ grafikda plato yoʻq",20,"#fb923c"]],lt,530,130,400,62,80,17)}
+else if(i==4)cardsL([["λ — 1 kg moddani erish t da eritish uchun kerak Q",3,E],["Muz:  λ = 3,4·10⁵ J/kg  (katta qiymat)",12,Y],["3 kg muz:  Q = 3,4·10⁵·3 = 1 020 000 J",22,Y],["Q = 1020 kJ",32,OK]],lt,80,115,800,58,72,22)
+else if(i==5)grid4([[50,110,"2 kg muz (0 °C)","Q = 3,4·10⁵·2 = 680 kJ",2],[490,110,"5 kg qoʻrgʻoshin, λ = 0,25·10⁵","Q = 1,25·10⁵ J = 125 kJ",14],[50,240,"0,5 kg suv 0 °C da qotadi","Q = 3,4·10⁵·0,5 = 170 kJ",27],[490,240,"Q = 6,8·10⁵ J  →  m = ?","m = Q / λ = 2 kg",40]])
+else if(i==6)grid4([[50,110,"A: 2 kg muz −10 → 0 °C, soʻng eriydi","Q = 42 000 + 680 000 = 722 kJ",2],[490,110,"B: Q = 1,02·10⁶ J, m = ?","m = Q / λ = 3 kg",16],[50,240,"V: 0,4 kg, Q = 1,08·10⁵ J","λ = 2,7·10⁵ J/kg  — temir",28],[490,240,"G: 0,2 kg muz + 1 kg suv (20 °C)","t ≈ 3,2 °C  (qolgan 16 kJ)",40]])
+else if(i==7)cardsL([["Quyma, payvandlash, muzlik va qor erishi, muzxona",2,E],["Qor erishi issiqlik yutadi — havo soviydi",8,E],["Suv qotganda issiqlik ajraladi — sabzavot asraladi",14,OK]],lt,80,130,800,62,78,21)
+else if(i==8)bullets(["Q = λ·m;   m = Q / λ","Amorf jismlarda aniq t_{er} yoʻq"],lt,3,190,26)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script></body></html>
