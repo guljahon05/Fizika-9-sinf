@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const backBtn = document.createElement('button');
     backBtn.innerText = 'Orqaga';
-    backBtn.onclick = function() { window.history.back(); };
+    backBtn.onclick = function() { window.location.href=ʼindex.htmlʼ;
     backBtn.style.padding = '10px 20px';
     backBtn.style.fontSize = '16px';
     backBtn.style.cursor = 'pointer';
