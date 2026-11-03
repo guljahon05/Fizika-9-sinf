@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Molekulalarning massasi va o'lchami</title>
+<style>
+:root{--bg:#f3f7ff;--card:#fff;--ink:#14213d;--mut:#55627f;--c1:#0096c7;--c2:#ff477e;--c3:#ffb703;--c4:#2fbf71;--line:#d7e1f5;--cv:#0b1d3a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1326;--card:#131f3a;--ink:#eaf0ff;--mut:#9fb0d6;--line:#26365e;--cv:#050c1c}}
+:root[data-theme="dark"]{--bg:#0b1326;--card:#131f3a;--ink:#eaf0ff;--mut:#9fb0d6;--line:#26365e;--cv:#050c1c}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Avenir Next","Trebuchet MS","Segoe UI",sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 60px}
+header{padding:32px 0 8px}
+h1{font-size:clamp(28px,7vw,46px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+header p{color:var(--mut);margin:0}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+nav a{padding:8px 14px;border-radius:99px;background:var(--card);color:var(--ink);text-decoration:none;border:2px solid var(--line);font-weight:600;font-size:15px}
+nav a:hover,nav a:focus-visible{border-color:var(--c1);outline:none}
+section{background:var(--card);border-radius:22px;padding:22px 18px;margin:22px 0;border:2px solid var(--line)}
+section:nth-of-type(1){border-top:8px solid var(--c1)}section:nth-of-type(2){border-top:8px solid var(--c2)}section:nth-of-type(3){border-top:8px solid var(--c3)}
+h2{margin:0 0 10px;font-size:26px}h3{margin:22px 0 8px;font-size:19px;color:var(--c1)}
+section:nth-of-type(2) h3{color:var(--c2)}section:nth-of-type(3) h3{color:#c98400}
+@media (prefers-color-scheme:dark){section:nth-of-type(3) h3{color:var(--c3)}}
+p{margin:8px 0}ul{padding-left:20px;margin:8px 0}li{margin:4px 0}
+.f{background:var(--bg);border-left:6px solid var(--c3);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:19px;font-weight:600;overflow-x:auto;white-space:nowrap}
+.f small{display:block;font-weight:400;font-size:14px;color:var(--mut);white-space:normal}
+canvas{width:100%;display:block;background:var(--cv);border-radius:16px}
+.ctl{display:grid;gap:10px;margin:12px 0}
+.ctl label{display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:15px}
+input[type=range]{width:100%;accent-color:var(--c2);height:28px}
+select,input[type=number]{font:inherit;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.out{background:var(--bg);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:16px}
+.out b{color:var(--c2);font-size:20px}
+.q{border:2px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+.q p{font-weight:600;margin:0 0 8px}
+.q button{display:block;width:100%;text-align:left;font:inherit;padding:10px 12px;margin:6px 0;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;min-height:44px}
+.q button:focus-visible{outline:3px solid var(--c1)}
+.q button.ok{background:var(--c4);border-color:var(--c4);color:#04270f}
+.q button.no{background:var(--c2);border-color:var(--c2);color:#fff}
+.q .fb{font-size:15px;color:var(--mut);min-height:1em}
+#s4{border-top:8px solid var(--c4)}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.vbar button{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:0;background:var(--c1);color:#fff;min-height:44px;cursor:pointer}
+.vbar button:focus-visible{outline:3px solid var(--c3)}
+.vbar input[type=range]{flex:1;min-width:140px;width:auto}
+.vbar select{width:auto}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
+.vnote{font-size:14px;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Molekulalarning massasi va o'lchami</h1>
+<p>9-sinf fizika · 2-mavzu</p>
+<nav><a href="#s1">1. Molekulalar</a><a href="#s2">2. O'lchami</a><a href="#s3">3. Massasi</a><a href="#s4">4. Video</a></nav>
+</header>
+
+<section id="s1">
+<h2>1. Molekulalar</h2>
+<h3>Nazariy ma'lumot</h3>
+<ul>
+<li>Barcha moddalar molekulalardan iborat.</li>
+<li>Molekula — moddaning xossalarini saqlovchi eng kichik zarra.</li>
+<li>Molekulalar atomlardan tuzilgan. Masalan, suv molekulasi (H₂O) 1 ta kislorod va 2 ta vodorod atomidan iborat.</li>
+<li>Molekulalar orasida bo'shliq bor.</li>
+<li>Molekulalar to'xtovsiz harakatda bo'ladi va bir-biri bilan ta'sirlashadi.</li>
+</ul>
+<h3>Formulalar va tushuntirish</h3>
+<div class="f">H₂O = 2 ta H + 1 ta O<small>Suv molekulasining tarkibi. Atomlar o'zgarsa, modda ham o'zgaradi.</small></div>
+<div class="f">T ↑ ⇒ υ ↑<small>Harorat oshsa, molekulalarning harakat tezligi ham oshadi.</small></div>
+<h3>Animatsiya: suv tomchisiga yaqinlashamiz</h3>
+<canvas id="a1" height="240"></canvas>
+<p style="font-size:14px;color:var(--mut)">Tomchi tekis ko'rinadi, lekin kattalashtirsak, u alohida molekulalardan iborat.</p>
+<h3>Simulyatsiya: haroratni o'zgartir</h3>
+<canvas id="c1" height="260"></canvas>
+<div class="ctl"><label>Harorat <span id="v1"></span></label><input type="range" id="t1" min="1" max="10" value="4" aria-label="Harorat"></div>
+<div class="out" id="o1"></div>
+<h3>Nazorat savollari</h3>
+<div id="q1"></div>
+</section>
+
+<section id="s2">
+<h2>2. Molekulalarning o'lchami</h2>
+<h3>Nazariy ma'lumot</h3>
+<ul>
+<li>Molekulalar juda kichik: ularni oddiy mikroskopda ham ko'rib bo'lmaydi.</li>
+<li>Molekula o'lchamining tartibi taxminan 10⁻¹⁰ m (0,1 nm) dan 10⁻⁹ m (1 nm) gacha.</li>
+<li>O'lchamni baholash usuli: suv yuziga bir tomchi yog' tomiziladi. Yog' yoyilib, qalinligi bitta molekulaga teng yupqa parda hosil qiladi.</li>
+</ul>
+<h3>Formulalar va tushuntirish</h3>
+<div class="f">d = V / S<small>d — molekula diametri (parda qalinligi), V — yog' hajmi, S — parda yuzi.</small></div>
+<div class="f">1 nm = 10⁻⁹ m<small>Hisoblashda birliklarni SI ga o'tkazishni unutma: 1 mm³ = 10⁻⁹ m³, 1 sm² = 10⁻⁴ m².</small></div>
+<h3>Animatsiya: yog' tomchisi yoyiladi</h3>
+<canvas id="a2" height="220"></canvas>
+<p style="font-size:14px;color:var(--mut)">Hajm o'zgarmaydi. Yuza kattalashadi, qalinlik kamayadi, to'xtaganda parda bitta molekula qalinligida bo'ladi.</p>
+<h3>Simulyatsiya: molekula o'lchamini hisobla</h3>
+<div class="ctl">
+<label>Yog' hajmi V <span id="v2a"></span></label><input type="range" id="V2" min="0.02" max="0.5" step="0.01" value="0.1" aria-label="Hajm">
+<label>Parda yuzi S <span id="v2b"></span></label><input type="range" id="S2" min="100" max="2000" step="10" value="500" aria-label="Yuza">
+</div>
+<canvas id="c2" height="120"></canvas>
+<div class="out" id="o2"></div>
+<h3>Nazorat savollari</h3>
+<div id="q2"></div>
+</section>
+
+<section id="s3">
+<h2>3. Molekulalarning massasi</h2>
+<h3>Nazariy ma'lumot</h3>
+<ul>
+<li>Molekulalar juda kichik bo'lgani uchun ularning massasi ham nihoyatda kichik (taxminan 10⁻²⁶ kg).</li>
+<li>Shuning uchun modda miqdori mol bilan o'lchanadi. 1 mol modda tarkibida 6,02·10²³ ta molekula bor. Bu son Avogadro doimiysi deyiladi.</li>
+<li>1 molning grammlardagi massasi molyar massa (M) deyiladi. U son jihatdan nisbiy molekulyar massaga teng.</li>
+</ul>
+<h3>Formulalar va tushuntirish</h3>
+<div class="f">m₀ = M / N<sub>A</sub><small>m₀ — bitta molekulaning massasi, M — molyar massa (kg/mol), N<sub>A</sub> = 6,02·10²³ 1/mol.</small></div>
+<div class="f">N = m / m₀ = (m / M) · N<sub>A</sub><small>N — m massali moddadagi molekulalar soni.</small></div>
+<div class="f">m₀ = M<sub>r</sub> · 1,66·10⁻²⁷ kg<small>M<sub>r</sub> — nisbiy molekulyar massa (1 a.m.b. = 1,66·10⁻²⁷ kg).</small></div>
+<h3>Animatsiya: tarozida molekulalar</h3>
+<canvas id="a3" height="240"></canvas>
+<p style="font-size:14px;color:var(--mut)">Bitta molekula juda yengil. Tarozi tenglashishi uchun juda ko'p molekula kerak.</p>
+<h3>Simulyatsiya: molekula massasi va soni</h3>
+<div class="ctl">
+<label>Modda</label>
+<select id="sub" aria-label="Modda">
+<option value="2">Vodorod H₂ (M = 2 g/mol)</option>
+<option value="18" selected>Suv H₂O (M = 18 g/mol)</option>
+<option value="28">Azot N₂ (M = 28 g/mol)</option>
+<option value="32">Kislorod O₂ (M = 32 g/mol)</option>
+<option value="44">Karbonat angidrid CO₂ (M = 44 g/mol)</option>
+</select>
+<label>Modda massasi m <span id="v3"></span></label><input type="range" id="m3" min="1" max="100" value="18" aria-label="Massa">
+</div>
+<div class="out" id="o3"></div>
+<h3>Nazorat savollari</h3>
+<div id="q3"></div>
+</section>
+<section id="s4">
+<h2>4. Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button id="vpp">▶ Boshlash</button><button id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p>
+</section>
+<section id="youtube-link" style="background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 18px;margin:22px 0;text-align:center">
+<h2>Qoʻshimcha video dars</h2>
+<p>Videoni tomosha qilish uchun quyidagi havolani bosing:</p>
+<p><a href="https://youtu.be/VxPz36Qg1js?feature=shared" target="_blank" rel="noopener noreferrer">YouTube videosini ochish</a></p>
+</section>
+</div>
+
+<script>
+var DPR=Math.min(window.devicePixelRatio||1,2);
+function cv(id){var c=document.getElementById(id),h=+c.getAttribute('height');var w=c.clientWidth||300;c.width=w*DPR;c.height=h*DPR;var x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return{c:c,x:x,w:w,h:h}}
+var A1,C1,A2,C2,A3;
+function init(){A1=cv('a1');C1=cv('c1');A2=cv('a2');C2=cv('c2');A3=cv('a3')}
+var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function water(x,ctx,px,py,a,s){
+ x.fillStyle='#ffb0c8';[a-0.91,a+0.91].forEach(function(t){x.beginPath();x.arc(px+Math.cos(t)*7*s,py+Math.sin(t)*7*s,3.6*s,0,7);x.fill()});
+ x.fillStyle='#38bdf8';x.beginPath();x.arc(px,py,6.2*s,0,7);x.fill()}
+
+/* 1-animatsiya: yaqinlashish */
+function draw1(t){var g=A1,x=g.x,cx=g.w/2,cy=g.h/2,R=Math.min(g.h/2-14,g.w/2-10);
+ x.clearRect(0,0,g.w,g.h);var ph=(t/9000)%1,z=Math.pow(30,Math.min(ph*1.25,1));
+ x.save();x.beginPath();x.arc(cx,cy,R,0,7);x.clip();x.fillStyle='#0e5e8c';x.fillRect(0,0,g.w,g.h);
+ var sp=10*z,s=Math.max(z*0.55,0.15);
+ if(z>2.2){var n=Math.ceil(R/sp)+1;for(var i=-n;i<=n;i++)for(var j=-n;j<=n;j++){var px=cx+(i+(j%2)*.5)*sp,py=cy+j*sp*.87;if((px-cx)*(px-cx)+(py-cy)*(py-cy)<(R+sp)*(R+sp))water(x,0,px,py,(i*7+j*3)%6,s)}}
+ else{x.fillStyle='rgba(120,210,255,.5)';x.beginPath();x.arc(cx-R*.3,cy-R*.3,R*.25,0,7);x.fill()}
+ x.restore();x.strokeStyle='#7dd3fc';x.lineWidth=3;x.beginPath();x.arc(cx,cy,R,0,7);x.stroke();
+ x.fillStyle='#fff';x.font='700 15px sans-serif';x.fillText('×'+Math.round(z*z*30)+' kattalashtirish',12,22);
+ if(z>16)x.fillText('Bitta molekula = 1 O atomi + 2 H atomi',12,g.h-14);}
+
+/* 1-simulyatsiya */
+var M1=[];function seed1(){M1=[];for(var i=0;i<28;i++){var a=Math.random()*6.28;M1.push({x:20+Math.random()*(C1.w-40),y:20+Math.random()*(C1.h-40),a:a,r:Math.random()*6})}}
+function draw1s(){var g=C1,x=g.x,T=+document.getElementById('t1').value,sp=T*0.45;
+ x.clearRect(0,0,g.w,g.h);
+ var col=T<4?'#38bdf8':T<8?'#ffb703':'#ff477e';x.strokeStyle=col;x.lineWidth=4;x.strokeRect(2,2,g.w-4,g.h-4);
+ M1.forEach(function(m){m.x+=Math.cos(m.a)*sp;m.y+=Math.sin(m.a)*sp;m.r+=0.02*T;
+  if(m.x<12||m.x>g.w-12){m.a=Math.PI-m.a;m.x=Math.max(12,Math.min(g.w-12,m.x))}
+  if(m.y<12||m.y>g.h-12){m.a=-m.a;m.y=Math.max(12,Math.min(g.h-12,m.y))}
+  water(x,0,m.x,m.y,m.r,1.2)});
+ var L=['juda sovuq','sovuq','iliq','iliq','iliq','issiq','issiq','issiq','juda issiq','juda issiq'];
+ document.getElementById('v1').textContent=L[T-1];
+ document.getElementById('o1').innerHTML='Molekulalar tezligi: <b>'+(T*10)+' %</b>. Harorat oshgani sari molekulalar tezroq harakatlanadi.'}
+
+/* 2-animatsiya: yog' yoyiladi */
+function draw2(t){var g=A2,x=g.x,W=g.w,H=g.h;x.clearRect(0,0,W,H);
+ var ph=Math.min(((t/7000)%1.3)/1,1),area=W*60*0.12,d=10,wmax=area/d;
+ var w=Math.max(area/Math.max(60*(1-ph)+d*ph,d),area/60),h=area/w;
+ var wy=H*0.62;x.fillStyle='#0e5e8c';x.fillRect(0,wy,W,H-wy);
+ w=Math.min(w,W-20);h=Math.max(h,d);var cx=W/2;
+ if(h>d*1.2){x.fillStyle='#ffb703';x.beginPath();x.ellipse(cx,wy-h/2,w/2,h/2,0,0,7);x.fill()}
+ else{x.fillStyle='#ffb703';var n=Math.floor(w/d);for(var i=0;i<n;i++){x.beginPath();x.arc(cx-w/2+d/2+i*d,wy-d/2,d/2-.5,0,7);x.fill()}}
+ x.fillStyle='#fff';x.font='700 15px sans-serif';x.fillText(h>d*1.2?'Yog\'  tomchisi yoyilmoqda...':'Parda qalinligi d = bitta molekula',12,22);
+ if(h<=d*1.2){x.strokeStyle='#fff';x.lineWidth=2;var lx=cx+w/2+8;if(lx>W-14)lx=W-14;x.beginPath();x.moveTo(lx,wy-d);x.lineTo(lx,wy);x.stroke();x.fillText('d',Math.min(lx+4,W-12),wy-2)}}
+
+/* 2-simulyatsiya */
+function draw2s(){var g=C2,x=g.x,W=g.w,H=g.h,V=+document.getElementById('V2').value,S=+document.getElementById('S2').value;
+ var d=V/S*1e4;document.getElementById('v2a').textContent=V.toFixed(2)+' mm³';document.getElementById('v2b').textContent=S+' sm²';
+ x.clearRect(0,0,W,H);var wy=H*0.7;x.fillStyle='#0e5e8c';x.fillRect(0,wy,W,H-wy);
+ var w=Math.max(20,S/2000*(W-20)),th=Math.min(30,Math.max(3,d*6));
+ x.fillStyle='#ffb703';x.fillRect((W-w)/2,wy-th,w,th);
+ x.fillStyle='#fff';x.font='700 14px sans-serif';x.fillText('Parda qalinligi ~ '+d.toFixed(2)+' nm',12,22);
+ var hair=70000/d;
+ document.getElementById('o2').innerHTML='d = V / S = <b>'+d.toFixed(2)+' nm</b> = '+(d*1e-9).toExponential(2).replace('e-','·10⁻').replace('+','')+' m'+
+ '<br>Bu soch tolasi qalinligidan taxminan <b>'+Math.round(hair).toLocaleString('uz')+'</b> marta yupqa.'}
+
+/* 3-animatsiya: tarozi */
+function draw3(t){var g=A3,x=g.x,W=g.w,H=g.h;x.clearRect(0,0,W,H);
+ var n=Math.floor(((t/500)%42));n=Math.min(n,30);var ang=(30-n)/30*0.22;
+ var cx=W/2,py=H-40;x.strokeStyle='#cbd5e1';x.lineWidth=5;x.beginPath();x.moveTo(cx,py);x.lineTo(cx,70);x.stroke();
+ x.fillStyle='#cbd5e1';x.fillRect(cx-40,py,80,8);
+ var L=Math.min(W/2-30,150),by=70;x.save();x.translate(cx,by);x.rotate(-ang);
+ x.strokeStyle='#ffb703';x.lineWidth=6;x.beginPath();x.moveTo(-L,0);x.lineTo(L,0);x.stroke();x.restore();
+ var lx=cx-Math.cos(ang)*L,ly=by+Math.sin(ang)*L,rx=cx+Math.cos(ang)*L,ry=by-Math.sin(ang)*L;
+ [[lx,ly],[rx,ry]].forEach(function(p){x.strokeStyle='#94a3b8';x.lineWidth=2;x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(p[0]-40,p[1]+70);x.moveTo(p[0],p[1]);x.lineTo(p[0]+40,p[1]+70);x.stroke();
+  x.fillStyle='#94a3b8';x.fillRect(p[0]-46,p[1]+70,92,6)});
+ x.fillStyle='#ff477e';x.fillRect(lx-24,ly+40,48,30);x.fillStyle='#fff';x.font='700 13px sans-serif';x.textAlign='center';x.fillText('18 g',lx,ly+60);
+ for(var i=0;i<n;i++){x.fillStyle='#38bdf8';x.beginPath();x.arc(rx-34+(i%6)*13,ry+66-Math.floor(i/6)*11,5,0,7);x.fill()}
+ x.fillStyle='#fff';x.font='700 14px sans-serif';x.fillText('Molekulalar soni: '+(n>=30?'6,02·10²³ ta = 1 mol':'ko\'payib bormoqda...'),cx,H-12);x.textAlign='left'}
+
+/* 3-simulyatsiya */
+var NA=6.02e23;
+function fmt(v){var e=Math.floor(Math.log10(v)),m=v/Math.pow(10,e);return m.toFixed(2).replace('.',',')+'·10'+String(e).replace('-','⁻').replace(/\d/g,function(d){return '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]})}
+function sim3(){var M=+document.getElementById('sub').value,m=+document.getElementById('m3').value;
+ document.getElementById('v3').textContent=m+' g';
+ var m0=M*1e-3/NA,N=m*1e-3/m0;
+ document.getElementById('o3').innerHTML='Bitta molekula massasi: m₀ = M / N<sub>A</sub> = <b>'+fmt(m0)+' kg</b><br>'+m+' g moddadagi molekulalar soni: N = <b>'+fmt(N)+'</b> ta<br>Tekshirish: M<sub>r</sub> · 1,66·10⁻²⁷ = '+fmt(M*1.66e-27)+' kg'}
+
+/* Testlar */
+var Q=[[
+ ['Moddaning xossalarini saqlovchi eng kichik zarra qaysi?',['Atom','Molekula','Elektron'],1,'Molekula moddaning xossalarini saqlaydi. Atom esa molekulani tashkil etadi.'],
+ ['Suv isitilganda molekulalar harakati qanday o\'zgaradi?',['Tezlashadi','Sekinlashadi','O\'zgarmaydi'],0,'Harorat oshsa, molekulalar tezligi ham oshadi.'],
+ ['50 ml suv va 50 ml spirt aralashtirilganda hajm 100 ml dan kam chiqadi. Nima uchun?',['Molekulalar yo\'qolib qoladi','Molekulalar orasida bo\'shliq bor','Suv bug\'lanadi'],1,'Bir modda molekulalari ikkinchisining bo\'shliqlariga joylashadi.']],
+[
+ ['Yog\' pardasining qalinligi (molekula diametri) qaysi formula bilan topiladi?',['d = V · S','d = V / S','d = S / V'],1,'Hajm = yuza · qalinlik, demak d = V / S.'],
+ ['V = 0,2 mm³ yog\' S = 1000 sm² yuzaga yoyildi. d ni toping.',['0,2 nm','2 nm','20 nm'],1,'d = 0,2 / 1000 · 10⁴ nm = 2 nm.'],
+ ['Molekula o\'lchamining tartibi qaysi?',['10⁻³ m','10⁻⁶ m','10⁻¹⁰ m'],2,'Molekulalar taxminan 10⁻¹⁰ — 10⁻⁹ m o\'lchamda.']],
+[
+ ['Bitta molekula massasi qaysi formula bilan topiladi?',['m₀ = M · N<sub>A</sub>','m₀ = M / N<sub>A</sub>','m₀ = N<sub>A</sub> / M'],1,'1 mol massasi M, unda N<sub>A</sub> ta molekula bor.'],
+ ['Suv molekulasi massasi (M = 18 g/mol) taxminan qancha?',['3·10⁻²⁶ kg','3·10⁻²³ kg','3·10⁻²⁹ kg'],0,'m₀ = 0,018 / 6,02·10²³ ≈ 3·10⁻²⁶ kg.'],
+ ['1 mol moddada nechta molekula bor?',['6,02·10²³','6,02·10¹³','1,66·10⁻²⁷'],0,'Bu Avogadro doimiysi N<sub>A</sub>.']]];
+Q.forEach(function(set,si){var box=document.getElementById('q'+(si+1));
+ set.forEach(function(q,qi){var d=document.createElement('div');d.className='q';
+  d.innerHTML='<p>'+(qi+1)+'. '+q[0]+'</p>';
+  var fb=document.createElement('div');fb.className='fb';
+  q[1].forEach(function(o,oi){var b=document.createElement('button');b.innerHTML=o;
+   b.onclick=function(){var bs=d.querySelectorAll('button');bs.forEach(function(x){x.classList.remove('ok','no')});
+    if(oi===q[2]){b.classList.add('ok');fb.textContent='To\'g\'ri! '+q[3].replace(/<[^>]+>/g,'')}else{b.classList.add('no');fb.textContent='Yana urinib ko\'r.'}};
+   d.appendChild(b)});
+  d.appendChild(fb);box.appendChild(d)})});
+
+['t1','V2','S2','m3'].forEach(function(id){document.getElementById(id).addEventListener('input',function(){if(id==='m3')sim3()})});
+document.getElementById('sub').addEventListener('change',sim3);
+function frame(t){draw1(t);draw1s();draw2(t);draw2s();draw3(t);if(!still||!frame.once){frame.once=1;requestAnimationFrame(frame)}}
+window.addEventListener('resize',function(){init();seed1()});
+init();seed1();sim3();requestAnimationFrame(frame);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const S=[
+{d:25,h:"Kirish: tomchi ichidagi dunyo",t:"Salom, aziz oʻquvchilar! Bugun molekulalarning oʻlchami va massasi haqida gaplashamiz. Mana, suv tomchisi. Tekis koʻrinadi, lekin kattalashtirsak, u alohida molekulalardan iboratligini koʻramiz. Molekulalar qanchalik kichik ekanini birgalikda aniqlaymiz."},
+{d:40,h:"1. Molekulalar",t:"Barcha moddalar molekulalardan iborat. Molekula — moddaning xossalarini saqlovchi eng kichik zarradir. Molekulalar esa atomlardan tuziladi. Masalan, suv molekulasi bitta kislorod va ikkita vodorod atomidan iborat. Atomlar oʻzgarsa, modda ham oʻzgaradi. Molekulalar orasida boʻshliq bor, ular toʻxtovsiz harakatda boʻladi va bir-biri bilan taʼsirlashadi."},
+{d:35,h:"2. Molekulalarning oʻlchami",t:"Molekulalar juda kichik. Ularni oddiy mikroskopda ham koʻrib boʻlmaydi. Molekula oʻlchamining tartibi taxminan oʻn ning minus oʻninchi darajasi metrdan, oʻn ning minus toʻqqizinchi darajasi metrgacha. Taqqoslash uchun, inson sochining qalinligi taxminan oʻn ning minus toʻrtinchi darajasi metr."},
+{d:50,h:"Oʻlchamni baholash: yogʻ pardasi",t:"Molekula oʻlchamini baholash uchun suv yuziga bir tomchi yogʻ tomiziladi. Yogʻ yoyilib, qalinligi bitta molekulaga teng yupqa parda hosil qiladi. Hajm oʻzgarmaydi, yuza kattalashadi, qalinlik kamayadi. Demak, molekula diametri d, yogʻ hajmi V ning parda yuzi S ga nisbatiga teng. Masalan, V nol butun bir kub millimetr, S besh yuz kvadrat santimetr boʻlsa, SI ga oʻtkazamiz: V oʻn ning minus oʻninchi darajasi kub metr, S nol butun nol besh kvadrat metr. Natijada d taxminan ikki nanometr chiqadi."},
+{d:35,h:"3. Molekulalarning massasi",t:"Molekulalar juda kichik boʻlgani uchun ularning massasi ham nihoyatda kichik, taxminan oʻn ning minus yigirma oltinchi darajasi kilogramm. Shuning uchun modda miqdori mol bilan oʻlchanadi. Bir mol modda tarkibida olti butun nol ikki karra oʻn ning yigirma uchinchi darajasi dona molekula bor. Bu Avogadro doimiysi. Bir molning massasi molyar massa deyiladi."},
+{d:45,h:"Asosiy formulalar",t:"Endi asosiy formulalar. Bitta molekulaning massasi m nol, molyar massa M ning Avogadro doimiysi N A ga nisbatiga teng. Moddadagi molekulalar soni N esa massaning molyar massaga nisbatini N A ga koʻpaytirib topiladi. Bundan tashqari, m nol ni nisbiy molekulyar massa Mr ni bir atom massa birligiga, ya’ni bir butun oltmish olti karra oʻn ning minus yigirma yettinchi darajasi kilogrammga koʻpaytirib ham topish mumkin."},
+{d:55,h:"Masala: suv molekulasining massasi",t:"Masala: suv molekulasining massasini toping. Suvning molyar massasi 18 gramm bir molga, ya’ni nol butun nol oʻn sakkiz kilogramm bir molga. Formulaga qoʻyamiz: m nol teng nol butun nol oʻn sakkiz boʻlinsin olti butun nol ikki karra oʻn ning yigirma uchinchi darajasiga. Natija taxminan uch karra oʻn ning minus yigirma oltinchi darajasi kilogramm. Tekshirib koʻraylik: 18 ni bir butun oltmish olti karra oʻn ning minus yigirma yettinchi darajasiga koʻpaytirsak, yana shu natija chiqadi."},
+{d:15,h:"Xulosa",t:"Xulosa: molekulalar juda kichik, oʻlchami nanometr tartibida, massasi esa taxminan oʻn ning minus yigirma oltinchi darajasi kilogramm. Eʼtiboringiz uchun rahmat!"}
+];
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc,BX=[60,95,900,395];
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,P=[],rt=1;
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x));
+const SP="speechSynthesis" in window;
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,ang:Math.random()*6.283}}
+function rp(n,b,sp){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+20+Math.random()*(b[2]-b[0]-40),b[1]+20+Math.random()*(b[3]-b[1]-40),sp));return r}
+function gas(q,sp,b,r){for(const o of q){const m=Math.hypot(o.vx,o.vy)||1;o.vx*=sp/m;o.vy*=sp/m;o.x+=o.vx;o.y+=o.vy;o.ang+=.01;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function enter(i){cur=i;P=[];if(i==0)P=rp(55,BX,1.2);if(i==1)P=rp(35,BX,1.6)}
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,col){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=x-w/2;c.fillStyle=col;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,col){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=col;c.fill()}
+function water(o,al){c.globalAlpha=al;for(const s of[-1,1])dot(o.x+Math.cos(o.ang+s*1.82)*13,o.y+Math.sin(o.ang+s*1.82)*13,5,"#fda4c0");dot(o.x,o.y,10,"#38bdf8");c.globalAlpha=1}
+function arrow2(x1,y1,x2,y2,col){c.strokeStyle=col;c.fillStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);for(const[px,py,d]of[[x2,y2,0],[x1,y1,Math.PI]]){c.beginPath();c.moveTo(px,py);c.lineTo(px-9*Math.cos(a+d-.5),py-9*Math.sin(a+d-.5));c.lineTo(px-9*Math.cos(a+d+.5),py-9*Math.sin(a+d+.5));c.fill()}}
+function box(){c.strokeStyle="#475569";c.lineWidth=2;c.strokeRect(BX[0],BX[1],BX[2]-BX[0],BX[3]-BX[1])}
+function step(i){if(i==0)gas(P,1.2,BX,10);else if(i==1)gas(P,1.6,BX,14)}
+function draw(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText("9-sinf Fizika • Molekulalarning massasi va oʻlchami",16,22);c.textAlign="center";
+if(i==0){const z=1+p*2.4,ga=1-cl((p-.3)/.15),ma=cl((p-.4)/.15);
+if(ga>0){c.save();c.globalAlpha=ga;c.translate(480,250);c.scale(z,z);c.beginPath();c.arc(0,0,70,0,6.283);c.fillStyle="rgba(56,189,248,.45)";c.fill();c.strokeStyle="#7dd3fc";c.lineWidth=4/z;c.stroke();c.restore();c.globalAlpha=1;
+if(p<.2){c.fillStyle="#cbd5e1";c.font="600 20px sans-serif";c.fillText("Suv tomchisi",480,360)}}
+if(ma>0){c.globalAlpha=ma*.25;c.fillStyle="#0ea5e9";c.fillRect(BX[0],BX[1],BX[2]-BX[0],BX[3]-BX[1]);c.globalAlpha=1;P.forEach(o=>water(o,ma))}
+if(p>.78){c.fillStyle="rgba(2,6,23,.8)";c.fillRect(150,130,660,50);c.fillStyle="#fde68a";c.font="700 24px sans-serif";c.fillText("Tomchi ham molekulalardan iborat!",W/2,163)}}
+else if(i==1){const a1=1-cl((p-.42)/.08),a2=cl((p-.45)/.1);
+if(a1>0){c.globalAlpha=a1;c.strokeStyle="#94a3b8";c.lineWidth=6;c.beginPath();c.moveTo(402,289);c.lineTo(480,225);c.lineTo(558,289);c.stroke();
+dot(480,225,44,"#38bdf8");dot(402,289,26,"#fda4c0");dot(558,289,26,"#fda4c0");
+c.fillStyle="#0b1220";c.font="700 30px sans-serif";c.fillText("O",480,236);c.font="700 22px sans-serif";c.fillText("H",402,297);c.fillText("H",558,297);
+rich("H_{2}O = 2 ta H + 1 ta O",480,375,28,"#fde68a");c.globalAlpha=1}
+if(a2>0){c.globalAlpha=a2;box();P.forEach(o=>water(o,1));c.fillStyle="#fde68a";c.font="600 20px sans-serif";c.fillText("Orasida boʻshliq • toʻxtovsiz harakat • taʼsirlashish",W/2,128);c.globalAlpha=1}}
+else if(i==2){const X=e=>100+(-3-e)/7*760;c.fillStyle="#94a3b8";c.font="600 18px sans-serif";c.fillText("Oʻlchamlar shkalasi (logarifmik, metrda)",W/2,120);
+c.strokeStyle="#64748b";c.lineWidth=3;c.beginPath();c.moveTo(90,250);c.lineTo(870,250);c.stroke();
+const ex=["10⁻³","10⁻⁴","10⁻⁵","10⁻⁶","10⁻⁷","10⁻⁸","10⁻⁹","10⁻¹⁰"];c.font="15px sans-serif";c.fillStyle="#cbd5e1";ex.forEach((s,k)=>{const x=X(-3-k);c.beginPath();c.moveTo(x,243);c.lineTo(x,257);c.stroke();c.fillText(s,x,284)});
+if(lt>2){dot(X(-4),250,9,"#fbbf24");c.fillStyle="#fbbf24";c.font="700 20px sans-serif";c.fillText("Soch qalinligi",X(-4),215)}
+if(lt>8){dot(X(-6),250,9,"#4ade80");c.fillStyle="#4ade80";c.font="700 20px sans-serif";c.fillText("Bakteriya",X(-6),215)}
+if(lt>14){c.fillStyle="rgba(244,63,94,.45)";c.fillRect(X(-9),236,X(-10)-X(-9),28);c.fillStyle="#fda4c0";c.font="700 22px sans-serif";c.fillText("Molekula",(X(-9)+X(-10))/2,205);c.font="600 16px sans-serif";c.fillText("0,1 – 1 nm",(X(-9)+X(-10))/2,328)}
+if(lt>22){c.fillStyle="#fde68a";c.font="700 24px sans-serif";c.fillText("1 nm = 10⁻⁹ m",W/2,375)}}
+else if(i==3){const e=cl((p-.12)/.5),w=60+660*e,h=1800/w;
+c.fillStyle="rgba(14,116,144,.55)";c.fillRect(60,300,840,100);c.strokeStyle="#67e8f9";c.lineWidth=2;c.beginPath();c.moveTo(60,300);c.lineTo(900,300);c.stroke();
+c.fillStyle="#fbbf24";c.beginPath();c.ellipse(480,300,w/2,h,0,Math.PI,0);c.fill();
+if(p>.15){c.textAlign="left";c.fillStyle="#fde68a";c.font="600 18px sans-serif";c.fillText("V = const (hajm oʻzgarmaydi)",70,125);c.textAlign="center"}
+if(p>.62-.2&&e>.3){arrow2(480-w/2,318,480+w/2,318,"#e2e8f0");c.fillStyle="#e2e8f0";c.font="600 18px sans-serif";c.fillText("S (parda yuzi)",480,345)}
+if(p>.4)rich("d = V / S",480,172,40,"#fde68a");
+if(p>.6){c.strokeStyle="#64748b";c.lineWidth=1;c.setLineDash([4,4]);c.beginPath();c.moveTo(480+w/2,296);c.lineTo(745,230);c.stroke();c.setLineDash([]);
+c.beginPath();c.arc(800,170,70,0,6.283);c.fillStyle="#0b1220";c.fill();c.strokeStyle="#e2e8f0";c.lineWidth=3;c.stroke();
+for(let k=-2;k<=2;k++)dot(800+k*24,170,11,"#fbbf24");arrow2(776-24-14,150,776-24-14,190,"#4ade80");c.fillStyle="#4ade80";c.font="700 18px sans-serif";c.fillText("d",718,175);c.fillStyle="#fde68a";c.font="600 14px sans-serif";c.fillText("1 molekula qatlami",800,262)}
+if(p>.78){c.font="600 20px sans-serif";rich("V = 10⁻¹⁰ m³,   S = 0,05 m²",480,355,22,"#e2e8f0");rich("d = V / S = 2·10⁻⁹ m = 2 nm",480,388,26,"#fde68a")}}
+else if(i==4){const a=.22*Math.max(0,1-p/.85),L=170,px=480,py=160,lx=px-L*Math.cos(a),ly=py+L*Math.sin(a),rx=px+L*Math.cos(a),ry=py-L*Math.sin(a);
+c.strokeStyle="#94a3b8";c.lineWidth=5;c.beginPath();c.moveTo(px,py);c.lineTo(px,330);c.stroke();c.fillStyle="#475569";c.fillRect(420,330,120,10);
+c.strokeStyle="#e2e8f0";c.lineWidth=6;c.beginPath();c.moveTo(lx,ly);c.lineTo(rx,ry);c.stroke();dot(px,py,8,"#fbbf24");
+for(const[x,y]of[[lx,ly],[rx,ry]]){c.lineWidth=1.5;c.strokeStyle="#94a3b8";c.beginPath();c.moveTo(x,y);c.lineTo(x-50,y+60);c.moveTo(x,y);c.lineTo(x+50,y+60);c.stroke();c.lineWidth=4;c.beginPath();c.moveTo(x-55,y+60);c.lineTo(x+55,y+60);c.stroke()}
+dot(lx,ly+46,14,"#94a3b8");c.fillStyle="#cbd5e1";c.font="14px sans-serif";c.fillText("yuk",lx,ly+84);
+const n=Math.floor(Math.min(1,p/.85)*60);for(let k=0;k<n;k++)dot(rx-44+(k%12)*8,ry+55-Math.floor(k/12)*8,3.5,"#38bdf8");
+c.fillStyle="#fde68a";c.font="600 22px sans-serif";c.fillText(p<.35?"Bitta molekula juda yengil":"Tenglik uchun juda koʻp molekula kerak",W/2,125);
+if(p>.65)rich("1 mol = 6,02·10²³ ta molekula  (N_{A})",W/2,385,26,"#fde68a")}
+else if(i==5){const F=[["m_{0} = M / N_{A}","m_{0} — bitta molekula massasi, M — molyar massa (kg/mol), N_{A} = 6,02·10²³ 1/mol",6],["N = m / m_{0} = (m / M)·N_{A}","N — m massali moddadagi molekulalar soni",18],["m_{0} = M_{r}·1,66·10⁻²⁷ kg","M_{r} — nisbiy molekulyar massa (1 a.m.b. = 1,66·10⁻²⁷ kg)",31]];
+F.forEach((f,k)=>{const al=cl((lt-f[2])*2);if(al<=0)return;const y=105+k*104;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(70,y,820,88);c.fillStyle="#fbbf24";c.fillRect(70,y,6,88);rich(f[0],W/2,y+40,32,"#fde68a");c.font="15px sans-serif";rich(f[1],W/2,y+70,16,"#94a3b8");c.globalAlpha=1})}
+else if(i==6){const R=[["M = 18 g/mol = 0,018 kg/mol",2,28,"#e2e8f0",130],["m_{0} = M / N_{A} = 0,018 / (6,02·10²³)",13,30,"#e2e8f0",195],["m_{0} ≈ 3·10⁻²⁶ kg",26,40,"#fde68a",270],["Tekshiruv: M_{r}·1,66·10⁻²⁷ = 18·1,66·10⁻²⁷ ≈ 3·10⁻²⁶ kg ✓",40,22,"#4ade80",340]];
+R.forEach(r=>{const al=cl((lt-r[1])*2);if(al<=0)return;c.globalAlpha=al;rich(r[0],W/2,r[4],r[2],r[3]);c.globalAlpha=1})}
+else if(i==7){const L=["Molekula — moddaning xossalarini saqlovchi eng kichik zarra","Oʻlchami ≈ 10⁻¹⁰ … 10⁻⁹ m  (d = V / S)","Massasi m_{0} = M / N_{A} ≈ 10⁻²⁶ kg"];
+L.forEach((s,k)=>{if(lt>k*2){c.globalAlpha=Math.min(1,(lt-k*2)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 32px sans-serif";c.fillText((k+1)+".",70,175+k*70);c.textAlign="center";rich(s,540,175+k*70,24,"#e2e8f0");c.globalAlpha=1}})}
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText("Molekulalarning massasi va oʻlchami • 5 daqiqa",W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){enter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)step(i);draw(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
