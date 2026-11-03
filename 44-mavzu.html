@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>44-mavzu. Yorug‘lik tezligini aniqlash</title>
+<style>
+:root{--bg:#0f1b33;--fg:#e8eefc;--card:#16264a;--ac:#ffc800;--bd:#2a3f6e;--in:#0d1830}
+[data-theme=light]{--bg:#eceff4;--fg:#14213d;--card:#fff;--ac:#b86e00;--bd:#cdd5e3;--in:#f1f4f9}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--bd)}
+h1{font-size:1rem;margin:0}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:8px 12px}
+#tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 10px}
+#tabs button{white-space:nowrap}
+#tabs button.on,.pri{background:var(--ac);color:#111;border-color:var(--ac);font-weight:600}
+main{max-width:860px;margin:auto;padding:10px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+h2{font-size:1.1rem;margin:.1em 0 .5em;color:var(--ac)}h3{font-size:1rem;margin:0 0 6px}
+ul{padding-left:20px;margin:6px 0}
+.f{font-size:1.1rem;text-align:center;padding:8px;border:1px dashed var(--ac);border-radius:8px;margin:8px 0}
+canvas{width:100%;height:auto;border-radius:8px;display:block;border:1px solid var(--bd)}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}
+label{display:block;margin:8px 0 2px;font-size:.92rem}
+input[type=range]{width:100%}
+input[type=text],select{font:inherit;padding:7px;border-radius:8px;border:1px solid var(--bd);background:var(--in);color:var(--fg);width:130px}
+.out{background:var(--in);border-radius:8px;padding:8px;margin-top:8px}
+.ok{color:#2ecc71}.no{color:#ff5c5c}
+.q label{display:block;padding:4px 0}
+#vcv{height:auto}
+.vbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vbar button{border:0;border-radius:12px;padding:10px 16px;background:var(--ac);color:#fff;font:inherit;font-weight:700;cursor:pointer;min-height:44px}
+.vbar button.alt{background:var(--bd);color:var(--fg)}
+.vbar input[type=range]{flex:1;min-width:140px}
+.vbar label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.vbar select{font:inherit;padding:6px 8px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--fg)}
+.vnote{font-size:13px;color:var(--fg);margin:6px 0 0;opacity:.75}
+</style>
+</head>
+<body>
+<header><h1>9-sinf Fizika · 44-mavzu: Yorug‘lik tezligini aniqlash</h1><button id="th">☀️</button></header>
+<nav id="tabs"></nav>
+<main id="main"></main>
+<div style="max-width:900px;margin:0 auto;padding:0 12px 24px"><div class="vid" id="vid" style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px"><h2>🎬 Video dars (5 daqiqa, ovozli sharh bilan)</h2>
+<canvas id="vcv" width="960" height="540" aria-label="Video dars"></canvas>
+<div class="vbar"><button class="" id="vpp">▶ Boshlash</button><button class=" alt" id="vrs" aria-label="Boshidan boshlash">⟲</button><input type="range" id="vsl" min="0" max="300" step="0.1" value="0" aria-label="Video vaqti"><span id="vtm">0:00 / 5:00</span></div>
+<div class="vbar"><label><input type="checkbox" id="vmu"> Ovozsiz</label><label>Ovoz tezligi <select id="vrt" aria-label="Ovoz tezligi"><option value="0.85">Sekin</option><option value="1" selected>Oddiy</option><option value="1.15">Tez</option></select></label></div>
+<p class="vnote" id="vnt"></p></div></div>
+<script>
+const $=(s)=>document.querySelector(s),C=299792458,g=id=>+$('#'+id).value;
+const fmt=(x,d=2)=>Number(x).toFixed(d).replace('.',',');
+const sci=x=>{const e=Math.floor(Math.log10(Math.abs(x)));return fmt(x/10**e,2)+'·10<sup>'+e+'</sup>'};
+const tm=s=>Math.floor(s/60)+' min '+Math.floor(s%60)+' s';
+const Y='#ffd400',O='#ff8c00',B='#2f7de1',G='#c0c4cc';
+const circ=(x,px,py,r,c)=>{x.fillStyle=c;x.beginPath();x.arc(px,py,r,0,7);x.fill()};
+const txt=(x,s,px,py,c='#cfe0ff',al='center',f='15px sans-serif')=>{x.fillStyle=c;x.textAlign=al;x.font=f;x.fillText(s,px,py)};
+const ln=(x,a,b,c,d,col,w=2)=>{x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.stroke()};
+const gl=(x,px,py)=>{circ(x,px,py,10,'rgba(255,212,0,.3)');circ(x,px,py,5,Y)};
+const sun=(x,px,py,r)=>{circ(x,px,py,r+6,'rgba(255,140,0,.3)');circ(x,px,py,r,O)};
+const sl=(id,lb,mn,mx,st,v,u)=>`<label>${lb}: <b id="${id}v">${v}</b> ${u}<input type="range" id="${id}" min="${mn}" max="${mx}" step="${st}" value="${v}"></label>`;
+const cvs=i=>`<canvas id="cv${i}" width="600" height="260"></canvas><div class="row"><button class="pri" id="go${i}">▶ Boshlash</button><button id="st${i}">⏸ To‘xtatish</button><button id="rs${i}">↺ Qayta boshlash</button></div>`;
+const task=(i,q,u)=>i==5?`<div class="card"><h3>🧮 Bosqichma-bosqich masalalar</h3><p id="pq"></p><div id="stp"></div><div class="row"><button class="pri" id="pn"></button></div></div>`:
+`<div class="card"><h3>✍️ Mustaqil masala</h3><p>${q}</p><input type="text" inputmode="decimal" id="a${i}" placeholder="Javob"> ${u} <button id="ck${i}">Tekshirish</button><p id="res${i}"></p></div>`;
+const sec=(i,d)=>`<section id="p${i}"><div class="card"><h2>${d.t}</h2>${d.th}<div class="f">${d.f}</div><p>💡 <b>Hayotiy misol:</b> ${d.ex}</p></div><div class="card"><h3>🎛 Simulyatsiya</h3>${d.ctrl}<div class="out" id="o${i}"></div></div><div class="card"><h3>🎬 Animatsiya</h3>${cvs(i)}</div>${task(i,d.q,d.u)}</section>`;
+
+const D=[
+{t:'1-reja. Yorug‘lik tezligi haqida tushuncha',
+th:`<ul><li>Qadimda yorug‘lik tezligi cheksiz katta deb o‘ylangan.</li><li>Galiley tajribasi (chiroqlar bilan): tezlik juda katta bo‘lgani uchun o‘lchab bo‘lmadi.</li><li>Vakuumda c ≈ 3·10⁸ m/s = 300 000 km/s.</li></ul>`,
+f:'c = s / t &nbsp;⇒&nbsp; t = s / c',
+ex:'Quyoshdan Yerga yorug‘lik ≈ 8 min 20 s da yetib keladi (s ≈ 150 mln km).',
+ctrl:sl('s0a','Masofa s',0.1,150,0.1,150,'mln km')+'<small>Oy–Yer: 0,384 mln km; Quyosh–Yer: 150 mln km</small>',
+q:'Yupiterdan Yerga yorug‘lik (s = 600 mln km, c = 3·10⁵ km/s) necha minutda yetib keladi?',u:'min',ans:33.3},
+{t:'2-reja. Ryomer usuli (1676)',
+th:`<ul><li>Yupiter yo‘ldoshi Io tutilishlari orasidagi vaqt Yer Yupiterdan uzoqlashganda uzayadi, yaqinlashganda qisqaradi.</li><li>Sabab: yorug‘lik Yer orbitasi diametri (≈ 3·10¹¹ m) masofani bosib o‘tishi uchun vaqt kerak.</li><li>Ryomer ≈ 22 min kechikish topgan.</li></ul>`,
+f:'c = D / Δt',
+ex:'Δt ≈ 22 min bo‘lsa, c ≈ 2,3·10⁸ m/s (tarixiy, taxminiy natija).',
+ctrl:sl('s1a','Kechikish Δt',5,25,0.5,22,'min'),
+q:'Ryomer usulida D = 3·10¹¹ m, Δt = 1200 s. c ni toping (·10⁸ m/s hisobida).',u:'·10⁸ m/s',ans:2.5},
+{t:'3-reja. Fizo usuli (1849, tishli g‘ildirak)',
+th:`<ul><li>Nur tishli g‘ildirak tishlari orasidan o‘tib, L = 8633 m uzoqdagi ko‘zguga boradi va qaytadi.</li><li>G‘ildirak ma’lum tezlikda aylanganda qaytgan nur keyingi tishga tushib, to‘silib qoladi.</li><li>z — tishlar soni, n — aylanish chastotasi.</li></ul>`,
+f:'c = 4·L·z·n',
+ex:'z = 720, L = 8633 m, n = 12,6 ayl/s ⇒ c ≈ 3,13·10⁸ m/s.',
+ctrl:sl('s2a','Tishlar soni z',100,1000,10,720,'')+sl('s2b','Chastota n',5,30,0.1,12.6,'ayl/s')+sl('s2c','Masofa L',1000,20000,1,8633,'m'),
+q:'Fizo tajribasida z = 500, L = 10 000 m, n = 15 ayl/s. c ni toping (·10⁸ m/s hisobida).',u:'·10⁸ m/s',ans:3},
+{t:'4-reja. Fuko va Maykelson usuli (aylanuvchi ko‘zgu)',
+th:`<ul><li>Nur tez aylanuvchi ko‘zgudan qaytib, uzoqdagi ko‘zguga boradi va qaytadi.</li><li>Ko‘zgu shu vaqt ichida biroz burilgani sababli qaytgan nur siljiydi; siljishdan tezlik topiladi.</li><li>Maykelson (1879–1926) usulni takomillashtirib, juda aniq natija oldi: ≈ 299 800 km/s.</li></ul>`,
+f:'Δt = 2D/c; &nbsp; α = 2·(2π·ω·Δt) &nbsp;⇒&nbsp; c = 8π·ω·D / α',
+ex:'Radar va masofa o‘lchagichlar ham nur borib-qaytish vaqtiga asoslanadi.',
+ctrl:sl('s3a','Ko‘zgu aylanishi ω',100,1000,10,800,'ayl/s')+sl('s3b','Ko‘zgular orasidagi masofa D',10,5000,10,20,'m'),
+q:'Nur D = 20 km masofaga borib qaytadi (c = 3·10⁸ m/s). Bu uchun ketgan vaqtni mikrosekundda (µs) toping.',u:'µs',ans:133.3},
+{t:'5-reja. Zamonaviy usullar va c = λ·ν',
+th:`<ul><li>Lazer va elektron soatlar yordamida o‘lchanadi.</li><li>c = 299 792 458 m/s — aniq qiymat; shunga ko‘ra 1 metr ta’rifi belgilangan.</li><li>Yorug‘lik tezligi muhitga bog‘liq: suvda ≈ 2,25·10⁸ m/s, shishada ≈ 2·10⁸ m/s.</li></ul>`,
+f:'c = λ·ν &nbsp;;&nbsp; v = c / n',
+ex:'Optik tolada yorug‘lik shisha ichida (≈ 2·10⁸ m/s) tarqaladi.',
+ctrl:sl('s4a','To‘lqin uzunligi λ',380,750,1,550,'nm')+sl('s4b','Chastota ν',400,790,1,545,'THz')+'<label>Muhit: <select id="m4"><option value="1">Vakuum (n=1)</option><option value="1.33">Suv (n=1,33)</option><option value="1.5">Shisha (n=1,5)</option></select></label>',
+q:'Olmosning sindirish ko‘rsatkichi n = 2,4. Undagi yorug‘lik tezligini toping (·10⁸ m/s hisobida, c = 3·10⁸ m/s).',u:'·10⁸ m/s',ans:1.25},
+{t:'6-reja. Qo‘llanilishi va masalalar',
+th:`<ul><li>Yorug‘lik yili ≈ 9,46·10¹² km — yorug‘lik 1 yilda bosib o‘tgan masofa.</li><li>Oydan Yerga nur ≈ 1,28 s da yetadi.</li><li>Radar, GPS va optik tola yorug‘lik/radio to‘lqin tezligiga asoslangan.</li></ul>`,
+f:'s = c · t',
+ex:'Proksima Sentavr yulduzi ≈ 4,24 yorug‘lik yili narida.',
+ctrl:sl('s5a','Yulduzgacha masofa',0.1,20,0.01,4.24,'yorug‘lik yili')}
+];
+
+const names=['1. Tushuncha','2. Ryomer','3. Fizo','4. Fuko–Maykelson','5. Zamonaviy','6. Qo‘llanilishi','Test'];
+const Q=[
+['Vakuumda yorug‘lik tezligi qancha?',['3·10⁶ m/s','3·10⁸ m/s','3·10⁵ m/s','3·10¹⁰ m/s'],1],
+['Ryomer usulida qaysi yo‘ldosh tutilishi kuzatilgan?',['Evropa','Ganimed','Io','Titan'],2],
+['Fizo usulida yorug‘lik tezligi qaysi formula bilan topiladi?',['c = L·z·n','c = 2·L·z·n','c = L/(z·n)','c = 4·L·z·n'],3],
+['Quyoshdan Yerga yorug‘lik qancha vaqtda yetib keladi?',['≈ 1,28 s','≈ 8 min 20 s','≈ 1 soat','≈ 1 yil'],1],
+['Suvda yorug‘lik tezligi taxminan qancha?',['2,25·10⁸ m/s','3·10⁸ m/s','4·10⁸ m/s','1·10⁸ m/s'],0]];
+const testHTML=`<section id="p6">`+Q.map((q,k)=>`<div class="card q"><b>${k+1}. ${q[0]}</b>`+q[1].map((o,j)=>`<label><input type="radio" name="q${k}" value="${j}"> ${'ABCD'[j]}) ${o}</label>`).join('')+`<div id="qr${k}"></div></div>`).join('')+`<div class="card"><button class="pri" id="tk">Tekshirish</button><h3 id="tr"></h3></div></section>`;
+
+$('#main').innerHTML=D.map((d,i)=>sec(i,d)).join('')+testHTML;
+$('#tabs').innerHTML=names.map((n,i)=>`<button data-i="${i}">${n}</button>`).join('');
+
+// ---------- Animatsiya yadrosi
+const anims=[];let cur=0,last=0;
+function mk(i,draw,dur){const cv=$('#cv'+i),cx=cv.getContext('2d'),a={t:0,run:false,dur};
+ a.frame=()=>{cx.fillStyle='#0b1b3a';cx.fillRect(0,0,600,260);draw(cx,a.t,a)};
+ $('#go'+i).onclick=()=>{if(a.dur&&a.t>=a.dur)a.t=0;a.run=true};
+ $('#st'+i).onclick=()=>a.run=false;
+ $('#rs'+i).onclick=()=>{a.t=0;a.run=false;a.frame()};
+ a.frame();anims[i]=a}
+function loop(ts){const dt=Math.min(.05,(ts-last)/1000);last=ts;const a=anims[cur];
+ if(a){if(a.run){a.t+=dt;if(a.dur&&a.t>=a.dur){a.t=a.dur;a.run=false}}a.frame()}
+ requestAnimationFrame(loop)}
+
+mk(0,(x,t)=>{
+ const p=Math.min(1,t/8),q=Math.min(1,t/5.12);
+ txt(x,'Quyosh → Yer (tezlatilgan: 1 s ≈ 62,5 s)',300,28);
+ ln(x,70,70,540,70,'#2a3f6e',1);sun(x,45,70,16);circ(x,555,70,12,B);
+ const px=70+470*p;ln(x,70,70,px,70,Y,3);gl(x,px,70);
+ txt(x,tm(p*500),300,105,Y,'center','bold 17px sans-serif');
+ txt(x,'Oy → Yer (sekinlashtirilgan: 1 s ≈ 0,25 s)',300,150);
+ ln(x,70,190,540,190,'#2a3f6e',1);circ(x,45,190,9,G);circ(x,555,190,12,B);
+ const mx=70+470*q;ln(x,70,190,mx,190,Y,3);gl(x,mx,190);
+ txt(x,fmt(q*1.28,2)+' s',300,225,Y,'center','bold 17px sans-serif');
+ txt(x,'Quyosh',45,100,'#cfe0ff','center','12px sans-serif');txt(x,'Yer',555,100,'#cfe0ff','center','12px sans-serif');
+ txt(x,'Oy',45,215,'#cfe0ff','center','12px sans-serif');txt(x,'Yer',555,215,'#cfe0ff','center','12px sans-serif');
+},8.2);
+
+mk(1,(x,t,a)=>{
+ const th=t*.6,ex=200+70*Math.cos(th),ey=130+70*Math.sin(th),jx=520,jy=130;
+ if(t===0){a.n=0;a.pe=false}
+ x.strokeStyle='#2a3f6e';x.lineWidth=1;x.beginPath();x.arc(200,130,70,0,7);x.stroke();
+ x.fillStyle='rgba(0,0,0,.4)';x.fillRect(jx,jy-16,80,32);
+ sun(x,200,130,14);circ(x,ex,ey,8,B);circ(x,jx,jy,16,'#d9a066');
+ const ph=t*4,ix=jx+32*Math.cos(ph),iy=jy+32*Math.sin(ph);
+ const ecl=Math.cos(ph)>0&&Math.abs(32*Math.sin(ph))<16;
+ if(ecl&&!a.pe)a.n++;a.pe=ecl;
+ circ(x,ix,iy,5,ecl?'#665':'#fff3a0');
+ x.setLineDash([5,5]);ln(x,jx,jy,ex,ey,Y,1.5);x.setLineDash([]);
+ const d=Math.hypot(jx-ex,jy-ey),dl=g('s1a')*(d-250)/140;
+ txt(x,'Quyosh',200,160,'#cfe0ff','center','12px sans-serif');txt(x,'Yer',ex,ey-14,'#cfe0ff','center','12px sans-serif');
+ txt(x,'Yupiter',jx,jy-40,'#cfe0ff','center','12px sans-serif');txt(x,'Io',ix,iy-9,'#cfe0ff','center','11px sans-serif');
+ txt(x,'Io tutilishi kechikishi: +'+fmt(dl,1)+' min',300,225,Y,'center','bold 16px sans-serif');
+ txt(x,'Tutilishlar soni: '+a.n+(ecl?'  (Io tutilishda!)':''),300,248,'#cfe0ff');
+ txt(x,'Yer yaqin → kechikish 0; uzoq → eng katta',300,25,'#9fb2d8','center','13px sans-serif');
+},0);
+
+function fz(){const z=g('s2a'),n=g('s2b'),L=g('s2c'),f=(n*z*2*L/C)%1;return{z,n,L,I:Math.abs(2*f-1)}}
+mk(2,(x,t)=>{
+ const {z,n,L,I}=fz(),cx=170,cy=150,rot=t*n*.15,N=24,mx=560;
+ ln(x,30,91,mx,91,Y,3);
+ x.globalAlpha=I;ln(x,mx,103,30,103,'#fff2a0',3);x.globalAlpha=1;
+ x.fillStyle=G;
+ for(let i=0;i<N;i++){const a=i*2*Math.PI/N+rot;x.beginPath();x.arc(cx,cy,60,a,a+Math.PI/N);x.arc(cx,cy,46,a+Math.PI/N,a,true);x.closePath();x.fill()}
+ circ(x,cx,cy,44,'#1b2f5a');
+ x.fillStyle=G;x.fillRect(mx,65,7,65);
+ const p=(t*.5)%1;
+ if(p<.5)gl(x,cx+(mx-cx)*p*2,91);else{x.globalAlpha=I;gl(x,mx-(mx-cx)*(p-.5)*2,103);x.globalAlpha=1}
+ txt(x,'Chiroq',30,72,'#cfe0ff','center','12px sans-serif');txt(x,'Ko‘z',30,128,'#cfe0ff','center','12px sans-serif');
+ txt(x,'Ko‘zgu',mx,150,'#cfe0ff','center','12px sans-serif');
+ txt(x,'L = '+L+' m',370,75,'#cfe0ff');
+ txt(x,'Qaytgan nur yorqinligi: '+Math.round(I*100)+'%'+(I<.1?' (tish to‘sdi!)':''),380,200,Y,'center','bold 15px sans-serif');
+ txt(x,'z = '+z+', n = '+fmt(n,1)+' ayl/s',380,228);
+ txt(x,'Tishli g‘ildirak (24 tish ko‘rsatilgan)',cx,235,'#9fb2d8','center','12px sans-serif');
+},0);
+
+mk(3,(x,t)=>{
+ const w=g('s3a'),Dm=g('s3b'),al=8*Math.PI*w*Dm/C;
+ const vis=Math.min(.45,.06+.39*Math.min(1,al/.01));
+ const S=[40,215],M=[160,140],F=[540,140];
+ let dx=S[0]-M[0],dy=S[1]-M[1];const l=Math.hypot(dx,dy);dx/=l;dy/=l;
+ const c=Math.cos(vis),s=Math.sin(vis),rx=dx*c-dy*s,ry=dx*s+dy*c;
+ const k=(40-M[0])/rx,spot=[40,M[1]+k*ry];
+ const base=Math.atan2(dy,1+dx)+Math.PI/2;
+ const mir=(ang,col,w2)=>ln(x,M[0]-22*Math.cos(ang),M[1]-22*Math.sin(ang),M[0]+22*Math.cos(ang),M[1]+22*Math.sin(ang),col,w2);
+ ln(x,40,60,40,240,'#3b5288',2);
+ ln(x,S[0],S[1],M[0],M[1],Y,3);ln(x,M[0],M[1],F[0],F[1],Y,3);
+ x.globalAlpha=.8;ln(x,M[0],M[1],spot[0],spot[1],'#fff2a0',3);x.globalAlpha=1;
+ x.setLineDash([4,4]);mir(base,'#7a869c',2);x.setLineDash([]);
+ mir(base+vis/2+Math.sin(t*20)*.04,G,5);
+ x.fillStyle=G;x.fillRect(F[0]-3,F[1]-30,6,60);
+ circ(x,S[0],S[1],5,Y);circ(x,spot[0],spot[1],7,'#fff2a0');
+ const P=[S,M,F,M,spot],p=((t*.5)%1)*4,kk=Math.floor(p),f=p-kk,A=P[kk],Bq=P[kk+1];
+ gl(x,A[0]+(Bq[0]-A[0])*f,A[1]+(Bq[1]-A[1])*f);
+ txt(x,'⟳ aylanuvchi ko‘zgu',M[0]+30,M[1]-35,'#cfe0ff','center','13px sans-serif');
+ txt(x,'Qo‘zg‘almas ko‘zgu',F[0]-10,F[1]-40,'#cfe0ff','center','13px sans-serif');
+ txt(x,'Ekran',40,52,'#cfe0ff','center','13px sans-serif');txt(x,'Manba',70,238,'#cfe0ff','center','12px sans-serif');
+ txt(x,'Siljish burchagi α = '+fmt(al*1000,2)+' mrad (rasmda kattalashtirilgan)',330,250,Y,'center','13px sans-serif');
+},0);
+
+mk(4,(x,t)=>{
+ const N=[1,1.33,1.5],nm=['Vakuum','Suv','Shisha'],cl=[Y,'#6ec6ff','#d0d4dc'];
+ txt(x,'Nur poygasi: kim birinchi finishga yetadi?',300,24);
+ for(let i=0;i<3;i++){const y=70+i*70,p=Math.min(1,t/4/N[i]),px=90+450*p;
+  txt(x,nm[i],42,y+5,cl[i],'center','14px sans-serif');
+  ln(x,90,y,540,y,'#2a3f6e',1);ln(x,540,y-18,540,y+18,'#fff',2);
+  ln(x,90,y,px,y,cl[i],3);gl(x,px,y);
+  txt(x,'v = '+fmt(2.998/N[i],2)+'·10⁸ m/s'+(p>=1?'  ✔':''),90,y+30,'#9fb2d8','left','12px sans-serif')}
+},6.2);
+
+mk(5,(x,t)=>{
+ const P=[['Merkuriy',3.2,'#b0b0b0'],['Venera',6,'#e8c070'],['Yer',8.3,B],['Mars',12.7,'#d2552d'],['Yupiter',43.2,'#d9a066'],['Saturn',79.3,'#e6d08a']];
+ const X=m=>30+Math.sqrt(m/80)*520,tt=t*10,fx=X(Math.min(tt,80));
+ ln(x,30,130,560,130,'#2a3f6e',1);
+ x.strokeStyle='rgba(255,212,0,.5)';x.lineWidth=2;x.beginPath();x.arc(30,130,Math.max(0,fx-30),-.6,.6);x.stroke();
+ ln(x,30,130,fx,130,Y,3);gl(x,fx,130);sun(x,30,130,13);
+ P.forEach((p,i)=>{const px=X(p[1]),hit=tt>=p[1],ty=i%2?165:97;
+  if(hit)circ(x,px,130,12,'rgba(255,212,0,.35)');circ(x,px,130,6,p[2]);
+  txt(x,p[0],px,ty,'#cfe0ff','center','13px sans-serif');
+  if(hit)txt(x,fmt(p[1],1)+' min',px,ty+15,Y,'center','12px sans-serif')});
+ txt(x,'t = '+fmt(tt,1)+' min (tezlatilgan: 1 s = 10 min)',300,28,Y,'center','bold 15px sans-serif');
+ txt(x,'Masofalar masshtabsiz (nisbiy)',300,245,'#9fb2d8','center','12px sans-serif');
+},8.2);
+
+// ---------- Simulyatsiya natijalari
+const upd=[];
+upd[0]=()=>{const s=g('s0a'),t=s*1e9/C;$('#o0').innerHTML=`t = s / c = ${fmt(s,1)}·10⁶ km / 3·10⁵ km/s ≈ <b>${fmt(t,1)} s</b> (${tm(t)})`};
+upd[1]=()=>{const d=g('s1a'),c=3e11/(d*60);$('#o1').innerHTML=`c = D / Δt = 3·10¹¹ m / ${fmt(d*60,0)} s ≈ <b>${sci(c)} m/s</b><br>Haqiqiy c uchun Δt ≈ 16,7 min bo‘lishi kerak.`};
+upd[2]=()=>{const {z,n,L,I}=fz(),c=4*L*z*n;$('#o2').innerHTML=`c = 4·${L}·${z}·${fmt(n,1)} ≈ <b>${sci(c)} m/s</b><br>Haqiqiy qiymatdan farq: ${fmt((c-C)/C*100,1)}%<br>Qaytgan nur: ${I<.1?'deyarli yo‘qoldi (tish to‘sdi)':fmt(I*100,0)+'%'}`};
+upd[3]=()=>{const w=g('s3a'),Dm=g('s3b'),al=8*Math.PI*w*Dm/C;$('#o3').innerHTML=`Δt = 2D/c = ${fmt(2*Dm/C*1e6,3)} µs<br>α = ${fmt(al*1000,3)} mrad (≈ ${fmt(al*180/Math.PI*3600,0)}″)<br>Ekranda 1 m masofada siljish ≈ ${fmt(al*1000,2)} mm<br>c = 8π·ω·D / α ≈ <b>${sci(8*Math.PI*w*Dm/al)} m/s</b>`};
+upd[4]=(id)=>{let l=g('s4a'),v=g('s4b');
+ if(id=='s4a'){v=Math.round(299792.458/l);$('#s4b').value=v;$('#s4bv').textContent=v}
+ else if(id=='s4b'){l=Math.round(299792.458/v);$('#s4a').value=l;$('#s4av').textContent=l}
+ const n=+$('#m4').value,h=270*(750-l)/370;
+ $('#o4').innerHTML=`<span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:hsl(${h},100%,50%)"></span> c = λ·ν = ${l} nm · ${v} THz ≈ <b>${sci(l*1e-9*v*1e12)} m/s</b><br>Aniq qiymat: c = 299 792 458 m/s<br>Tanlangan muhitda: v = c/n = <b>${sci(C/n)} m/s</b>; λ′ = λ/n = ${fmt(l/n,0)} nm`};
+upd[5]=()=>{const d=g('s5a'),km=d*9.46e12;$('#o5').innerHTML=`Nur yetib keladi: <b>${fmt(d,2)} yil</b> ≈ ${fmt(d*365,0)} kun<br>s = c·t ≈ ${sci(km)} km`};
+
+document.querySelectorAll('input[type=range]').forEach(r=>r.oninput=()=>{$('#'+r.id+'v').textContent=r.value;upd[+r.id[1]](r.id)});
+$('#m4').onchange=()=>upd[4]();
+upd.forEach(f=>f());
+
+// ---------- Mustaqil masalalar
+D.forEach((d,i)=>{if(d.ans===undefined)return;$('#ck'+i).onclick=()=>{
+ const v=parseFloat($('#a'+i).value.replace(',','.')),ok=Math.abs(v-d.ans)<=d.ans*.02;
+ $('#res'+i).innerHTML=isNaN(v)?'Javobni kiriting.':ok?'<span class="ok">✔ To‘g‘ri!</span>':`<span class="no">✖ Noto‘g‘ri.</span> To‘g‘ri javob: ${fmt(d.ans,d.ans%1?2:0)} ${d.u}`}});
+
+// ---------- Bosqichma-bosqich masalalar
+const P=[
+['Quyoshdan Yerga nur necha minutda yetib keladi?','s = 150 mln km = 1,5·10⁸ km; c = 3·10⁵ km/s','t — vaqt (min)','t = s / c','t = 1,5·10⁸ / 3·10⁵ = 500 s','t = 500 s ≈ 8 min 20 s'],
+['Oydan Yerga nur necha sekundda yetadi?','s = 384 000 km; c = 3·10⁵ km/s','t — vaqt (s)','t = s / c','t = 384 000 / 300 000','t ≈ 1,28 s'],
+['Fizo tajribasida yorug‘lik tezligini hisoblang.','z = 720; L = 8633 m; n = 12,6 ayl/s','c — yorug‘lik tezligi','c = 4·L·z·n','c = 4·8633·720·12,6','c ≈ 3,13·10⁸ m/s'],
+['Yorug‘lik 1 yilda qancha masofa bosadi?','c = 3·10⁵ km/s; t = 1 yil = 365·24·3600 ≈ 3,15·10⁷ s','s — masofa (km)','s = c · t','s = 3·10⁵ · 3,15·10⁷','s ≈ 9,46·10¹² km (1 yorug‘lik yili)']];
+let pi=0,ps=0;
+function rp(){const p=P[pi],r=[['Berilgan',p[1]],['Topish kerak',p[2]],['Formula',p[3]],['Hisoblash',p[4]],['Javob',p[5]]];
+ $('#pq').innerHTML=`<b>${pi+1}-masala.</b> ${p[0]}`;
+ $('#stp').innerHTML=r.slice(0,ps).map(e=>`<div class="out"><b>${e[0]}:</b> ${e[1]}</div>`).join('');
+ $('#pn').textContent=ps<5?'Keyingi qadam ▶':pi<3?'Keyingi masala ▶':'Qaytadan ↺'}
+$('#pn').onclick=()=>{if(ps<5)ps++;else{ps=0;pi=(pi+1)%4}rp()};rp();
+
+// ---------- Test
+$('#tk').onclick=()=>{let sc=0;
+ Q.forEach((q,k)=>{const c=document.querySelector(`input[name=q${k}]:checked`),ok=c&&+c.value===q[2];if(ok)sc++;
+  $('#qr'+k).innerHTML=ok?'<span class="ok">✔ To‘g‘ri</span>':`<span class="no">✖ Noto‘g‘ri.</span> To‘g‘ri javob: ${'ABCD'[q[2]]}) ${q[1][q[2]]}`});
+ $('#tr').textContent=`Natija: ${sc} / ${Q.length}`};
+
+// ---------- Tablar va mavzu
+function show(i){cur=i;
+ document.querySelectorAll('section').forEach((s,j)=>s.classList.toggle('on',j==i));
+ document.querySelectorAll('#tabs button').forEach((b,j)=>b.classList.toggle('on',j==i));
+ if(anims[i])anims[i].frame();window.scrollTo(0,0)}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>show(+b.dataset.i));
+$('#th').onclick=()=>{const d=document.documentElement,dk=d.dataset.theme=='dark';d.dataset.theme=dk?'light':'dark';$('#th').textContent=dk?'🌙':'☀️'};
+show(0);requestAnimationFrame(loop);
+</script>
+<script>
+(function(){
+const cv=document.getElementById("vcv"),c=cv.getContext("2d"),W=960,H=540;
+const E="#e2e8f0",G="#94a3b8",Y="#fde68a",OK="#4ade80";
+const $=id=>document.getElementById(id),cl=x=>Math.max(0,Math.min(1,x)),fx=v=>String(+v.toFixed(1)).replace(".",",");
+function mk(x,y,sp){const a=Math.random()*6.283;return{x,y,vx:Math.cos(a),vy:Math.sin(a),sp}}
+function rp(n,b,s0,s1){const r=[];for(let i=0;i<n;i++)r.push(mk(b[0]+12+Math.random()*(b[2]-b[0]-24),b[1]+12+Math.random()*(b[3]-b[1]-24),s0+Math.random()*(s1-s0)));return r}
+function gas(q,m,b,r){for(const o of q){const k=Math.hypot(o.vx,o.vy)||1;o.vx/=k;o.vy/=k;const s=o.sp*m;o.x+=o.vx*s;o.y+=o.vy*s;
+if(o.x<b[0]+r){o.x=b[0]+r;o.vx=Math.abs(o.vx)}if(o.x>b[2]-r){o.x=b[2]-r;o.vx=-Math.abs(o.vx)}
+if(o.y<b[1]+r){o.y=b[1]+r;o.vy=Math.abs(o.vy)}if(o.y>b[3]-r){o.y=b[3]-r;o.vy=-Math.abs(o.vy)}}}
+function col(sp){const f=cl((sp-1)/2.4);return"rgb("+Math.round(10+245*f)+",60,"+Math.round(255-245*f)+")"}
+function mix(k){k=cl(k);return"rgb("+Math.round(31+201*k)+","+Math.round(111-42*k)+","+Math.round(224-180*k)+")"}
+function wrap(t,x,y,w,lh){const ws=t.split(" ");let l="",ls=[];for(const q of ws){const n=l?l+" "+q:q;if(c.measureText(n).width>w&&l){ls.push(l);l=q}else l=n}ls.push(l);ls.forEach((s,k)=>c.fillText(s,x,y+k*lh));return ls.length}
+function rich(t,x,y,fs,colr,al){const seg=[];t.split(/(_\{[^}]*\})/).forEach(s=>{if(!s)return;const m=s.match(/^_\{([^}]*)\}$/);seg.push(m?{s:m[1],sub:1}:{s:s})});
+let w=0;seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";q.w=c.measureText(q.s).width;w+=q.w});
+let cx=al=="l"?x:al=="r"?x-w:x-w/2;c.fillStyle=colr;c.textAlign="left";seg.forEach(q=>{c.font="600 "+(q.sub?fs*.65:fs)+"px sans-serif";c.fillText(q.s,cx,y+(q.sub?fs*.25:0));cx+=q.w});c.textAlign="center"}
+function dot(x,y,r,cc){c.beginPath();c.arc(x,y,r,0,6.283);c.fillStyle=cc;c.fill()}
+function arrow(x1,y1,x2,y2,cc,lw){c.strokeStyle=cc;c.fillStyle=cc;c.lineWidth=lw||4;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-12*Math.cos(a-.5),y2-12*Math.sin(a-.5));c.lineTo(x2-12*Math.cos(a+.5),y2-12*Math.sin(a+.5));c.fill()}
+function arr(x1,y1,x2,y2,cc,lb,lx,ly){arrow(x1,y1,x2,y2,cc);if(lb){c.fillStyle=cc;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,lx,ly)}}
+function frame(b,cc){c.strokeStyle=cc||"#475569";c.lineWidth=2;c.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1])}
+function ground(y){c.strokeStyle="#64748b";c.lineWidth=4;c.beginPath();c.moveTo(40,y);c.lineTo(560,y);c.stroke()}
+function cart(x,gy,w,cc,lb){c.fillStyle=cc;c.fillRect(x,gy-42,w,26);dot(x+w*.22,gy-9,9,"#1e293b");dot(x+w*.78,gy-9,9,"#1e293b");c.strokeStyle="#e2e8f0";c.lineWidth=2;[.22,.78].forEach(f=>{c.beginPath();c.arc(x+w*f,gy-9,9,0,6.283);c.stroke()});if(lb){c.fillStyle="#0b1220";c.font="700 15px sans-serif";c.textAlign="center";c.fillText(lb,x+w/2,gy-24)}}
+function panel(L,lt,fs){c.fillStyle="rgba(15,23,42,.85)";c.fillRect(575,100,360,305);c.strokeStyle="#334155";c.lineWidth=1;c.strokeRect(575,100,360,305);
+L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;rich(l[0],590,134+k*(L.length>6?38:42),fs||20,l[2],"l");c.globalAlpha=1})}
+const mkR=(T0,a)=>a.map((x,k)=>[x[0],T0[k],x[1]]);
+function cylx(x0,y0,w,h,vf,o){o=o||{};const top=y0+h*(1-vf);c.strokeStyle="#94a3b8";c.lineWidth=4;c.beginPath();c.moveTo(x0,y0-10);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.lineTo(x0+w,y0-10);c.stroke();
+c.fillStyle="#cbd5e1";c.fillRect(x0+2,top-10,w-4,10);c.fillStyle="#64748b";if(o.wt){c.fillRect(x0+w/2-34,top-40,68,30);c.fillStyle="#fff";c.font="700 13px sans-serif";c.textAlign="center";c.fillText(o.wt,x0+w/2,top-20)}else{c.fillRect(x0+w/2-4,top-34,8,24);c.fillRect(x0+w/2-24,top-40,48,8)}
+if(o.lock){c.fillStyle="#f87171";c.fillRect(x0-8,top-14,12,18);c.fillRect(x0+w-4,top-14,12,18)}
+if(o.f){for(let k=0;k<3;k++){const fx0=x0+w*(.25+.25*k),hh=16+8*Math.sin((o.ph||0)*6+k*2);c.fillStyle=o.f>0?"#f97316":"#38bdf8";c.beginPath();c.moveTo(fx0-12,y0+h+26);c.lineTo(fx0,y0+h+26-hh-10);c.lineTo(fx0+12,y0+h+26);c.fill()}}return top}
+function gauge(cx,cy,r,val,max,unit){c.lineWidth=12;c.strokeStyle="#334155";c.beginPath();c.arc(cx,cy,r,Math.PI,0);c.stroke();const f=cl(val/max),a=Math.PI+Math.PI*f;c.strokeStyle="#f59e0b";c.beginPath();c.arc(cx,cy,r,Math.PI,a);c.stroke();
+c.strokeStyle="#f8fafc";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+(r-16)*Math.cos(a),cy+(r-16)*Math.sin(a));c.stroke();dot(cx,cy,8,"#f8fafc");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="center";c.fillText("0",cx-r,cy+20);c.fillText(max,cx+r,cy+20);rich(fx(val)+" "+unit,cx,cy+48,26,Y)}
+function thermo(x,y0,y1,f,lb){c.fillStyle="#1e293b";c.fillRect(x-12,y0-8,24,y1-y0+16);const ly=y1-cl(f)*(y1-y0);c.fillStyle="#ef4444";c.fillRect(x-6,ly,12,y1-ly+8);dot(x,y1+22,22,"#ef4444");c.strokeStyle="#e2e8f0";c.lineWidth=2;c.strokeRect(x-12,y0-8,24,y1-y0+16);if(lb)rich(lb,x,y1+62,22,Y)}
+function axes(x0,y0,w,h,lx,ly,ttl){c.fillStyle="rgba(15,23,42,.7)";c.fillRect(x0,y0,w,h);c.strokeStyle="#64748b";c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0,y0+h);c.lineTo(x0+w,y0+h);c.stroke();c.fillStyle=G;c.font="700 15px sans-serif";c.textAlign="center";c.fillText(ly,x0-10,y0+12);c.fillText(lx,x0+w-6,y0+h+18);if(ttl){c.font="600 15px sans-serif";c.fillText(ttl,x0+w/2,y0-10)}}
+function bullets(L,lt,gap,y0,fs,x0){x0=x0||60;L.forEach((s,k)=>{if(lt>k*gap){c.globalAlpha=Math.min(1,(lt-k*gap)*2);c.textAlign="left";c.fillStyle="#38bdf8";c.font="700 28px sans-serif";c.fillText((k+1)+".",x0,y0+k*62);rich(s,x0+50,y0+k*62,fs||23,E,"l");c.globalAlpha=1}})}
+function cardsL(L,lt,x,y,w,h,gy,fs){L.forEach((l,k)=>{const al=cl((lt-l[1])*2);if(al<=0)return;c.globalAlpha=al;c.fillStyle="rgba(30,41,59,.92)";c.fillRect(x,y+k*gy,w,h);c.fillStyle="#fbbf24";c.fillRect(x,y+k*gy,5,h);rich(l[0],x+w/2,y+k*gy+h/2+(fs||24)*.35,fs||24,l[2]||E);c.globalAlpha=1})}
+function beaker(x,y,w,h,lv,cc){c.fillStyle=cc;c.fillRect(x,y+h-lv,w,lv);c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+h);c.lineTo(x+w,y+h);c.lineTo(x+w,y);c.stroke()}
+function flame(x,y,t,s){s=s||1;for(let i=0;i<3;i++){const hh=(26+8*Math.sin(t*9+i*2))*s,xc=x+(i-1)*14*s;c.fillStyle=["#ff9500","#ffd000","#ff4d00"][i];c.beginPath();c.moveTo(xc-8*s,y);c.quadraticCurveTo(xc-8*s,y-hh/2,xc,y-hh);c.quadraticCurveTo(xc+8*s,y-hh/2,xc,y);c.fill()}}
+function tc(t){return mix(t/100)}
+function engd(cx,lt,q1,a,q2,u){c.fillStyle="#7f1d1d";c.fillRect(cx-150,105,300,40);rich("Isitgich T₁",cx,133,20,"#fff");c.fillStyle="#1e3a8a";c.fillRect(cx-150,335,300,40);rich("Sovutgich T₂",cx,363,20,"#fff");dot(cx,235,45,"#475569");rich("Dvigatel",cx,241,16,"#fff");
+if(lt>2){arrow(cx,147,cx,188,"#f87171",5);rich("Q₁ = "+q1+" "+u,cx+95,175,18,"#f87171")}if(lt>6){arrow(cx+45,235,cx+210,235,OK,5);rich("A = "+a+" "+u,cx+210,215,18,OK)}if(lt>10){arrow(cx,282,cx,333,"#60a5fa",5);rich("Q₂ = "+q2+" "+u,cx+100,315,18,"#60a5fa")}}
+function carnot(lt,x0,y0,w,h){const X=v=>x0+(v-.8)/2.6*w,Y=p=>y0+h-(p-.8)/3.6*h;axes(x0,y0,w,h,"V","p","");
+const F=[v=>4/v,v=>2*Math.pow(2/v,1.4),v=>3.314/v,v=>2.071*Math.pow(1.6/v,1.4)],R=[[1,2],[2,3.2],[3.2,1.6],[1.6,1]],CC=["#ef5b5b","#f5a54a","#4f7cff","#7a8bd1"],NM=["1→2 izoterma (T₁)","2→3 adiabata","3→4 izoterma (T₂)","4→1 adiabata"],pts=[];
+F.forEach((f,k)=>{for(let j=0;j<=30;j++){const v=R[k][0]+(R[k][1]-R[k][0])*j/30;pts.push([X(v),Y(f(v)),k])}});const n=Math.floor((pts.length-1)*cl(lt/16));
+for(let k=0;k<4;k++){c.strokeStyle=CC[k];c.lineWidth=4;c.beginPath();let st=0;for(let j=0;j<=n;j++){if(pts[j][2]!=k)continue;st?c.lineTo(pts[j][0],pts[j][1]):c.moveTo(pts[j][0],pts[j][1]);st=1}c.stroke()}
+dot(pts[n][0],pts[n][1],6,"#fbbf24");NM.forEach((s,k)=>{if(lt>k*4){c.font="600 13px sans-serif";c.fillStyle=CC[k];c.textAlign="right";c.fillText(s,x0+w-8,y0+20+k*18);c.textAlign="center"}})}
+function tubeV(cx,w,y0,y1,lv,cc,md){c.fillStyle=cc;c.beginPath();if(md>0){c.moveTo(cx-w/2,lv-6);c.quadraticCurveTo(cx,lv+8,cx+w/2,lv-6)}else if(md<0){c.moveTo(cx-w/2,lv+6);c.quadraticCurveTo(cx,lv-14,cx+w/2,lv+6)}else{c.moveTo(cx-w/2,lv);c.lineTo(cx+w/2,lv)}c.lineTo(cx+w/2,y1);c.lineTo(cx-w/2,y1);c.closePath();c.fill();
+c.strokeStyle="#cbd5e1";c.lineWidth=3;c.beginPath();c.moveTo(cx-w/2,y0);c.lineTo(cx-w/2,y1);c.moveTo(cx+w/2,y0);c.lineTo(cx+w/2,y1);c.stroke()}
+function latt(x0,y0,cols,rows,gap,jit,r,cc,lt){for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)dot(x0+i*gap+Math.sin(lt*9+i*3+j)*jit,y0+j*gap+Math.cos(lt*8+j*2+i)*jit,r,cc)}
+function spring2(x1,x2,y,n,amp){c.strokeStyle="#e2e8f0";c.lineWidth=2.5;c.beginPath();c.moveTo(x1,y);for(let i=1;i<n;i++)c.lineTo(x1+(x2-x1)*i/n,y+(i%2?-amp:amp));c.lineTo(x2,y);c.stroke()}
+function tgraph(x0,y0,w,h,r,kind){axes(x0,y0,w,h,"τ","t","");const X=u=>x0+u/40*w,Y=t=>y0+h-(t+30)/70*h,f=u=>kind=="cr"?(u<10?-20+2*u:u<30?0:(u-30)*2.5):-20+55/(1+Math.exp(-(u-20)/6));
+c.strokeStyle="#38bdf8";c.lineWidth=4;c.beginPath();for(let u=0;u<=40*r;u+=.5){const x=X(u),y=Y(f(u));u?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+if(kind=="cr"&&r>.25){c.strokeStyle="#f59e0b";c.lineWidth=7;c.beginPath();c.moveTo(X(10),Y(0));c.lineTo(X(Math.min(30,40*r)),Y(0));c.stroke()}
+const u=40*r;dot(X(u),Y(f(u)),6,"#fbbf24");c.fillStyle=G;c.font="13px sans-serif";c.textAlign="right";c.fillText("0 °C",x0-4,Y(0)+4);c.textAlign="center"}
+function iface(cx,cy,L,a,n1,n2,s,lowFill,w){const ar=a*Math.PI/180,sb=n1*Math.sin(ar)/n2,tir=sb>=1,b=tir?90:Math.asin(sb)*180/Math.PI,br=b*Math.PI/180,x0=cx-w/2;
+if(lowFill){c.fillStyle=lowFill;c.fillRect(x0,s>0?cy:cy-w*.42,w,w*.42)}c.strokeStyle="#94a3b8";c.lineWidth=2;c.beginPath();c.moveTo(x0,cy);c.lineTo(x0+w,cy);c.stroke();c.setLineDash([5,5]);c.strokeStyle="#64748b";c.beginPath();c.moveTo(cx,cy-L-10);c.lineTo(cx,cy+L+10);c.stroke();c.setLineDash([]);
+arrow(cx-L*Math.sin(ar),cy-s*L*Math.cos(ar),cx-6*Math.sin(ar),cy-s*6*Math.cos(ar),"#fbbf24",4);
+c.globalAlpha=tir?1:.35;c.strokeStyle="#4ade80";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+L*Math.sin(ar),cy-s*L*Math.cos(ar));c.stroke();c.globalAlpha=1;
+if(!tir){c.strokeStyle="#f87171";c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+L*Math.sin(br),cy+s*L*Math.cos(br));c.stroke()}return{b:b,tir:tir}}
+const FOOT="9-sinf Fizika • 44-mavzu: Yorugʻlik tezligini aniqlash",BEGIN="Yorugʻlik tezligini aniqlash • 5 daqiqa";
+const S=[
+{d:15,h:"Kirish: yorugʻlik tezligi",t:"Salom, aziz oʻquvchilar! Bugun yorugʻlik tezligi qanday oʻlchanganini oʻrganamiz."},
+{d:40,h:"1. Yorugʻlik tezligi haqida",t:"Qadimda yorugʻlik tezligi cheksiz katta deb oʻylangan. Galiley chiroqlar bilan tajriba oʻtkazdi, ammo tezlik juda katta boʻlgani uchun oʻlchab boʻlmadi. Vakuumda yorugʻlik tezligi c taxminan 3 karra 10 ning 8-darajasi metr bir sekund, ya’ni 300 ming kilometr bir sekund. Quyoshdan Yerga yorugʻlik taxminan 8 minut 20 sekundda yetib keladi. Masalan, Yupiterdan Yergacha 600 million kilometr: 600 million boʻlinsin 300 ming, 2000 sekund, ya’ni 33,3 minut."},
+{d:45,h:"2. Ryomer usuli (1676)",t:"Ryomer usuli, 1676-yil. Yupiter yoʻldoshi Io tutilishlari orasidagi vaqt Yer Yupiterdan uzoqlashganda uzayadi, yaqinlashganda qisqaradi. Sababi: yorugʻlik Yer orbitasi diametri, taxminan 3 karra 10 ning 11-darajasi metr, masofani bosib oʻtishi uchun vaqt kerak. Ryomer taxminan 22 minut kechikish topgan, bu c taxminan 2,3 karra 10 ning 8-darajasi. Masalan, D 3 karra 10 ning 11-darajasi metr, delta t 1200 sekund boʻlsa, c teng D boʻlinsin delta t, 2,5 karra 10 ning 8-darajasi."},
+{d:45,h:"3. Fizo usuli (1849)",t:"Fizo usuli, 1849-yil. Nur tishli gʻildirak tishlari orasidan oʻtib, uzoqdagi koʻzguga boradi va qaytadi. Gʻildirak maʼlum tezlikda aylanganda qaytgan nur keyingi tishga tushib, toʻsilib qoladi. Bu holda c teng 4 L z n, bunda z tishlar soni, n aylanish chastotasi. Masalan, z 500, L 10 000 metr, n 15 aylanish sekundiga: c teng 4 karra 10 000 karra 500 karra 15, 3 karra 10 ning 8-darajasi metr bir sekund."},
+{d:40,h:"4. Fuko va Maykelson usullari",t:"Fuko va Maykelson usuli. Nur tez aylanuvchi koʻzgudan qaytib, uzoqdagi koʻzguga boradi va qaytadi. Koʻzgu shu vaqt ichida biroz burilgani sababli qaytgan nur siljiydi, siljishdan tezlik topiladi. Maykelson usulni takomillashtirib, taxminan 299 800 kilometr bir sekund natija oldi. Radar ham nurning borib-qaytish vaqtiga asoslangan. Masalan, 20 kilometr masofaga borib qaytish: delta t teng ikki D boʻlinsin c, taxminan 133 mikrosekund."},
+{d:45,h:"5. Zamonaviy usullar",t:"Zamonaviy usullar lazer va elektron soatlar bilan oʻlchaydi. c teng 299 792 458 metr bir sekund — aniq qiymat, 1 metr taʼrifi shunga asoslangan. Toʻlqin uchun c teng lambda nyu. Yorugʻlik tezligi muhitga bogʻliq: suvda taxminan 2,25 karra 10 ning 8-darajasi, shishada 2 karra 10 ning 8-darajasi. Muhitda v teng c boʻlinsin n. Masalan, olmos, n 2,4: tezlik 3 boʻlinsin 2,4, taxminan 1,25 karra 10 ning 8-darajasi metr bir sekund."},
+{d:45,h:"6. Qoʻllanilishi",t:"Qoʻllanilishi. Yorugʻlik yili — yorugʻlik 1 yilda bosib oʻtgan masofa, taxminan 9,46 karra 10 ning 12-darajasi kilometr. Oydan Yerga nur taxminan 1,28 sekundda yetadi. Proksima Sentavr yulduzi taxminan 4,24 yorugʻlik yili narida. Radar, GPS va optik tola yorugʻlik va radio toʻlqin tezligiga asoslangan. Optik tolada yorugʻlik shisha ichida taxminan 2 karra 10 ning 8-darajasi metr bir sekund tezlikda tarqaladi."},
+{d:25,h:"Xulosa",t:"Xulosa: c taxminan 3 karra 10 ning 8-darajasi metr bir sekund, Ryomer, Fizo va Maykelson usullari bilan oʻlchangan, muhitda v teng c boʻlinsin n. Eʼtiboringiz uchun rahmat!"}
+];
+function sceneEnter(i){}function sceneStep(i,p){}
+function sceneDraw(i,p,lt){
+if(i==0){["c ≈ 3·10⁸ m/s","Ryomer · Fizo · Maykelson","v = c / n"].forEach((s,k)=>{const al=cl((lt-1-k*3)*2);if(al<=0)return;c.globalAlpha=al;rich(s,W/2,170+k*60,32,["#fde047","#38bdf8","#4ade80"][k]);c.globalAlpha=1})}
+else if(i==1){dot(80,230,34,"#facc15");dot(480,230,16,"#38bdf8");c.strokeStyle="#334155";c.lineWidth=2;c.setLineDash([6,6]);c.beginPath();c.moveTo(114,230);c.lineTo(464,230);c.stroke();c.setLineDash([]);const ph=(lt*.1)%1;dot(114+350*ph,230,7,"#fef08a");const ts=Math.round(500*ph);rich("t = "+Math.floor(ts/60)+" min "+ts%60+" s",280,190,20,Y);rich("Quyosh",80,290,16,E);rich("Yer",480,270,16,E);
+cardsL([["c ≈ 3·10⁸ m/s = 300 000 km/s",3,Y],["Quyosh → Yer:  8 min 20 s",12,E],["Yupiter → Yer: 600 mln km  →  33,3 min",24,OK]],lt,560,120,370,64,80,16)}
+else if(i==2){const cx=240,cy=240;dot(cx,cy,22,"#facc15");c.strokeStyle="#475569";c.lineWidth=1.5;c.beginPath();c.arc(cx,cy,70,0,6.283);c.stroke();const a=lt*.4,ex=cx+70*Math.cos(a),ey=cy+70*Math.sin(a);dot(ex,ey,8,"#38bdf8");dot(cx+190,cy,16,"#f59e0b");dot(cx+190+30,cy-24,4,"#e2e8f0");c.strokeStyle="#64748b";c.setLineDash([5,5]);c.beginPath();c.moveTo(ex,ey);c.lineTo(cx+190,cy);c.stroke();c.setLineDash([]);rich("Yupiter",cx+190,cy+38,15,E);rich("Yer",ex,ey-14,14,E);
+cardsL([["Yer uzoqlashsa — Io kechikishi ↑",4,E],["Δt ≈ 22 min",14,Y],["c = D / Δt",22,Y],["3·10¹¹ / 1200 = 2,5·10⁸ m/s",32,OK]],lt,540,120,390,60,76,17)}
+else if(i==3){const cx=200,cy=300,ph=lt*3;c.strokeStyle="#cbd5e1";c.lineWidth=4;c.beginPath();c.arc(cx,cy,60,0,6.283);c.stroke();for(let k=0;k<24;k++){const a=ph+k*Math.PI/12;c.fillStyle="#94a3b8";c.save();c.translate(cx+66*Math.cos(a),cy+66*Math.sin(a));c.rotate(a);c.fillRect(-4,-5,10,10);c.restore()}
+const op=.35+.65*Math.abs(Math.sin(ph*12));c.globalAlpha=op;c.strokeStyle="#fde047";c.lineWidth=4;c.beginPath();c.moveTo(40,cy-66);c.lineTo(500,cy-66);c.stroke();c.globalAlpha=1;c.strokeStyle="#e2e8f0";c.lineWidth=5;c.beginPath();c.moveTo(500,cy-100);c.lineTo(500,cy-30);c.stroke();rich("L",350,cy-84,18,E);rich("koʻzgu",500,cy-108,14,E);rich("tishli gʻildirak",cx,cy+100,15,E);
+cardsL([["z — tishlar soni;  n — aylanish chastotasi",3,E],["c = 4·L·z·n",12,Y],["z = 500,  L = 10 000 m,  n = 15 ayl/s",22,E],["c = 4·10⁴·500·15 = 3·10⁸ m/s",32,OK]],lt,540,120,390,60,76,16)}
+else if(i==4){const cx=150,cy=250,m=.15*Math.sin(lt*2.5);c.save();c.translate(cx,cy);c.rotate(m);c.strokeStyle="#e2e8f0";c.lineWidth=6;c.beginPath();c.moveTo(-26,26);c.lineTo(26,-26);c.stroke();c.restore();
+c.strokeStyle="#fde047";c.lineWidth=3;c.beginPath();c.moveTo(40,cy);c.lineTo(cx,cy);c.stroke();c.beginPath();c.moveTo(cx,cy);c.lineTo(480,cy-(480-cx)*Math.tan(0));c.stroke();c.strokeStyle="#f87171";c.beginPath();c.moveTo(480,cy);c.lineTo(cx+10,cy+(480-cx)*Math.tan(2*m)*.35);c.stroke();c.strokeStyle="#e2e8f0";c.lineWidth=5;c.beginPath();c.moveTo(480,cy-40);c.lineTo(480,cy+40);c.stroke();rich("aylanuvchi koʻzgu",cx,cy-50,15,E);rich("uzoqdagi koʻzgu",470,cy+68,15,E);
+cardsL([["Aylanuvchi koʻzgu: nur siljiydi",3,E],["Maykelson:  ≈ 299 800 km/s",12,Y],["D = 20 km:   Δt = 2D / c",22,E],["Δt ≈ 133 μs",32,OK]],lt,540,120,390,60,76,16)}
+else if(i==5){[["Vakuum",3,"#fde047","3,00"],["Suv",2.25,"#38bdf8","2,25"],["Shisha",2,"#94a3b8","2,00"],["Olmos",1.25,"#a78bfa","1,25"]].forEach((r,k)=>{const f=cl((lt-2-k*4)/2);if(f<=0)return;c.globalAlpha=Math.min(1,f*2);rich(r[0],50,160+k*50,19,E,"l");c.fillStyle=r[2];c.fillRect(150,148+k*50,300*r[1]/3*f,26);rich(r[3],150+300*r[1]/3*f+8,167+k*50,17,Y,"l");c.globalAlpha=1});rich("tezlik (·10⁸ m/s)",300,125,16,G);
+cardsL([["c = 299 792 458 m/s (aniq)",3,Y],["c = λ·ν",10,Y],["v = c / n",18,Y],["Olmos n = 2,4:  v ≈ 1,25·10⁸ m/s",28,OK]],lt,540,120,390,60,76,16)}
+else if(i==6)cardsL([["1 yorugʻlik yili ≈ 9,46·10¹² km",3,Y],["Oy → Yer:  ≈ 1,28 s",12,E],["Proksima Sentavr:  ≈ 4,24 yorugʻlik yili",22,E],["Radar, GPS, optik tola — nur va radio toʻlqin tezligiga asoslangan",32,OK]],lt,70,115,820,58,72,20)
+else if(i==7)bullets(["c ≈ 3·10⁸ m/s  (vakuumda)","Ryomer · Fizo (c = 4Lzn) · Maykelson","v = c / n"],lt,5,180,23)}
+let acc=0;
+S.forEach(s=>{s.st=acc;acc+=s.d;s.s=s.t.split(/(?<=[.!?])\s+/);const L=s.s.map(x=>x.length),tot=L.reduce((a,b)=>a+b,0);let a=0;s.cf=L.map(x=>(a+=x)/tot)});
+const TOTAL=acc;
+let T=0,playing=false,last=performance.now(),cur=-1,need=false,rt=1;
+const SP="speechSynthesis" in window;
+function sentIdx(i){const s=S[i],f=(T-s.st)/s.d;let k=0;while(k<s.cf.length-1&&f>s.cf[k])k++;return k}
+function voice(){if(!SP)return null;const v=speechSynthesis.getVoices();return v.find(x=>/^uz/i.test(x.lang))||v.find(x=>/^tr/i.test(x.lang))||null}
+function speak(i,from){if(!SP)return;speechSynthesis.cancel();if(!playing||$("vmu").checked)return;const v=voice(),uz=v&&/^uz/i.test(v.lang);
+S[i].s.slice(from).forEach(s=>{const u=new SpeechSynthesisUtterance(uz||!v?s:s.replace(/[ʻ’‘']/g,""));u.lang=v?v.lang:"uz-UZ";if(v)u.voice=v;u.rate=rt;speechSynthesis.speak(u)})}
+function note(){const v=voice();$("vnt").textContent=!SP?"Bu brauzerda ovoz yoʻq — subtitrlar koʻrsatiladi. Ovoz uchun faylni Chrome’da oching.":!v?"Qurilmada oʻzbekcha ovoz topilmadi — subtitrlar koʻrsatiladi.":/^uz/i.test(v.lang)?"Ovoz: "+v.name:"Oʻzbekcha ovoz topilmadi, "+v.name+" ishlatilmoqda (talaffuz biroz farq qilishi mumkin)."}
+if(SP){speechSynthesis.onvoiceschanged=note}note();
+function drawAll(i,p,lt){
+const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0f1b36");g.addColorStop(1,"#020617");c.fillStyle=g;c.fillRect(0,0,W,H);
+c.textAlign="center";c.fillStyle="#e2e8f0";c.font="700 28px sans-serif";c.fillText(S[i].h,W/2,48);
+c.textAlign="left";c.fillStyle="#64748b";c.font="13px sans-serif";c.fillText(FOOT,16,22);c.textAlign="center";
+sceneDraw(i,p,lt);
+const k=sentIdx(i);c.fillStyle="rgba(2,6,23,.78)";c.fillRect(0,420,W,120);c.fillStyle="#fff";c.font="21px sans-serif";c.textAlign="center";wrap(S[i].s[k],W/2,450,880,27);
+if(!playing&&T<.1){c.fillStyle="rgba(2,6,23,.7)";c.fillRect(0,0,W,H);c.fillStyle="#fff";c.font="700 34px sans-serif";c.textAlign="center";c.fillText("▶ Boshlash uchun bosing",W/2,250);c.font="20px sans-serif";c.fillStyle="#94a3b8";c.fillText(BEGIN,W/2,290)}}
+function fmt(t){t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function setBtn(){$("vpp").textContent=playing?"⏸ Pauza":(T>=TOTAL?"↻ Qayta":"▶ "+(T>0?"Davom":"Boshlash"))}
+function toggle(){if(T>=TOTAL){T=0;cur=-1}playing=!playing;if(playing)need=true;else if(SP)speechSynthesis.cancel();setBtn()}
+$("vpp").onclick=toggle;cv.onclick=toggle;
+$("vrs").onclick=()=>{T=0;cur=-1;need=true;if(SP)speechSynthesis.cancel();setBtn()};
+$("vsl").oninput=e=>{T=parseFloat(e.target.value);cur=-1;need=true;if(SP)speechSynthesis.cancel()};
+$("vmu").onchange=()=>{if(!$("vmu").checked)need=true;else if(SP)speechSynthesis.cancel()};
+$("vrt").onchange=e=>{rt=parseFloat(e.target.value);need=true};
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+if(playing){T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;if(SP)setTimeout(()=>speechSynthesis.cancel(),4000);setBtn()}}
+let i=S.length-1;for(let k=0;k<S.length;k++)if(T<S[k].st+S[k].d){i=k;break}
+if(i!==cur){cur=i;sceneEnter(i);need=true}
+if(need&&playing){speak(i,sentIdx(i));need=false}
+const lt=T-S[i].st,p=Math.min(1,lt/S[i].d);
+if(playing)sceneStep(i,p);drawAll(i,p,lt);
+$("vsl").value=T;$("vtm").textContent=fmt(T)+" / "+fmt(TOTAL);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
